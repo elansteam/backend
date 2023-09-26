@@ -1,3 +1,3 @@
-[submodule "exern/runner"]
-	path = exern/runner
+[submodule "extern/runner"]
+	path = extern/runner
 	url = https://github.com/elansteam/runner.git
