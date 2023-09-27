@@ -1,0 +1,37 @@
+name: Python Pylint Check
+
+on:
+  push:
+    branches:
+      - main  # Замените "main" на вашу основную ветку
+
+jobs:
+  pylint:
+    name: Run Pylint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: pip3 install pylint
+
+    - name: Run pylint
+      run: |
+        echo -e '"""Temp file for Github Action"""' > __init__.py
+        pylint ${PWD} > pylint_output.txt
+      continue-on-error: true
+
+    - name: Check pylint results
+      run: |
+        cat pylint_output.txt
+        if ! grep -q "Your code has been rated at 10.00/10" pylint_output.txt; then
+          echo "Pylint issues found!"
+          exit 1
+        fi
