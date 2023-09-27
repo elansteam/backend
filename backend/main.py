@@ -1,11 +1,10 @@
 """Основной файл"""
 from backend.database.data_base import DataBase
+from fastapi import FastAPI
+import uvicorn
 
-
-def main():
-    """Стартовая функция"""
-    DataBase.init()  # подключение к БД
+app = FastAPI()
 
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(app, log_level="info")

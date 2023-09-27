@@ -1,7 +1,6 @@
 """Определение класса User"""
 from typing import List
-from dataclasses import dataclass, field
-from ...project_types import ObjectId
+from backend.project_types import ObjectId
 from pydantic import BaseModel
 
 

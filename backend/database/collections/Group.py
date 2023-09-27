@@ -1,7 +1,6 @@
 """Определение класса Group"""
 from typing import List
-from dataclasses import dataclass, field
-from ...project_types import ObjectId  # type: ignore
+from backend.project_types import ObjectId  # type: ignore
 from pydantic import BaseModel
 
 

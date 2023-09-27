@@ -1,7 +1,7 @@
 """Определение класса Contest"""
 from typing import List, Tuple
 from datetime import datetime
-from ...project_types import ObjectId  # type: ignore
+from backend.project_types import ObjectId  # type: ignore
 from pydantic import BaseModel
 
 

@@ -1,8 +1,7 @@
 """Определение класса Submit"""
-from dataclasses import dataclass
 from typing import List, Dict
 from datetime import datetime
-from ...project_types import ObjectId  # type: ignore
+from backend.project_types import ObjectId  # type: ignore
 from pydantic import BaseModel
 
 

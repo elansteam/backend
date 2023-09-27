@@ -1,6 +1,6 @@
 """Определение класса Task"""
 from typing import List
-from ...project_types import ObjectId  # type: ignore
+from backend.project_types import ObjectId  # type: ignore
 from pydantic import BaseModel
 
 
