@@ -168,3 +168,4 @@ frontend/
 future
 data_cache
 src_cache
+fastapi-async-mongodb
