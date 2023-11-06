@@ -160,3 +160,7 @@ cython_debug/
 .idea/
 
 frontend/
+
+./src_cache
+./data_cache
+./future
