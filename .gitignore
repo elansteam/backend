@@ -164,3 +164,7 @@ frontend/
 ./src_cache
 ./data_cache
 ./future
+
+future
+data_cache
+src_cache
