@@ -1,22 +1,24 @@
 from fastapi import FastAPI
-from config import Config
-from db import DatabaseManager
+from src.config import Config
+from db.abstract_database_manager import AbstractDatabaseManager
+import routers.users
 import uvicorn
 
-app = FastAPI(title="Async FastAPI")
+app = FastAPI(title=Config.app_title, debug=True)
 
+app.include_router(routers.users.router, prefix="/api/users")
 
-# app.include_router(posts.router, prefix='/api/posts')
 
 @app.on_event("startup")
 async def startup():
-    config = Config()
-    DatabaseManager().connect_to_database(path=config.db_path)
+    """Старт"""
+    AbstractDatabaseManager.connect_to_database(path=Config.db_path)
 
 
 @app.on_event("shutdown")
 async def shutdown():
-    DatabaseManager().close_database_connection()
+    """Конец"""
+    AbstractDatabaseManager.close_database_connection()
 
 
 if __name__ == "__main__":

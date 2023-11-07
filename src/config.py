@@ -1,7 +1,7 @@
-from base.singleton import Singleton
+from src.base.singleton import Singleton
 
 
-class Config(metaclass=Singleton):
+class Config:
     """Синглтон класс конфига всего сервиса"""
 
     db_path: str = "mongodb://localhost:27017"
@@ -13,5 +13,12 @@ class Config(metaclass=Singleton):
     db_name: str = "ELANDB"
     """Имя базы данных"""
 
-    def __init__(self):
-        """Возможна загрузка значений из файла"""
+    class Collections:
+        users = "Users"
+
+    app_title = "ELAN api"
+    """Заголовок приложения"""
+
+    @classmethod
+    def init(cls):
+        """Инициализация конфига из файлов"""

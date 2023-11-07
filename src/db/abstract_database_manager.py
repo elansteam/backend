@@ -5,23 +5,29 @@ from src.config import Config
 from src.base.singleton import Singleton
 
 
-class AbstractDatabaseManager(metaclass=Singleton):
+class AbstractDatabaseManager(Singleton):
     """Абстрактный класс менеджера базы данных"""
-    db: AsyncIOMotorDatabase
-    client: AsyncIOMotorClient
+    _db: AsyncIOMotorDatabase
+    _client: AsyncIOMotorClient
 
-    def connect_to_database(self, path: str):
+    collection_name = None
+
+    @property
+    def db(self):
+        return self._db[self.collection_name]
+
+    @classmethod
+    def connect_to_database(cls, path: str):
         logging.info("Connecting to MongoDB.")
-        self.client = AsyncIOMotorClient(
+        cls._client = AsyncIOMotorClient(
             path,
             maxPoolSize=10,
             minPoolSize=10)
-        self.db = self.client[Config().db_name]
+        cls._db = cls._client[Config().db_name]
         logging.info("Connected to MongoDB.")
 
-    def close_database_connection(self):
+    @classmethod
+    def close_database_connection(cls):
         logging.info("Closing connection with MongoDB.")
-        self.client.close()
+        cls._client.close()
         logging.info("Closed connection with MongoDB.")
-
-
