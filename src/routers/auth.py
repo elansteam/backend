@@ -31,10 +31,10 @@ router = APIRouter()
         }
     }
 )
-async def signup(user_auth: UserSignup):
+async def signup(user_auth: UserSignup, user: User = Depends(get_current_user)):
     """Создает нового пользователя в базе данных"""
 
-    user_by_name = await db.get_by_user_name(user_auth.user_name)
+    user_by_name = await db.get_by_name(user_auth.user_name)
     if user_by_name is not None:
         return JSONResponse(status_code=400, content={"detail": [
             {"msg": "User with this user name already exists"}
@@ -75,7 +75,7 @@ async def signup(user_auth: UserSignup):
     }
 )
 async def signin(user_data: UserSignin):
-    user = await db.get_by_user_name(user_data.user_name)
+    user = await db.get_by_name(user_data.user_name)
 
     if user is None:
         return JSONResponse(status_code=400, content={
@@ -96,12 +96,3 @@ async def signin(user_data: UserSignin):
         "refresh_token": create_token(user.user_name, False),
     }
 
-
-@router.post(
-    "/test"
-)
-async def test(data: str, user: User = Depends(get_current_user)):
-    print(user)
-    print(data)
-
-    return "OK"

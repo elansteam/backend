@@ -4,8 +4,9 @@ from db.managers.role_database_manager import RoleDatabaseManager
 from db.managers.permission_database_manager import PermissionDatabaseManager
 from src.auth.utils import get_current_user
 from starlette.responses import JSONResponse
-
+from src.auth.utils import get_current_user
 from src.db.models.role import Role
+from db.models.user import User
 
 router = APIRouter()
 
@@ -29,7 +30,7 @@ db_perms = PermissionDatabaseManager()
         }
     }
 )
-async def create(role: Role):
+async def create(role: Role, user: User = Depends(get_current_user)):
     """Создание роли"""
 
     if await db.get_by_name(role.name) is not None:

@@ -1,4 +1,5 @@
 from db.abstract_database_manager import AbstractDatabaseManager
+from db.models.role import Role
 from db.models.user import User
 from db.oid import OID
 from bson import ObjectId
@@ -23,7 +24,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
 
         return User.model_validate(user)
 
-    async def get_by_user_name(self, user_name: str) -> User | None:
+    async def get_by_name(self, user_name: str) -> User | None:
         """Получение пользователя по user_name"""
 
         user = await self.db.find_one({"user_name": user_name})
@@ -39,3 +40,9 @@ class UserDatabaseManager(AbstractDatabaseManager):
             return None
 
         return User.model_validate(User)
+
+    async def add_role(self, user_name: str, role_name: str) -> None:
+        """Добавление пользователю роли."""
+
+        await self.db.update_one({"user_name": user_name},
+                                 {"$push": {"roles": role_name}})

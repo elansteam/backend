@@ -65,7 +65,7 @@ async def get_current_user(token: str) -> User:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await db.get_by_user_name(token_sub)
+    user = await db.get_by_name(token_sub)
 
     if user is None:
         raise HTTPException(
