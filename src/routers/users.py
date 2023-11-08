@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from db.oid import OID
 from db.managers.user_database_manager import UserDatabaseManager
 
@@ -9,8 +9,8 @@ router = APIRouter()
 db = UserDatabaseManager()
 
 
-@router.get("/get_by_id/{oid}")
-async def get_by_id(oid: OID):
-    # user = await db.get_user_by_id(oid)
-    user = await db.get_by_id(oid)
-    return user.__dict__
+@router.get("/get_by_id/{oid}", response_model=User)
+async def get_by_id(oid: str = Path(..., description="Идентификатор пользователя ObjectId")):
+    """Получение пользователя по ID"""
+    user = await db.get_by_id(OID(oid))
+    return user

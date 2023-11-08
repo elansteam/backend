@@ -2,6 +2,7 @@ from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.user import User
 from db.oid import OID
 from bson import ObjectId
+from pydantic import EmailStr
 from config import Config
 
 
@@ -12,9 +13,29 @@ class UserDatabaseManager(AbstractDatabaseManager):
 
     async def create(self, user: User) -> None:
         """Создание пользователя в базе данных"""
+        await self.db.insert_one({**user.model_dump()})
 
-    async def get_by_id(self, oid: OID) -> User:
+    async def get_by_id(self, oid: OID) -> User | None:
         """Получение пользователя по ID"""
-        x = await self.db.find_one({"_id": ObjectId(oid)})
+        user = await self.db.find_one({"_id": ObjectId(oid)})
+        if user is None:
+            return None
 
-        return User.model_validate(x)
+        return User.model_validate(user)
+
+    async def get_by_user_name(self, user_name: str) -> User | None:
+        """Получение пользователя по user_name"""
+
+        user = await self.db.find_one({"user_name": user_name})
+        if user is None:
+            return None
+        return User.model_validate(user)
+
+    async def get_by_email(self, email: EmailStr) -> User | None:
+        """Получение пользователя по email"""
+
+        user = await self.db.find_one({"email": email})
+        if user is None:
+            return None
+
+        return User.model_validate(User)

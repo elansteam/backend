@@ -15,8 +15,8 @@ class User(BaseModel):
     password_hash: str
     """SHA-256 хеш пароля"""
 
-    email: EmailStr
-    """Уникальный адрес электронной почты"""
+    # email: EmailStr | None # TODO: add in future
+    # """Уникальный адрес электронной почты"""
 
     first_name: str
     """Имя"""
@@ -40,3 +40,12 @@ class User(BaseModel):
     # # 1 - Пользователь может создавать группы
     # # 3 - Пользователь может создавать задачи
     # # 2 - Пользователь админ"""
+
+
+class UserAuth(BaseModel):
+    user_name: str
+    password: str
+    first_name: str
+    last_name: str
+    mid_name: str | None = None
+    # email: EmailStr | None = None # TODO: add in future

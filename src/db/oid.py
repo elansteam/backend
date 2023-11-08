@@ -1,17 +1,13 @@
 from bson import ObjectId
+from pydantic import BaseModel
 
 
 class OID(str):
-    """Расширенный класс ObjectId c возможностью валидации"""
+    """Расширенный класс ObjectId с возможностью валидации"""
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v, *args, **kwargs):
+    def __new__(cls, v):
         if v == '':
-            raise TypeError('ObjectId is empty')
+            raise ValueError('ObjectId is empty')
         if ObjectId.is_valid(v) is False:
-            raise TypeError('ObjectId invalid')
+            raise ValueError('ObjectId invalid')
         return str(v)
