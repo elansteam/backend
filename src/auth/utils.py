@@ -1,8 +1,14 @@
 import os
+from pydantic import ValidationError
+from fastapi import HTTPException
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Union, Any
 from jose import jwt
+from starlette import status
+from db.managers.user_database_manager import UserDatabaseManager
+from db.models.user import User
+from src.auth.TokenSchema import TokenSchema
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
@@ -13,6 +19,8 @@ JWT_SECRET_KEY = "jwt_secret_key"  # should be kept secret
 JWT_REFRESH_SECRET_KEY = "jwt_refresh_secret_key"  # should be kept secret
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+db = UserDatabaseManager()
 
 
 def get_hashed_password(password: str) -> str:
@@ -37,3 +45,35 @@ def create_token(subject: Union[str, Any], is_access=True, expires_delta: int = 
     to_encode = {"exp": expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, ALGORITHM)
     return encoded_jwt
+
+
+async def get_current_user(token: str) -> User:
+    try:
+        payload = jwt.decode(
+            token, JWT_SECRET_KEY, algorithms=[ALGORITHM]
+        )
+        token_exp = payload["exp"]
+        token_sub = payload["sub"]
+
+        if datetime.fromtimestamp(token_exp) < datetime.now():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user = await db.get_by_user_name(token_sub)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Could not find user",
+        )
+
+    return user

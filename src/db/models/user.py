@@ -42,10 +42,17 @@ class User(BaseModel):
     # # 2 - Пользователь админ"""
 
 
-class UserAuth(BaseModel):
+class UserSignup(BaseModel):
+    """Представление пользователя для его создания"""
     user_name: str
     password: str
     first_name: str
     last_name: str
     mid_name: str | None = None
     # email: EmailStr | None = None # TODO: add in future
+
+
+class UserSignin(BaseModel):
+    """Представление пользователя для авторизации"""
+    user_name: str
+    password: str
