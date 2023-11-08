@@ -1,6 +1,8 @@
 from pydantic import BaseModel, EmailStr
 from src.db.oid import OID
 from bson import ObjectId
+from typing import List
+from .role import Role
 
 
 class User(BaseModel):
@@ -27,13 +29,14 @@ class User(BaseModel):
     mid_name: str | None
     """Отчество"""
 
+    roles: List[Role]
+    """Список ролей пользователя"""
+
     # TODO: ADD BELOW IN FUTURE
 
     # groups: List[ObjectId]
     # """Группы, в которых состоит пользователь"""
 
-    # roles: List[Role]
-    # """Список ролей пользователя"""
     # # permission: int
     # # """Уровень доступа пользователя:
     # # 0 - Нулевой

@@ -1,5 +1,3 @@
-import os
-from pydantic import ValidationError
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
@@ -8,7 +6,6 @@ from jose import jwt
 from starlette import status
 from db.managers.user_database_manager import UserDatabaseManager
 from db.models.user import User
-from src.auth.TokenSchema import TokenSchema
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
