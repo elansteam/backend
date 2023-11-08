@@ -29,8 +29,8 @@ class User(BaseModel):
     mid_name: str | None
     """Отчество"""
 
-    roles: List[Role]
-    """Список ролей пользователя"""
+    roles: List[str]
+    """Список ролей пользователя по их именам"""
 
     # TODO: ADD BELOW IN FUTURE
 

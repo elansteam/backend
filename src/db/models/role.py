@@ -7,4 +7,5 @@ class Role(BaseModel):
     """Представление роли пользователя, роль - совокупность permissions"""
     name: str
     description: str
-    permissions: List[Permission]
+    permissions: List[str]
+    """Список прав доступа по именам"""

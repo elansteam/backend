@@ -15,6 +15,8 @@ class Config:
 
     class Collections:
         users = "Users"
+        roles = "Roles"
+        permissions = "Permissions"
 
     app_title = "ELAN api"
     """Заголовок приложения"""
