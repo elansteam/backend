@@ -4,7 +4,7 @@ from db.managers.role_database_manager import RoleDatabaseManager
 from db.managers.permission_database_manager import PermissionDatabaseManager
 from src.auth.utils import get_current_user
 from starlette.responses import JSONResponse
-from src.auth.utils import get_current_user
+from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
 from src.db.models.role import Role
 from db.models.user import User
 
@@ -27,11 +27,15 @@ db_perms = PermissionDatabaseManager()
                     }]},
                 }
             }
-        }
+        },
+        401: AUTH_RESPONSE_MODEL
     }
 )
 async def create(role: Role, user: User = Depends(get_current_user)):
     """Создание роли"""
+
+    if "admin" not in user.roles:
+        return AUTH_FAILED
 
     if await db.get_by_name(role.name) is not None:
         return JSONResponse(
@@ -54,5 +58,4 @@ async def create(role: Role, user: User = Depends(get_current_user)):
             )
 
     await db.create_role(role)
-
     return role

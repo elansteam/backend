@@ -6,6 +6,7 @@ from jose import jwt
 from starlette import status
 from db.managers.user_database_manager import UserDatabaseManager
 from db.models.user import User
+from starlette.responses import JSONResponse
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
@@ -18,6 +19,21 @@ JWT_REFRESH_SECRET_KEY = "jwt_refresh_secret_key"  # should be kept secret
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 db = UserDatabaseManager()
+
+AUTH_RESPONSE_MODEL = {
+    "description": "Failed auth",
+    "content": {
+        "application/json": {
+            "example": {"detail": [
+                {"msg": "Auth failed"}
+            ]},
+        }
+    }
+}
+
+AUTH_FAILED = JSONResponse(status_code=401, content={"detail": [
+    {"msg": "Auth failed"}
+]})
 
 
 def get_hashed_password(password: str) -> str:

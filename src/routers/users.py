@@ -3,7 +3,7 @@ from db.oid import OID
 from db.managers.user_database_manager import UserDatabaseManager
 from db.managers.role_database_manager import RoleDatabaseManager
 from starlette.responses import JSONResponse
-from src.auth.utils import get_current_user
+from src.auth.utils import get_current_user, AUTH_FAILED, AUTH_RESPONSE_MODEL
 
 from src.db.models.user import User
 from db.models.role import Role
@@ -13,12 +13,12 @@ router = APIRouter()
 db = UserDatabaseManager()
 role_db = RoleDatabaseManager()
 
-
-@router.get("/get_by_id/{oid}", response_model=User)
-async def get_by_id(oid: str, user: User = Depends(get_current_user)):
-    """Получение пользователя по ID"""
-    user = await db.get_by_id(OID(oid))
-    return user
+# TODO: подумать, нужна ли эта хрень
+# @router.get("/get_by_id/{oid}", response_model=User)
+# async def get_by_id(oid: str, user: User = Depends(get_current_user)):
+#     """Получение пользователя по ID"""
+#     user = await db.get_by_id(OID(oid))
+#     return user
 
 
 @router.post(
@@ -36,14 +36,19 @@ async def get_by_id(oid: str, user: User = Depends(get_current_user)):
                     }
                 }
             }
-        }
+        },
+        401: AUTH_RESPONSE_MODEL
     }
 )
-async def add_role_to_user(user_name: str, role_name: str, user: User = Depends(get_current_user)):
+async def add_role_to_user(user_name: str, role_name: str, cur_user: User = Depends(get_current_user)):
     """Добавляет роль пользователю"""
-    user = await db.get_by_name(user_name)
+    
+    if "admin" not in cur_user.roles:
+        return AUTH_FAILED
 
-    if user is None:
+    cur_user = await db.get_by_name(user_name)
+
+    if cur_user is None:
         return JSONResponse(
             status_code=400,
             content={
@@ -65,7 +70,7 @@ async def add_role_to_user(user_name: str, role_name: str, user: User = Depends(
             }
         )
 
-    if role_name in user.roles:
+    if role_name in cur_user.roles:
         return JSONResponse(
             status_code=400,
             content={
