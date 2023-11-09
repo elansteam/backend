@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class InGroupPermission(BaseModel):
+class GPermission(BaseModel):
     """Представление права доступа в локальной группе"""
     name: str
     """Имя права"""

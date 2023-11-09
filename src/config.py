@@ -18,8 +18,8 @@ class Config:
         users = "Users"
         roles = "Roles"
         permissions = "Permissions"
-        in_group_permissions = "InGroupPermissions"
-        in_group_roles = "InGroupRoles"
+        gpermissions = "GPermissions"
+        groles = "GRoles"
         groups = "Groups"
 
     app_title = "ELAN api"

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 
-class InGroupRole(BaseModel):
+class GRole(BaseModel):
     """Представление роли конкретно в группе"""
 
     name: str
