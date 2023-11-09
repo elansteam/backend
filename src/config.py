@@ -1,4 +1,5 @@
 from src.base.singleton import Singleton
+from enum import Enum
 
 
 class Config:
@@ -17,9 +18,20 @@ class Config:
         users = "Users"
         roles = "Roles"
         permissions = "Permissions"
+        in_group_permissions = "InGroupPermissions"
+        in_group_roles = "InGroupRoles"
+        groups = "Groups"
 
     app_title = "ELAN api"
     """Заголовок приложения"""
+
+    class Permissions:
+        admin = "admin"
+        """Высший тип права - позволено все"""
+
+    class InGroupPermissions:
+        admin = "admin"
+        """Высший тип права - позволено все"""
 
     @classmethod
     def init(cls):
