@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 import logging
-from src.config import Config
-from src.base.singleton import Singleton
+from config import Config
+from base.singleton import Singleton
 
 
 class AbstractDatabaseManager(Singleton):

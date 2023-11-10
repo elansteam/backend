@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.config import Config
+from config import Config
 from db.abstract_database_manager import AbstractDatabaseManager
 import routers.users
 import routers.auth

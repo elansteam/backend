@@ -1,4 +1,4 @@
-from src.base.singleton import Singleton
+from base.singleton import Singleton
 
 
 class Config:

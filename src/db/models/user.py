@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from src.db.oid import OID
+from db.oid import OID
 from bson import ObjectId
 from typing import List
 from .role import Role
