@@ -9,6 +9,8 @@ from starlette.responses import JSONResponse
 from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
 from src.db.models.grole import GRole
 from db.models.user import User
+from utils.utils import get_error_response, get_error_schema
+from config import Config
 
 router = APIRouter()
 
@@ -18,20 +20,12 @@ db_groups = GroupDatabaseManager()
 db_users = UserDatabaseManager()
 
 
+# TODO: add auth
 @router.post(
     "/create",
     response_model=Group,
     responses={
-        400: {
-            "description": "Failed to create group",
-            "content": {
-                "application/json": {
-                    "example": {"detail": [{
-                        "msg": "error message",
-                    }]},
-                }
-            }
-        },
+        400: get_error_schema("Failed to create group"),
         401: AUTH_RESPONSE_MODEL
     }
 )
@@ -43,23 +37,13 @@ async def create(group: Group, current_user: User = Depends(get_current_user)):
 
     # проверка на уникальность группы
     if await db_groups.get_by_name(group.name) is not None:
-        return JSONResponse(
-            status_code=400,
-            content={
-                "detail": [{
-                    "msg": f"Group with name <{group.name}> are exist yet"
-                }]}
-        )
+        return get_error_response(f"Group with name <{group.name}> are exist yet",
+                                  400)
 
     # Проверка на существование владельца
     if await db_users.get_by_name(group.owner) is None:
-        return JSONResponse(
-            status_code=400,
-            content={
-                "detail": [{
-                    "msg": f"Owner with name <{group.owner}> isn`t exist"
-                }]}
-        )
+        return get_error_response(f"Owner with name <{group.owner}> isn`t exist",
+                                  400)
 
     # Создание встроенных ролей
     # TODO вынести это в отдельное поле и сделать расширяемым
@@ -87,7 +71,48 @@ async def create(group: Group, current_user: User = Depends(get_current_user)):
     group.groles.append("owner")
     group.groles.append("admin")
 
-    group.members[group.owner] = "owner"
+    group.members[group.owner] = ["owner"]
 
     await db_groups.create(group)
     return group
+
+
+# TODO: add auth
+@router.post(
+    "/add_user",
+    response_model=User,
+    responses={
+        400: get_error_schema("Failed add user to group"),
+        401: AUTH_RESPONSE_MODEL
+    }
+)
+async def add_user(user_name: str, group_name: str, current_user: User = Depends(get_current_user)):
+    if current_user is None:
+        return AUTH_FAILED
+
+    group = await db_groups.get_by_name(group_name)
+
+    # Проверка на существование группы
+    if group is None:
+        return get_error_response(f"Group with name <{group_name}> isn`t exist")
+
+    # аутентификация
+    group_members = await db_groups.get_members(group_name)
+
+    if current_user.user_name not in group_members:
+        return AUTH_FAILED
+
+    # TODO: добавить адекватную проверку на права пока КОСТЫЛЬ
+
+    if group.owner != current_user.user_name:
+        return AUTH_FAILED
+
+    # проверка валидности данных
+    user = await db_users.get_by_name(user_name)
+
+    if user is None:
+        return get_error_response(f"User with name <{user_name}> isn`t exist")
+
+    await db_groups.add_user(group_name, user_name)
+
+    return await db_users.get_by_name(user_name)

@@ -12,8 +12,8 @@ class Group(BaseModel):
     description: str
     """Описание группы"""
 
-    members: Dict[str, str] = {}
-    """Словарь пользователь : роль"""
+    members: Dict[str, List[str]] = {}
+    """Словарь пользователь : список ролей"""
 
     owner: str
     """user_name пользователя, создавшего группу"""

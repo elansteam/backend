@@ -1,4 +1,4 @@
-from src.base.singleton import Singleton
+from utils.singleton import Singleton
 from enum import Enum
 
 
@@ -29,8 +29,8 @@ class Config:
         admin = "admin"
         """Высший тип права - позволено все"""
 
-    class InGroupPermissions:
-        admin = "admin"
+    class GPermissions:
+        owner = "owner"
         """Высший тип права - позволено все"""
 
     @classmethod

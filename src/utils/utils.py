@@ -1,3 +1,5 @@
+from typing import List
+
 from starlette.responses import JSONResponse
 
 
@@ -17,3 +19,7 @@ def get_error_response(msg: str, status_code: int = 400):
     return JSONResponse(status_code=status_code, content={"detail": [
         {"msg": msg}
     ]})
+
+
+def has_role_permission(role: List[str], permission: str):
+    return permission in role
