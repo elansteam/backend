@@ -57,5 +57,5 @@ async def create(role: Role, user: User = Depends(get_current_user)):
                     }]}
             )
 
-    await db.create_role(role)
+    await db.create(role)
     return role

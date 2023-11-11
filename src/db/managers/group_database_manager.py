@@ -25,4 +25,15 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         group = await self.db.find_one({"name": name})
         if group is None:
             return None
-        return Group.model_validate(group)
+        return Group.model_validate({**group})
+
+    async def add_user(self, group_name: str, user_name: str) -> None:  # FIXME
+        """Добавить пользователя в группу"""
+
+        await self.db.update_one({"name": group_name},
+                                 {})
+
+    async def add_grole(self, group_name: str, grole_name: str):
+        """Добавляет grole в группу"""
+        await self.db.update_one({"name": group_name},
+                                 {"$push": {"groles": grole_name}})

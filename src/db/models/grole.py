@@ -8,8 +8,11 @@ class GRole(BaseModel):
     name: str
     """Имя роли"""
 
-    description: str
+    description: str = ""
     """Описание роли"""
 
-    permissions: List[str]
+    gpermissions: List[str]
     """Список разрешений"""
+
+    group: str
+    """Группа, к которой привязана grole"""

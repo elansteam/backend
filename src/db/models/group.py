@@ -12,16 +12,11 @@ class Group(BaseModel):
     description: str
     """Описание группы"""
 
-    members: Dict[str, str]
+    members: Dict[str, str] = {}
     """Словарь пользователь : роль"""
 
     owner: str
     """user_name пользователя, создавшего группу"""
 
-    roles: List[str]
+    groles: List[str] = []
     """Список ролей созданных в этой группе"""
-
-    # def __init__(self):
-    #     super().__init__()
-    #
-    #     self.members[self.owner] = Config.InGroupPermissions.admin

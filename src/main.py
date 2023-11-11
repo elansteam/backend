@@ -4,12 +4,16 @@ from db.abstract_database_manager import AbstractDatabaseManager
 import routers.users
 import routers.auth
 import routers.roles
+import routers.groles
+import routers.groups
 
 app = FastAPI(title=Config.app_title, debug=True)
 
 app.include_router(routers.users.router, prefix="/api/users")
 app.include_router(routers.auth.router, prefix="/auth")
 app.include_router(routers.roles.router, prefix="/api/roles")
+app.include_router(routers.groles.router, prefix="/api/groles")
+app.include_router(routers.groups.router, prefix="/api/groups")
 
 
 @app.on_event("startup")

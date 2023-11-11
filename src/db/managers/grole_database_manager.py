@@ -8,15 +8,15 @@ class GRoleDatabaseManager(AbstractDatabaseManager):
 
     collection_name = Config.Collections.groles
 
-    async def get_by_name(self, name: str) -> GRole | None:
-        """Получение роли по имени"""
-        role = await self.db.find_one({"name": name})
+    async def get_by_name(self, grole_name: str, group_name: str) -> GRole | None:
+        """Получение grole по имени"""
+        grole = await self.db.find_one({"name": grole_name, "group": group_name})
 
-        if role is None:
+        if grole is None:
             return None
 
-        return GRole.model_validate(role)
+        return GRole.model_validate(grole)
 
-    async def create_role(self, role: GRole) -> None:
-        """Создание роли в базе данных"""
-        await self.db.insert_one({**role.model_dump()})
+    async def create(self, grole: GRole) -> None:
+        """Создание grole в базе данных"""
+        await self.db.insert_one({**grole.model_dump()})

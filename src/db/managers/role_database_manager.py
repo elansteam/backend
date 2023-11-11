@@ -17,7 +17,7 @@ class RoleDatabaseManager(AbstractDatabaseManager):
 
         return Role.model_validate(role)
 
-    async def create_role(self, role: Role) -> None:
+    async def create(self, role: Role) -> None:
         """Создание роли в базе данных"""
         await self.db.insert_one({**role.model_dump()})
 
