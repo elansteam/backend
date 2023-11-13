@@ -32,15 +32,3 @@ app.include_router(routers.auth.router, prefix="/auth")
 app.include_router(routers.roles.router, prefix="/api/roles")
 app.include_router(routers.groles.router, prefix="/api/groles")
 app.include_router(routers.groups.router, prefix="/api/groups")
-
-
-@app.on_event("startup")
-async def startup():
-    """Старт"""
-    AbstractDatabaseManager.connect_to_database(path=Config.db_path)
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    """Конец"""
-    AbstractDatabaseManager.close_database_connection()
