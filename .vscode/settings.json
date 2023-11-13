@@ -1,7 +1,0 @@
-{
-    "pylint.path": [
-        ".env/bin/python",
-        "-m",
-        "pylint"
-    ]
-}
