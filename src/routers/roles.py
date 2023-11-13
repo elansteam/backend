@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, Path
 from db.oid import OID
 from db.managers.role_database_manager import RoleDatabaseManager
 from db.managers.permission_database_manager import PermissionDatabaseManager
-from src.auth.utils import get_current_user
+from auth.utils import get_current_user
 from starlette.responses import JSONResponse
-from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
-from src.db.models.role import Role
+from auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
+from db.models.role import Role
 from db.models.user import User
 
 router = APIRouter()

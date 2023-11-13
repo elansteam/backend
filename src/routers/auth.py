@@ -4,9 +4,9 @@ from starlette.responses import JSONResponse
 
 from db.managers.user_database_manager import UserDatabaseManager
 from db.models.user import User, UserSignup, UserSignin
-from src.auth.utils import get_hashed_password, verify_password, create_token
-from src.auth.TokenSchema import TokenSchema
-from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
+from auth.utils import get_hashed_password, verify_password, create_token
+from auth.TokenSchema import TokenSchema
+from auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
 
 db = UserDatabaseManager()
 
