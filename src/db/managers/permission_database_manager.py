@@ -15,4 +15,4 @@ class PermissionDatabaseManager(AbstractDatabaseManager):
         if perm is None:
             return None
 
-        return Permission.model_validate(perm)
+        return Permission(**perm)

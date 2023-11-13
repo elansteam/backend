@@ -26,7 +26,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         group = await self.db.find_one({"name": name})
         if group is None:
             return None
-        return Group.model_validate({**group})
+        return Group(**group)
 
     async def add_user(self, group_name: str, user_name: str) -> None:
         """Добавить пользователя в группу"""

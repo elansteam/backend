@@ -22,7 +22,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
         if user is None:
             return None
 
-        return User.model_validate(user)
+        return User(**user)
 
     async def get_by_name(self, user_name: str) -> User | None:
         """Получение пользователя по user_name"""
@@ -30,7 +30,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
         user = await self.db.find_one({"user_name": user_name})
         if user is None:
             return None
-        return User.model_validate(user)
+        return User(**user)
 
     async def get_by_email(self, email: EmailStr) -> User | None:
         """Получение пользователя по email"""
@@ -39,7 +39,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
         if user is None:
             return None
 
-        return User.model_validate(User)
+        return User(**user)
 
     async def add_role(self, user_name: str, role_name: str) -> None:
         """Добавление пользователю роли."""

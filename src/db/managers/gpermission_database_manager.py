@@ -15,4 +15,4 @@ class GPermissionDatabaseManager(AbstractDatabaseManager):
         if perm is None:
             return None
 
-        return GPermission.model_validate(perm)
+        return GPermission(**perm)
