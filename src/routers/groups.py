@@ -95,12 +95,12 @@ async def add_user(user_name: str, group_name: str, current_user: User = Depends
     # аутентификация
     group_members = await db_groups.get_members(group_name)
 
-    if current_user.user_name not in group_members:
+    if current_user.name not in group_members:
         return AUTH_FAILED
 
     # TODO: добавить адекватную проверку на права пока КОСТЫЛЬ
 
-    if group.owner != current_user.user_name:
+    if group.owner != current_user.name:
         return AUTH_FAILED
 
     # проверка валидности данных

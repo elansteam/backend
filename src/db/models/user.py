@@ -11,7 +11,7 @@ class User(BaseModel):
     _id: ObjectId
     """Уникальный идентификатор пользователя"""
 
-    user_name: str
+    name: str
     """Идентификатор пользователя"""
 
     password_hash: str
@@ -57,5 +57,5 @@ class UserSignup(BaseModel):
 
 class UserSignin(BaseModel):
     """Представление пользователя для авторизации"""
-    user_name: str
+    name: str
     password: str

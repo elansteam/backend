@@ -54,7 +54,7 @@ async def signup(user_auth: UserSignup, user: User = Depends(auth_user("admin"))
 )
 async def signin(user_data: UserSignin):
     """Авторизует пользователя и генерирует JWT"""
-    user = await db.get_by_name(user_data.user_name)
+    user = await db.get_by_name(user_data.name)
 
     if user is None:
         return get_error_response("Invalid login or password")
@@ -63,6 +63,6 @@ async def signin(user_data: UserSignin):
         return get_error_response("Invalid login or password")
 
     return {
-        "access_token": create_token(user.user_name),
-        "refresh_token": create_token(user.user_name, False),
+        "access_token": create_token(user.name),
+        "refresh_token": create_token(user.name, False),
     }
