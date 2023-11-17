@@ -23,13 +23,13 @@ router = APIRouter()
         400: get_error_schema("Failed to create user")
     }
 )
-async def signup(user_auth: UserSignup, user: User = Depends(auth_user("admin"))):
+async def signup(user_auth: UserSignup):
     """Создает нового пользователя в базе данных"""
 
-    user_by_name = await db.get_by_name(user_auth.user_name)
+    user_by_name = await db.get_by_name(user_auth.name)
     if user_by_name is not None:
         return get_error_response(
-            f"User with this user name <{user_auth.user_name}> already exists")
+            f"User with this user name <{user_auth.name}> already exists")
 
     password_hash = get_hashed_password(user_auth.password)
 
@@ -38,7 +38,7 @@ async def signup(user_auth: UserSignup, user: User = Depends(auth_user("admin"))
         "password_hash": password_hash
     }
 
-    user = User.model_validate(user_to_create)
+    user = User(**user_to_create)
 
     await db.create(user)
 

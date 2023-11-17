@@ -47,7 +47,7 @@ class User(BaseModel):
 
 class UserSignup(BaseModel):
     """Представление пользователя для его создания"""
-    user_name: str
+    name: str
     password: str
     first_name: str
     last_name: str

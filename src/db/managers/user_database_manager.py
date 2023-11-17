@@ -27,7 +27,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
     async def get_by_name(self, user_name: str) -> User | None:
         """Получение пользователя по user_name"""
 
-        user = await self.db.find_one({"user_name": user_name})
+        user = await self.db.find_one({"name": user_name})
         if user is None:
             return None
         return User.model_validate(user)
@@ -44,5 +44,5 @@ class UserDatabaseManager(AbstractDatabaseManager):
     async def add_role(self, user_name: str, role_name: str) -> None:
         """Добавление пользователю роли."""
 
-        await self.db.update_one({"user_name": user_name},
+        await self.db.update_one({"name": user_name},
                                  {"$push": {"roles": role_name}})
