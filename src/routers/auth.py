@@ -20,7 +20,7 @@ router = APIRouter()
     "/signup",
     response_model=User,
     responses={
-        400: get_error_response("Failed to create user")
+        400: get_error_schema("Failed to create user")
     }
 )
 async def signup(user_auth: UserSignup, user: User = Depends(auth_user("admin"))):
