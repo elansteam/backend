@@ -2,6 +2,7 @@ from utils.singleton import Singleton
 from enum import Enum
 
 
+# TODO: add load values from env variables
 class Config:
     """Синглтон класс конфига всего сервиса"""
 

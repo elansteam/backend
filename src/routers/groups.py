@@ -4,7 +4,7 @@ from db.managers.grole_database_manager import GRoleDatabaseManager
 from db.managers.gpermission_database_manager import GPermissionDatabaseManager
 from db.managers.group_database_manager import GroupDatabaseManager, Group
 from db.managers.user_database_manager import UserDatabaseManager
-from src.auth.utils import get_current_user
+from src.auth.utils import get_current_user, auth_user
 from starlette.responses import JSONResponse
 from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
 from src.db.models.grole import GRole
@@ -26,14 +26,10 @@ db_users = UserDatabaseManager()
     response_model=Group,
     responses={
         400: get_error_schema("Failed to create group"),
-        401: AUTH_RESPONSE_MODEL
     }
 )
-async def create(group: Group, current_user: User = Depends(get_current_user)):
+async def create(group: Group, current_user: User = Depends(auth_user("admin"))):
     """Создание группы"""
-
-    if "admin" not in current_user.roles:
-        return AUTH_FAILED
 
     # проверка на уникальность группы
     if await db_groups.get_by_name(group.name) is not None:

@@ -4,9 +4,10 @@ from starlette.responses import JSONResponse
 
 from db.managers.user_database_manager import UserDatabaseManager
 from db.models.user import User, UserSignup, UserSignin
-from auth.utils import get_hashed_password, verify_password, create_token
-from auth.TokenSchema import TokenSchema
-from auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
+from src.auth.utils import get_hashed_password, verify_password, create_token
+from src.auth.TokenSchema import TokenSchema
+from src.auth.utils import get_current_user, auth_user
+from utils.utils import get_error_response, get_error_schema
 
 db = UserDatabaseManager()
 
@@ -19,30 +20,16 @@ router = APIRouter()
     "/signup",
     response_model=User,
     responses={
-        400: {
-            "description": "Failed to create user",
-            "content": {
-                "application/json": {
-                    "example": {"detail": [
-                        {"msg": "User with this user name already exists"}
-                    ]},
-                }
-            }
-        },
-        401: AUTH_RESPONSE_MODEL
+        400: get_error_response("Failed to create user")
     }
 )
-async def signup(user_auth: UserSignup, user: User = Depends(get_current_user)):
+async def signup(user_auth: UserSignup, user: User = Depends(auth_user("admin"))):
     """Создает нового пользователя в базе данных"""
-
-    if "admin" not in user.roles:
-        return AUTH_FAILED
 
     user_by_name = await db.get_by_name(user_auth.user_name)
     if user_by_name is not None:
-        return JSONResponse(status_code=400, content={"detail": [
-            {"msg": "User with this user name already exists"}
-        ]})
+        return get_error_response(
+            f"User with this user name <{user_auth.user_name}> already exists")
 
     password_hash = get_hashed_password(user_auth.password)
 
@@ -62,20 +49,7 @@ async def signup(user_auth: UserSignup, user: User = Depends(get_current_user)):
     "/signin",
     response_model=TokenSchema,
     responses={
-        400: {
-            "description": "Invalid data for signin",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": [
-                            {
-                                "msg": "Invalid user name or password"
-                            }
-                        ]
-                    }
-                }
-            }
-        }
+        400: get_error_schema("Failed to signin")
     }
 )
 async def signin(user_data: UserSignin):
@@ -83,20 +57,12 @@ async def signin(user_data: UserSignin):
     user = await db.get_by_name(user_data.user_name)
 
     if user is None:
-        return JSONResponse(status_code=400, content={
-            "detail": [{
-                "msg": "Invalid login or password"
-            }]
-        })
+        return get_error_response("Invalid login or password")
 
     if not verify_password(user_data.password, user.password_hash):
-        return JSONResponse(status_code=400, content={
-            "detail": [{
-                "msg": "Invalid login or password"
-            }]
-        })
+        return get_error_response("Invalid login or password")
 
     return {
-        "access_token": create_token(user.user_name, ),
+        "access_token": create_token(user.user_name),
         "refresh_token": create_token(user.user_name, False),
     }
