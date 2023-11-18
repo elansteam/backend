@@ -1,8 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from db.oid import OID
+from pydantic import BaseModel, Field
 from bson import ObjectId
-from typing import List
-from .role import Role
 
 
 class User(BaseModel):
@@ -17,9 +14,6 @@ class User(BaseModel):
     password_hash: str
     """SHA-256 хеш пароля"""
 
-    # email: EmailStr | None # TODO: add in future
-    # """Уникальный адрес электронной почты"""
-
     first_name: str
     """Имя"""
 
@@ -29,20 +23,8 @@ class User(BaseModel):
     mid_name: str | None
     """Отчество"""
 
-    roles: List[str] = []
+    roles: list[str]
     """Список ролей пользователя по их именам"""
-
-    # TODO: ADD BELOW IN FUTURE
-
-    # groups: List[ObjectId]
-    # """Группы, в которых состоит пользователь"""
-
-    # # permission: int
-    # # """Уровень доступа пользователя:
-    # # 0 - Нулевой
-    # # 1 - Пользователь может создавать группы
-    # # 3 - Пользователь может создавать задачи
-    # # 2 - Пользователь админ"""
 
 
 class UserSignup(BaseModel):
@@ -52,7 +34,6 @@ class UserSignup(BaseModel):
     first_name: str
     last_name: str
     mid_name: str | None = None
-    # email: EmailStr | None = None # TODO: add in future
 
 
 class UserSignin(BaseModel):

@@ -12,6 +12,7 @@ from db.managers.role_database_manager import RoleDatabaseManager
 from db.models.user import User
 from starlette.responses import JSONResponse
 from fastapi import Depends
+from enum import Enum
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
@@ -22,6 +23,31 @@ JWT_SECRET_KEY = "jwt_secret_key"  # should be kept secret
 JWT_REFRESH_SECRET_KEY = "jwt_refresh_secret_key"  # should be kept secret
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class Permissions(Enum):
+    """Перечисление всех прав"""
+    ADMIN = 0
+    C_SIGNUP = 1
+    C_SET_ROLE = 2
+    C_CREATE_ROLE = 3
+    C_ADD_USER_TO_GROUP = 4
+    C_CREATE_GROUP = 5
+    C_CREATE_GROLE = 6
+    C_ADD_GROLE = 7
+    C_ADD_ROLE_TO_USER = 8
+    # TODO: add more perms
+
+
+def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
+    if role_staff % 2 == 1:
+        return True
+    for perm in permissions:
+        if (role_staff >> perm.value) % 2 == 0:
+            return False
+
+    return True
+
 
 db_user = UserDatabaseManager()
 db_role = RoleDatabaseManager()
@@ -100,23 +126,22 @@ async def get_current_user(token: str) -> User:
     return user
 
 
-def auth_user(*permissions: str):
+def auth_user(*permissions: Permissions):
     async def wrapper(user: User = Depends(get_current_user)) -> User:
         """Авторизовывает пользователя по правам permissions"""
 
-        for permission in permissions:
-            has_permission = False
+        result_mask = 0
 
-            for role_name in user.roles:
-                if permission in await db_role.get_by_name(role_name):
-                    has_permission = True
-                    break
+        for role_name in user.roles:
+            cur_role = await db_role.get_by_name(role_name)
+            if cur_role is not None:
+                result_mask |= cur_role.permissions
 
-            if not has_permission:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"User <{user.name}> has not <{permission}> permission"
-                )
+        if not has_role_permissions(result_mask, *permissions):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"User <{user.name}> has no required permission"
+            )
         return user
 
     return wrapper

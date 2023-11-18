@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, Path
 from db.oid import OID
 from db.managers.grole_database_manager import GRoleDatabaseManager
-from db.managers.gpermission_database_manager import GPermissionDatabaseManager
 from db.managers.group_database_manager import GroupDatabaseManager, Group
 from db.managers.user_database_manager import UserDatabaseManager
-from src.auth.utils import get_current_user, auth_user
-from starlette.responses import JSONResponse
+from src.auth.utils import auth_user, Permissions
 from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
 from src.db.models.grole import GRole
 from db.models.user import User
@@ -15,7 +13,6 @@ from config import Config
 router = APIRouter()
 
 db_groles = GRoleDatabaseManager()
-db_perms = GPermissionDatabaseManager()
 db_groups = GroupDatabaseManager()
 db_users = UserDatabaseManager()
 
@@ -28,8 +25,11 @@ db_users = UserDatabaseManager()
         400: get_error_schema("Failed to create group"),
     }
 )
-async def create(group: Group, current_user: User = Depends(auth_user("admin"))):
-    """Создание группы"""
+async def create(group: Group,
+                 current_user: User = Depends(auth_user(
+                     Permissions.C_CREATE_GROUP
+                 ))):
+    """Создание group"""
 
     # проверка на уникальность группы
     if await db_groups.get_by_name(group.name) is not None:
@@ -79,12 +79,15 @@ async def create(group: Group, current_user: User = Depends(auth_user("admin")))
     response_model=User,
     responses={
         400: get_error_schema("Failed add user to group"),
-        401: AUTH_RESPONSE_MODEL
     }
 )
-async def add_user(user_name: str, group_name: str, current_user: User = Depends(get_current_user)):
-    if current_user is None:
-        return AUTH_FAILED
+async def add_user(user_name: str, group_name: str,
+                   current_user: User = Depends(auth_user(
+                       Permissions.C_ADD_USER_TO_GROUP
+                   ))):
+    """Добавляет user в group"""
+
+    raise Exception("Method not ready")  # FIXME
 
     group = await db_groups.get_by_name(group_name)
 

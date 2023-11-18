@@ -1,6 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Dict
-from config import Config
 
 
 class Group(BaseModel):
@@ -12,11 +10,11 @@ class Group(BaseModel):
     description: str
     """Описание группы"""
 
-    members: Dict[str, List[str]] = {}
+    members: dict[str, list[str]] = {}
     """Словарь пользователь : список ролей"""
 
     owner: str
     """user_name пользователя, создавшего группу"""
 
-    groles: List[str] = []
+    groles: list[str] = []
     """Список ролей созданных в этой группе"""

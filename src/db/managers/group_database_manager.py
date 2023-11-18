@@ -1,11 +1,6 @@
 from db.abstract_database_manager import AbstractDatabaseManager
-from db.models.role import Role
 from db.models.group import Group
-from db.oid import OID
-from bson import ObjectId
-from pydantic import EmailStr
 from config import Config
-from typing import List
 
 
 class GroupDatabaseManager(AbstractDatabaseManager):
@@ -39,14 +34,14 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         await self.db.update_one({"name": group_name},
                                  {"$push": {"groles": grole_name}})
 
-    async def get_members(self, group_name) -> List[str]:
+    async def get_members(self, group_name) -> list[str]:
         """Возвращает список участников"""
 
         members = await self.db.find_one({"name": group_name})
 
         return list(members["members"].keys())
 
-    async def get_member_groles(self, group_name: str, user_name: str) -> List[str]:
+    async def get_member_groles(self, group_name: str, user_name: str) -> list[str]:
         """Возвращает список gролей у участника"""
 
         members = await self.db.find_one({"name": group_name})

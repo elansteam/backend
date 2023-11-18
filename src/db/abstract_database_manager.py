@@ -5,7 +5,6 @@ from src.config import Config
 from utils.singleton import Singleton
 
 
-
 class AbstractDatabaseManager(Singleton):
     """Абстрактный класс менеджера базы данных"""
     _db: AsyncIOMotorDatabase

@@ -3,7 +3,7 @@ from db.oid import OID
 from db.managers.user_database_manager import UserDatabaseManager
 from db.managers.role_database_manager import RoleDatabaseManager
 from starlette.responses import JSONResponse
-from auth.utils import get_current_user, auth_user
+from auth.utils import auth_user, Permissions
 from utils.utils import get_error_response, get_error_schema
 
 from db.models.user import User
@@ -31,7 +31,9 @@ role_db = RoleDatabaseManager()
     }
 )
 async def add_role_to_user(user_name: str, role_name: str,
-                           current_user: User = Depends(get_current_user)):
+                           current_user: User = Depends(auth_user(
+                               Permissions.C_ADD_ROLE_TO_USER
+                           ))):
     """Добавляет роль пользователю"""
 
     cur_user = await db.get_by_name(user_name)
