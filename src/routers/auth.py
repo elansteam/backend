@@ -39,6 +39,9 @@ async def signup(user_auth: UserSignup,
         "password_hash": password_hash
     }
 
+    user_to_create.pop("password")
+    print(user_to_create)
+
     user = User(**user_to_create)
 
     await db.create(user)

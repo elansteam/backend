@@ -13,14 +13,7 @@ from db.models.user import User
 from starlette.responses import JSONResponse
 from fastapi import Depends
 from enum import Enum
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 30 minutes
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
-ALGORITHM = "HS256"
-
-# TODO: set to config
-JWT_SECRET_KEY = "jwt_secret_key"  # should be kept secret
-JWT_REFRESH_SECRET_KEY = "jwt_refresh_secret_key"  # should be kept secret
+from config import Config
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -84,21 +77,21 @@ def create_token(
         expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
     elif is_access:
         expires_delta = datetime.utcnow() + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+            minutes=Config.Auth.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     else:
         expires_delta = datetime.utcnow() + timedelta(
-            minutes=REFRESH_TOKEN_EXPIRE_MINUTES
+            minutes=Config.Auth.REFRESH_TOKEN_EXPIRE_MINUTES
         )
 
     to_encode = {"exp": expires_delta, "sub": str(subject)}
-    encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM)
     return encoded_jwt
 
 
 async def get_current_user(token: str) -> User:
     try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, Config.Auth.JWT_SECRET_KEY, algorithms=[Config.Auth.ALGORITHM])
         token_exp = payload["exp"]
         token_sub = payload["sub"]
 

@@ -1,39 +1,28 @@
-from utils.singleton import Singleton
-from enum import Enum
+import os
 
 
-# TODO: add load values from env variables
 class Config:
     """Синглтон класс конфига всего сервиса"""
 
-    db_path: str = "mongodb://localhost:27017"
+    db_path: str = os.environ.get("DB_PATH")
     """Путь к базе данных"""
 
-    db_max_pool_size: int = 10
-    """Ограничение количества подключений"""
-
-    db_name: str = "ELANDB"
+    db_name: str = os.environ.get("DB_NAME")
     """Имя базы данных"""
 
     class Collections:
-        users = "Users"
-        roles = "Roles"
-        permissions = "Permissions"
-        gpermissions = "GPermissions"
-        groles = "GRoles"
-        groups = "Groups"
+        users = os.environ.get("COLLECTION_USERS")
+        roles = os.environ.get("COLLECTION_ROLES")
+        groles = os.environ.get("COLLECTION_GROLES")
+        groups = os.environ.get("COLLECTION_GROUPS")
 
-    app_title = "ELAN api"
+    class Auth:
+        ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES"))
+        REFRESH_TOKEN_EXPIRE_MINUTES = int(os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES"))
+        ALGORITHM = os.environ.get("ALGORITHM")
+
+        JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
+        JWT_REFRESH_SECRET_KEY = os.environ.get("JWT_REFRESH_SECRET_KEY")
+
+    app_title = os.environ.get("APP_TITLE")
     """Заголовок приложения"""
-
-    class Permissions:
-        admin = "admin"
-        """Высший тип права - позволено все"""
-
-    class GPermissions:
-        owner = "owner"
-        """Высший тип права - позволено все"""
-
-    @classmethod
-    def init(cls):
-        """Инициализация конфига из файлов"""

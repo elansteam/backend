@@ -23,7 +23,7 @@ class User(BaseModel):
     mid_name: str | None
     """Отчество"""
 
-    roles: list[str]
+    roles: list[str] = Field([])
     """Список ролей пользователя по их именам"""
 
 
