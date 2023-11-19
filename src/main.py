@@ -19,7 +19,7 @@ async def lifespan(_app: FastAPI):
         _app (FastAPI): application object. It is not using right now
     """
     # on startup
-    AbstractDatabaseManager.connect_to_database(path=Config.db_path)
+    AbstractDatabaseManager.connect_to_database(url=Config.db_path)
     yield
     # on shutdown
     AbstractDatabaseManager.close_database_connection()
