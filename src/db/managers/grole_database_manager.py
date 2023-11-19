@@ -15,7 +15,7 @@ class GRoleDatabaseManager(AbstractDatabaseManager):
         if grole is None:
             return None
 
-        return GRole.model_validate(grole)
+        return GRole(**grole)
 
     async def create(self, grole: GRole) -> None:
         """Создание grole в базе данных"""
