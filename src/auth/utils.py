@@ -2,22 +2,24 @@
 Helpers for auth stuff
 """
 from datetime import datetime, timedelta
-from enum import Enum
-from fastapi import HTTPException, Depends
+from typing import Union, Any
+from fastapi import HTTPException
 from passlib.context import CryptContext
 from jose import jwt
 from starlette import status
-from starlette.responses import JSONResponse
-from config import Config
 from db.managers.user_database_manager import UserDatabaseManager
 from db.managers.role_database_manager import RoleDatabaseManager
 from db.models.user import User
+from starlette.responses import JSONResponse
+from fastapi import Depends
+from enum import Enum
+from config import Config
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class Permissions(Enum):
-    """Permission codes"""
+    """Перечисление всех прав"""
     ADMIN = 0
     C_SIGNUP = 1
     C_SET_ROLE = 2
@@ -31,14 +33,6 @@ class Permissions(Enum):
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
-    """Бананы
-
-    Args:
-        role_staff (int): _description_
-
-    Returns:
-        bool: _description_
-    """
     if role_staff % 2 == 1:
         return True
     for perm in permissions:
@@ -76,7 +70,7 @@ def verify_password(password: str, hashed_pass: str) -> bool:
 
 
 def create_token(
-        subject: str, is_access=True, expires_delta: int = None
+        subject: Union[str, Any], is_access=True, expires_delta: int = None
 ) -> str:
     """Генерирует jwt токен по данным и времени"""
     if expires_delta is not None:
@@ -96,16 +90,6 @@ def create_token(
 
 
 async def get_current_user(token: str) -> User:
-    """Get current user by access token or raise HTTPException
-
-    Args:
-        token (str): access token
-
-    Raises:
-        HTTPException: Raise 401/403 error if access token is invalid
-    Returns:
-        User: user object
-    """
     try:
         payload = jwt.decode(token, Config.Auth.JWT_SECRET_KEY, algorithms=[Config.Auth.ALGORITHM])
         token_exp = payload["exp"]
@@ -117,12 +101,12 @@ async def get_current_user(token: str) -> User:
                 detail="Token expired",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-    except Exception as exc:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        ) from exc
+        )
 
     user = await db_user.get_by_name(token_sub)
 
