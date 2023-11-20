@@ -13,11 +13,6 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def handle_startapp():
-    # Logic to handle the startapp command
-    print("Starting a new app!")
-
-
 def main():
     project_root = Path(__file__).resolve().parent
     sys.path.append(str(project_root)+"/src")
@@ -34,8 +29,10 @@ def main():
         case "runserver":
             # Run the FastAPI app using uvicorn
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
-        case "startapp":
-            handle_startapp()
+        case "test":
+            os.system("python ")
+        case "lint":
+            os.system("pylint --recursive=y ./src/ ./testing/")
         case _:
             print(f"Unknown command: {args.command}")
 
