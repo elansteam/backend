@@ -30,7 +30,7 @@ def main():
             # Run the FastAPI app using uvicorn
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
         case "test":
-            os.system("python ")
+            os.system("pytest ./testing")
         case "lint":
             os.system("pylint --recursive=y ./src/ ./testing/")
         case _:
