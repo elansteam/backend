@@ -1,3 +1,5 @@
+"""Main project file"""
+
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Config

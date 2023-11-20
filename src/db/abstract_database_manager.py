@@ -1,9 +1,9 @@
 """Database manager class"""
+import logging
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from motor.core import AgnosticCollection
 from src.config import Config
 from utils.singleton import Singleton
-import logging
 
 
 class AbstractDatabaseManager(Singleton):
@@ -15,6 +15,7 @@ class AbstractDatabaseManager(Singleton):
 
     @property
     def db(self) -> AgnosticCollection:
+        """Property, which returns special collection for child class"""
         return self._db[self.collection_name]
 
     @classmethod

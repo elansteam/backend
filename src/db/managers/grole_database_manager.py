@@ -1,6 +1,7 @@
+"""Group role database manager"""
 from db.abstract_database_manager import AbstractDatabaseManager
-from config import Config
 from db.models.grole import GRole
+from config import Config
 
 
 class GRoleDatabaseManager(AbstractDatabaseManager):

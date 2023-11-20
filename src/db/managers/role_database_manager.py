@@ -1,7 +1,7 @@
 """Roles database manager"""
 from db.abstract_database_manager import AbstractDatabaseManager
-from config import Config
 from db.models.role import Role
+from config import Config
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):

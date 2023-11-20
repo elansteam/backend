@@ -1,9 +1,6 @@
+"""UserDatabaseManager definition"""
 from db.abstract_database_manager import AbstractDatabaseManager
-from db.models.role import Role
 from db.models.user import User
-from db.oid import OID
-from bson import ObjectId
-from pydantic import EmailStr
 from config import Config
 
 

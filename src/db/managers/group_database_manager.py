@@ -1,3 +1,4 @@
+"""GroupDatabaseManager definition"""
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config

@@ -1,3 +1,4 @@
+"""OID class definition"""
 from bson import ObjectId
 
 
