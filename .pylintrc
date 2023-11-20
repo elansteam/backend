@@ -59,7 +59,7 @@ extension-pkg-whitelist=
 #
 # Kubeflow disables string-interpolation because we are starting to use f
 # style strings
-disable=import-error
+disable=import-error,fixme,no-name-in-module,no-self-argument,unreachable,broad-exception-raised
 
 [REPORTS]
 

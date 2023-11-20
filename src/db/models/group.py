@@ -1,3 +1,4 @@
+"""Group definition"""
 from pydantic import BaseModel
 
 

@@ -1,3 +1,4 @@
+"""Grole definition"""
 from pydantic import BaseModel, field_validator, ValidationError
 
 
@@ -17,6 +18,12 @@ class GRole(BaseModel):
     """Группа, к которой привязана grole"""
 
     @field_validator("gpermissions")
-    def my_custom_validator(cls, value):
+    def validate_gpermission(cls, value) -> None:
+        """
+        Validate gpermission code
+        if value < 0 -> exception
+        Args:
+            value: permission code
+        """
         if value < 0:
             raise ValidationError("GPermissions must be positive")

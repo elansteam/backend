@@ -1,9 +1,10 @@
+"""Endpoints with group roles"""
 from fastapi import APIRouter, Depends
 from db.managers.grole_database_manager import GRoleDatabaseManager
-from db.managers.group_database_manager import GroupDatabaseManager, Group
+from db.managers.group_database_manager import GroupDatabaseManager
+from db.models.user import User
 from src.auth.utils import auth_user, Permissions
 from src.db.models.grole import GRole
-from db.models.user import User
 from utils.utils import get_error_response, get_error_schema
 
 router = APIRouter()
@@ -20,7 +21,7 @@ db_groups = GroupDatabaseManager()
     }
 )
 async def create(grole: GRole,
-                 current_user: User = Depends(auth_user(
+                 _current_user: User = Depends(auth_user(
                      Permissions.C_CREATE_GROLE
                  ))):
     """Создание grole для группы"""

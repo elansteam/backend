@@ -1,3 +1,4 @@
+"""Role definition"""
 from pydantic import BaseModel, field_validator, ValidationError
 
 
@@ -15,6 +16,12 @@ class Role(BaseModel):
 
     @field_validator("permissions")
     def my_custom_validator(cls, value):
+        """
+        Validate permission code
+        if value < 0 -> exception
+        Args:
+            value: permission code
+        """
         if value < 0:
             raise ValidationError("Permissions must be positive")
         return value

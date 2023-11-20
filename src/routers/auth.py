@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException, Response, status, Depends
+"""All auth methods and some useful stuff"""
+from fastapi import APIRouter, Depends
 
 from db.managers.user_database_manager import UserDatabaseManager
 from db.models.user import User, UserSignup, UserSignin
 from src.auth.utils import get_hashed_password, verify_password, create_token
-from src.auth.TokenSchema import TokenSchema
+from src.auth.token_schema import TokenSchema
 from src.auth.utils import auth_user, Permissions
 from utils.utils import get_error_response, get_error_schema
 
@@ -22,7 +23,7 @@ router = APIRouter()
     }
 )
 async def signup(user_auth: UserSignup,
-                 current_user: User = Depends(auth_user(
+                 _current_user: User = Depends(auth_user(
                      Permissions.C_SIGNUP
                  ))):
     """Создает нового пользователя в базе данных"""

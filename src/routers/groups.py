@@ -1,14 +1,13 @@
-from fastapi import APIRouter, Depends, Path
-from db.oid import OID
+"""Groups endpoints"""
+from fastapi import APIRouter, Depends
 from db.managers.grole_database_manager import GRoleDatabaseManager
 from db.managers.group_database_manager import GroupDatabaseManager, Group
 from db.managers.user_database_manager import UserDatabaseManager
-from src.auth.utils import auth_user, Permissions
-from src.auth.utils import get_current_user, AUTH_RESPONSE_MODEL, AUTH_FAILED
-from src.db.models.grole import GRole
 from db.models.user import User
+from src.auth.utils import auth_user, Permissions
+from src.auth.utils import AUTH_FAILED
+from src.db.models.grole import GRole
 from utils.utils import get_error_response, get_error_schema
-from config import Config
 
 router = APIRouter()
 
@@ -26,7 +25,7 @@ db_users = UserDatabaseManager()
     }
 )
 async def create(group: Group,
-                 current_user: User = Depends(auth_user(
+                 _current_user: User = Depends(auth_user(
                      Permissions.C_CREATE_GROUP
                  ))):
     """Создание group"""

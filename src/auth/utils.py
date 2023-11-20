@@ -31,13 +31,12 @@ class Permissions(Enum):
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
-    """Бананы
-
+    """Check what role contains permissions
     Args:
-        role_staff (int): _description_
+        role_staff: representation permissions through converted to bits int32 number
 
     Returns:
-        bool: _description_
+        True - if role has permission, else False
     """
     if role_staff % 2 == 1:
         return True
@@ -66,19 +65,43 @@ AUTH_FAILED = JSONResponse(
 
 
 def get_hashed_password(password: str) -> str:
-    """Хэширует пароль"""
+    """
+    Hashing password
+    Args:
+        password: password to hash
+
+    Returns:
+        hashed password
+    """
     return password_context.hash(password)
 
 
-def verify_password(password: str, hashed_pass: str) -> bool:
-    """Проверяет пароль и его хеш на равенство"""
-    return password_context.verify(password, hashed_pass)
+def verify_password(password: str, hashed_password: str) -> bool:
+    """
+    Checks what hashed password is password
+    Args:
+        password: password
+        hashed_password: password hash
+
+    Returns:
+        True if hash(password) equal to hashed_password, else False
+    """
+    return password_context.verify(password, hashed_password)
 
 
 def create_token(
         subject: str, is_access=True, expires_delta: int = None
 ) -> str:
-    """Генерирует jwt токен по данным и времени"""
+    """
+    Generating JWT by data and expires time
+    Args:
+        subject: some useful data to code, like username
+        is_access:
+        expires_delta:
+
+    Returns:
+
+    """
     if expires_delta is not None:
         expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
     elif is_access:
@@ -97,7 +120,6 @@ def create_token(
 
 async def get_current_user(token: str) -> User:
     """Get current user by access token or raise HTTPException
-
     Args:
         token (str): access token
 
@@ -136,9 +158,19 @@ async def get_current_user(token: str) -> User:
 
 
 def auth_user(*permissions: Permissions):
-    async def wrapper(user: User = Depends(get_current_user)) -> User:
-        """Авторизовывает пользователя по правам permissions"""
+    """
+    Decorator
+    Use:
+    >>> def endpoint(user: User = Depends(auth_user(Permissions.C_ADD_USER_TO_GROUP)))
+    Auth user by permissions. If user roles does not contain required permissions ->
+    raise HTTP error 403 - forbidden
+    Args:
+        *permissions: Permissions, which must contain user roles
+    Returns:
+        function, which auth user
+    """
 
+    async def wrapper(user: User = Depends(get_current_user)) -> User:
         result_mask = 0
 
         for role_name in user.roles:

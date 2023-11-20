@@ -1,4 +1,4 @@
-"""Database manager class"""
+"""AbstractDatabaseManager definition"""
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from motor.core import AgnosticCollection
@@ -7,7 +7,12 @@ from utils.singleton import Singleton
 
 
 class AbstractDatabaseManager(Singleton):
-    """Abstract database manager"""
+    """Base class for database managers
+    Usage:
+    Make new database manager class and inherit of this class
+    redefine collection_name, it should be representation of collection
+    in database
+    """
     _db: AsyncIOMotorDatabase
     _client: AsyncIOMotorClient
 
@@ -15,15 +20,19 @@ class AbstractDatabaseManager(Singleton):
 
     @property
     def db(self) -> AgnosticCollection:
-        """Property, which returns special collection for child class"""
+        """
+
+        Returns: special collection by self.collection_name in MongoDB
+
+        """
         return self._db[self.collection_name]
 
     @classmethod
-    def connect_to_database(cls, url: str):
+    def connect_to_database(cls, url: str) -> None:
         """Method to connect to the database
 
         Args:
-            url (str): MongoDB url
+            url: MongoDB url
         """
         logging.info("Connecting to MongoDB.")
         cls._client = AsyncIOMotorClient(
@@ -34,8 +43,10 @@ class AbstractDatabaseManager(Singleton):
         logging.info("Connected to MongoDB.")
 
     @classmethod
-    def close_database_connection(cls):
-        """Close connection to the database"""
+    def close_database_connection(cls) -> None:
+        """
+        Close connection to the database
+        """
         logging.info("Closing connection with MongoDB.")
         cls._client.close()
         logging.info("Closed connection with MongoDB.")
