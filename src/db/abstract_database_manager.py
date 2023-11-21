@@ -13,8 +13,8 @@ class AbstractDatabaseManager(Singleton):
     redefine collection_name, it should be representation of collection
     in database
     """
-    _db: AsyncIOMotorDatabase
-    _client: AsyncIOMotorClient
+    _db: AsyncIOMotorDatabase = None
+    _client: AsyncIOMotorClient = None
 
     collection_name = None
 
