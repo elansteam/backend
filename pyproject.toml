@@ -13,6 +13,8 @@ passlib = "^1.7.4"
 python-dotenv = "^1.0.0"
 uvicorn = "^0.24.0.post1"
 python-jose = "^3.3.0"
+pylint = "^3.0.2"
+pytest = "^7.4.3"
 
 
 [build-system]
