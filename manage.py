@@ -15,21 +15,23 @@ def parse_arguments():
 
 def main():
     project_root = Path(__file__).resolve().parent
-    sys.path.append(str(project_root)+"/src")
+    sys.path.append(str(project_root) + "/src")
     args = parse_arguments()
-
-    # Load .env file if provided
-    if args.config:
-        load_dotenv(dotenv_path=args.config)
-    else:
-        load_dotenv(dotenv_path="example.env")
 
     # Check the command and execute the corresponding logic
     match args.command:
         case "runserver":
             # Run the FastAPI app using uvicorn
+            if args.config:
+                load_dotenv(dotenv_path=args.config)
+            else:
+                load_dotenv(dotenv_path="example.env")
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
         case "test":
+            if args.config:
+                load_dotenv(dotenv_path=args.config)
+            else:
+                load_dotenv(dotenv_path="testing/testing.env")
             os.system("pytest ./testing")
         case "lint":
             os.system("pylint --recursive=y ./src/ ./testing/")

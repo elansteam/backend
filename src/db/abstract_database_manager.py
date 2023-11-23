@@ -27,6 +27,11 @@ class AbstractDatabaseManager(Singleton):
         """
         return self._db[self.collection_name]
 
+    @property
+    def client(self) -> AsyncIOMotorClient:
+        """"""
+        return self.client
+
     @classmethod
     def connect_to_database(cls, url: str) -> None:
         """Method to connect to the database
@@ -39,7 +44,7 @@ class AbstractDatabaseManager(Singleton):
             url,
             maxPoolSize=10,
             minPoolSize=10)
-        cls._db = cls._client[Config().db_name]
+        cls._db = cls._client[Config.db_name]
         logging.info("Connected to MongoDB.")
 
     @classmethod

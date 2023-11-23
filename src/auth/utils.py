@@ -47,6 +47,21 @@ def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
     return True
 
 
+def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
+    """
+    Generate role code by permissions
+    Args:
+        *permissions: permssions, which should be contained in role code
+    Returns:
+        role code
+    """
+    role_code = 0
+    for perm in permissions:
+        role_code += 1 << perm.value
+
+    return role_code
+
+
 db_user = UserDatabaseManager()
 db_role = RoleDatabaseManager()
 
