@@ -1,24 +1,24 @@
-"""Roles database manager"""
+"""Roles database manager definition"""
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.role import Role
 from config import Config
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):
-    """Role database manager"""
+    """Role database methods"""
 
     collection_name = Config.Collections.roles
 
-    async def get_by_name(self, name: str) -> Role | None:
+    async def get_by_name(self, role_name: str) -> Role | None:
         """Get role by name
 
         Args:
-            name (str): the role name
+            role_name (str): the role name
 
         Returns:
-            Role | None: role object or None
+            role object or None if not found
         """
-        role = await self.db.find_one({"name": name})
+        role = await self.db.find_one({"name": role_name})
 
         if role is None:
             return None
@@ -29,6 +29,6 @@ class RoleDatabaseManager(AbstractDatabaseManager):
         """Insert new role to the database
 
         Args:
-            role (Role): the role to insert
+            role: the role to insert
         """
-        await self.db.insert_one({**role.model_dump()})
+        await self.db.insert_one(role.model_dump())

@@ -1,4 +1,4 @@
-"""OID class definition"""
+"""OID class definition (deprecated)"""
 from bson import ObjectId
 
 

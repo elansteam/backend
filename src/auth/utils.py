@@ -19,7 +19,7 @@ password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class Permissions(Enum):
     """Permission codes"""
     ADMIN = 0
-    C_SIGNUP = 1
+    C_CREATE_USER = 1
     C_SET_ROLE = 2
     C_CREATE_ROLE = 3
     C_ADD_USER_TO_GROUP = 4

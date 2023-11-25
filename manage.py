@@ -7,6 +7,7 @@ import uvicorn
 
 
 def parse_arguments():
+    """Parsing args from command line"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', help='Path to the .env file')
     parser.add_argument('command', help='Command to execute (e.g., runserver, startapp)')
@@ -27,13 +28,13 @@ def main():
             else:
                 load_dotenv(dotenv_path="example.env")
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
-        case "test":
+        case "test": # run testing
             if args.config:
                 load_dotenv(dotenv_path=args.config)
             else:
                 load_dotenv(dotenv_path="testing/testing.env")
             os.system("pytest ./testing")
-        case "lint":
+        case "lint": # run linting
             os.system("pylint --recursive=y ./src/ ./testing/")
         case _:
             print(f"Unknown command: {args.command}")

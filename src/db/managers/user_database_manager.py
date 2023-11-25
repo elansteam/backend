@@ -5,16 +5,27 @@ from config import Config
 
 
 class UserDatabaseManager(AbstractDatabaseManager):
-    """Методы базы данных с пользователями"""
+    """Database methods to work with users"""
 
     collection_name = Config.Collections.users
 
     async def create(self, user: User) -> None:
-        """Создание пользователя в базе данных"""
-        await self.db.insert_one({**user.model_dump()})
+        """
+        Creating user in database
+        Args:
+            user: user object to create
+        """
+        await self.db.insert_one(**user.model_dump())
 
     async def get_by_name(self, user_name: str) -> User | None:
-        """Получение пользователя по user_name"""
+        """
+        Getting user by username
+        Args:
+            user_name: username
+
+        Returns:
+            User object or None, if not found
+        """
 
         user = await self.db.find_one({"name": user_name})
         if user is None:
@@ -22,7 +33,12 @@ class UserDatabaseManager(AbstractDatabaseManager):
         return User(**user)
 
     async def add_role(self, user_name: str, role_name: str) -> None:
-        """Добавление пользователю роли"""
+        """
+        Adding role to user
+        Args:
+            user_name: user where add
+            role_name: role which add
+        """
 
         await self.db.update_one({"name": user_name},
                                  {"$push": {"roles": role_name}})

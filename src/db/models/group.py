@@ -3,19 +3,19 @@ from pydantic import BaseModel
 
 
 class Group(BaseModel):
-    """Представление группы в базе данных"""
+    """Group representation in database"""
 
     name: str
-    """Уникальное имя группы"""
+    """Group name"""
 
     description: str
-    """Описание группы"""
+    """Group description"""
 
     members: dict[str, list[str]] = {}
-    """Словарь пользователь : список ролей"""
+    """Group members"""
 
     owner: str
-    """user_name пользователя, создавшего группу"""
+    """Group owner name"""
 
-    groles: list[str] = []
-    """Список ролей созданных в этой группе"""
+    group_roles: list[str] = []
+    """List of names group roles in group"""

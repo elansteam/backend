@@ -1,23 +1,23 @@
-"""Grole definition"""
+"""Group role definition"""
 from pydantic import BaseModel, field_validator, ValidationError
 
 
-class GRole(BaseModel):
-    """Представление роли конкретно в группе"""
+class GroupRole(BaseModel):
+    """GroupRole representation in database"""
 
     name: str
-    """Имя роли"""
+    """Role name"""
 
     description: str = ""
-    """Описание роли"""
+    """Role description"""
 
-    gpermissions: int
-    """Список разрешений"""
+    role_code: int
+    """Coded role permissions in byte representation"""
 
     group: str
-    """Группа, к которой привязана grole"""
+    """Parent group name"""
 
-    @field_validator("gpermissions")
+    @field_validator("role_code")
     def validate_gpermission(cls, value) -> None:
         """
         Validate gpermission code

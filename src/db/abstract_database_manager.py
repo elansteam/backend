@@ -2,7 +2,7 @@
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from motor.core import AgnosticCollection
-from src.config import Config
+from config import Config
 from utils.singleton import Singleton
 
 
@@ -17,6 +17,7 @@ class AbstractDatabaseManager(Singleton):
     _client: AsyncIOMotorClient = None
 
     collection_name = None
+    """Child class collection name"""
 
     @property
     def db(self) -> AgnosticCollection:
@@ -29,7 +30,11 @@ class AbstractDatabaseManager(Singleton):
 
     @property
     def client(self) -> AsyncIOMotorClient:
-        """"""
+        """
+
+        Returns: special database client
+
+        """
         return self.client
 
     @classmethod

@@ -3,25 +3,25 @@ from pydantic import BaseModel, field_validator, ValidationError
 
 
 class Role(BaseModel):
-    """Представление роли пользователя, роль - совокупность permissions"""
+    """Role representation in database"""
 
     name: str
-    """Уникальное имя роли"""
+    """Role name"""
 
     description: str
-    """Описание роли"""
+    """Role description"""
 
-    permissions: int
-    """32 битное число, двоичная запись которого кодирует permissions"""
+    role_code: int
+    """Role representation in integer"""
 
-    @field_validator("permissions")
+    @field_validator("role_code")
     def my_custom_validator(cls, value):
         """
-        Validate permission code
+        Validate role code
         if value < 0 -> exception
         Args:
             value: permission code
         """
         if value < 0:
-            raise ValidationError("Permissions must be positive")
+            raise ValidationError("Role code must be positive")
         return value

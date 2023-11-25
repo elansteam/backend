@@ -3,13 +3,11 @@ import os
 
 
 class Config:
-    """Синглтон класс конфига всего сервиса"""
+    """Entire project config"""
 
-    db_path: str = os.environ.get("DB_PATH")
-    """Путь к базе данных"""
+    db_connect_url: str = os.environ.get("DB_CONNECT_URL")
 
     db_name: str = os.environ.get("DB_NAME")
-    """Имя базы данных"""
 
     class Collections:
         """Collection db names"""
@@ -28,4 +26,3 @@ class Config:
         JWT_REFRESH_SECRET_KEY = os.environ.get("JWT_REFRESH_SECRET_KEY")
 
     app_title = os.environ.get("APP_TITLE")
-    """Заголовок приложения"""

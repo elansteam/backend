@@ -1,35 +1,26 @@
-"""User definition"""
+"""User definition and some useful stuff about user"""
 from pydantic import BaseModel, Field
-from bson import ObjectId
 
 
 class User(BaseModel):
     """Модель пользователя в базе данных"""
 
-    _id: ObjectId
-    """Уникальный идентификатор пользователя"""
-
     name: str
-    """Идентификатор пользователя"""
 
     password_hash: str
-    """SHA-256 хеш пароля"""
 
     first_name: str
-    """Имя"""
 
     last_name: str
-    """Фамилия"""
 
     mid_name: str | None
-    """Отчество"""
 
     roles: list[str] = Field([])
-    """Список ролей пользователя по их именам"""
+    """List of global roles, which user have"""
 
 
 class UserSignup(BaseModel):
-    """Представление пользователя для его создания"""
+    """Data for Signup user"""
     name: str
     password: str
     first_name: str
@@ -38,6 +29,6 @@ class UserSignup(BaseModel):
 
 
 class UserSignin(BaseModel):
-    """Представление пользователя для авторизации"""
+    """Data for user signin"""
     name: str
     password: str
