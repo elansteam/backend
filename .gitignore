@@ -173,3 +173,4 @@ fastapi-async-mongodb
 
 .vscode
 ./main_config.env
+poetry.lock
