@@ -15,12 +15,13 @@ class Role(BaseModel):
     """Role representation in integer"""
 
     @field_validator("role_code")
-    def my_custom_validator(cls, value):
+    def validate_role_code(cls, value):
         """
         Validate role code
-        if value < 0 -> exception
         Args:
             value: permission code
+        Raises:
+            ValidationError: if role code not positive
         """
         if value < 0:
             raise ValidationError("Role code must be positive")
