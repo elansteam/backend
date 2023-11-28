@@ -15,7 +15,6 @@ async def lifespan(_app: FastAPI):
     """Application lifespan (see https://fastapi.tiangolo.com/advanced/events/)
     In the application lifespan we need to connect and close connection to
     the database.
-    
     Args:
         _app (FastAPI): application object. It is not using right now
     """
