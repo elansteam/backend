@@ -2,7 +2,7 @@
 name = "elansbackend"
 version = "0.1.0"
 description = ""
-authors = ["Spotika <andrey.a.cherkashin@gmail.com>"]
+authors = ["Mark Fomin <mark@difhel.dev>", "Andrew Cherkashin <andrey.a.cherkashin@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
