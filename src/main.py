@@ -8,6 +8,7 @@ import routers.users_router
 import routers.auth_router
 import routers.roles_router
 import routers.groups_router
+import routers.group_roles_router
 
 
 @asynccontextmanager
@@ -30,5 +31,5 @@ app = FastAPI(title=Config.app_title, debug=True, lifespan=lifespan)
 app.include_router(routers.users_router.router, prefix="/api/users")
 app.include_router(routers.auth_router.router, prefix="/auth")
 app.include_router(routers.roles_router.router, prefix="/api/roles")
-app.include_router(routers.groles_router.router, prefix="/api/groles")
+app.include_router(routers.group_roles_router.router, prefix="/api/groles")
 app.include_router(routers.groups_router.router, prefix="/api/groups")

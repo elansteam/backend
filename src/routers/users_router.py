@@ -60,12 +60,12 @@ async def add_role_to_user(user_name: str, role_name: str,
     cur_user = await db.user.get_by_name(user_name)
 
     if cur_user is None:
-        return get_error_response(f"User with user name {user_name} isn`t exist")
+        return get_error_response(f"User with user name {user_name} doesn't exist")
 
     role = await db.role.get_by_name(role_name)
 
     if role is None:
-        return get_error_response(f"Role with name <{role_name}> isn`t exist")
+        return get_error_response(f"Role with name <{role_name}> doesn't exist")
 
     if role_name in cur_user.roles:
         return get_error_response(

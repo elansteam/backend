@@ -2,6 +2,7 @@ import os
 import argparse
 from dotenv import load_dotenv
 import sys
+import colorlog
 from pathlib import Path
 import uvicorn
 
@@ -19,6 +20,12 @@ def main():
     sys.path.append(str(project_root) + "/src")
     args = parse_arguments()
 
+    handler = colorlog.StreamHandler()
+
+    logger = colorlog.getLogger(__name__)
+    logger.addHandler(handler)
+    handler.setFormatter(colorlog.ColoredFormatter('%(red)s%(levelname)s:%(name)s:%(message)s'))
+
     # Check the command and execute the corresponding logic
     match args.command:
         case "runserver":
@@ -27,6 +34,10 @@ def main():
                 load_dotenv(dotenv_path=args.config)
             else:
                 load_dotenv(dotenv_path="example.env")
+                logger.warning(
+                    """You using the example config 'example.env' instead use your custom config
+                    using --config /path/to/config.env"""
+                )
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
         case "test": # run testing
             if args.config:
