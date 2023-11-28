@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
-    """Модель пользователя в базе данных"""
+    """User representation in database"""
 
     name: str
 

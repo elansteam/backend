@@ -69,7 +69,7 @@ async def add_role_to_user(user_name: str, role_name: str,
 
     if role_name in cur_user.roles:
         return get_error_response(
-            f"Role with name <{role_name}> are exist now in User <{user_name}>"
+            f"Role with name <{role_name}> doesn't exist now in User <{user_name}>"
         )
 
     await db.role.add_role(user_name, role_name)

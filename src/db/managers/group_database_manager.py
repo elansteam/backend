@@ -44,7 +44,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         await self.db.update_one({"name": group_name},
                                  {"$set": {f"members.{user_name}": []}})
 
-    async def add_grole(self, group_name: str, group_role_name: str) -> None:
+    async def add_group_role(self, group_name: str, group_role_name: str) -> None:
         """
         Adding group_role to group
         Args:
@@ -67,7 +67,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
 
         return list(members["members"].keys())
 
-    async def get_member_groles(self, group_name: str, user_name: str) -> list[str]:
+    async def get_member_group_roles(self, group_name: str, user_name: str) -> list[str]:
         """
         Getting list of group roles of concrete group member
         Args:

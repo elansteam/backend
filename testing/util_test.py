@@ -9,14 +9,13 @@ from auth.utils import Permissions
 
 
 @pytest.mark.parametrize("data", [
-    (Permissions.ADMIN, Permissions.C_CREATE_ROLE),
+    (Permissions.C_CREATE_ROLE),
     (),
     (Permissions.C_CREATE_USER, Permissions.C_ADD_USER_TO_GROUP),
     (Permissions.C_CREATE_GROUP,
      Permissions.C_SET_ROLE,
-     Permissions.C_ADD_GROLE,
+     Permissions.C_ADD_GROUP_ROLE,
      Permissions.C_ADD_USER_TO_GROUP,
-     Permissions.ADMIN,
      Permissions.C_ADD_ROLE_TO_USER,
      Permissions.C_CREATE_USER)
 ])

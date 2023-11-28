@@ -24,13 +24,14 @@ async def create(group: Group,
     """Group creating"""
 
     if await db.group.get_by_name(group.name) is not None:
-        return get_error_response(f"Group with name <{group.name}> are exist yet",
+        return get_error_response(f"Group with name <{group.name}> doesn't exist",
                                   400)
 
     if await db.user.get_by_name(group.owner) is None:
-        return get_error_response(f"Owner with name <{group.owner}> isn`t exist",
+        return get_error_response(f"Owner with name <{group.owner}> doesn't exist",
                                   400)
 
+    # FIXME
     # TODO вынести это в отдельное поле и сделать расширяемым
     await db.group_role.create(GroupRole.model_validate(
         {
@@ -50,11 +51,11 @@ async def create(group: Group,
         }
     ))
 
-    group.groles = []
+    group.group_roles = []
     group.members = {}
 
-    group.groles.append("owner")
-    group.groles.append("admin")
+    group.group_roles.append("owner")
+    group.group_roles.append("admin")
 
     group.members[group.owner] = ["owner"]
 

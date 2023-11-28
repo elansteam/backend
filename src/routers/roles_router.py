@@ -23,7 +23,7 @@ async def create(role: Role,
     """Role creation"""
 
     if await db.role.get_by_name(role.name) is not None:
-        return get_error_response(f"Role with name <{role.name}> are exist yet")
+        return get_error_response(f"Role with name <{role.name}> doesn't exist")
 
     await db.role.create(role)
     return role

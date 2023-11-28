@@ -13,7 +13,7 @@ class Config:
         """Collection db names"""
         users = os.environ.get("COLLECTION_USERS")
         roles = os.environ.get("COLLECTION_ROLES")
-        groles = os.environ.get("COLLECTION_GROLES")
+        group_roles = os.environ.get("COLLECTION_GROUP_ROLES")
         groups = os.environ.get("COLLECTION_GROUPS")
 
     class Auth:

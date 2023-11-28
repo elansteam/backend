@@ -24,8 +24,8 @@ class Permissions(Enum):
     C_CREATE_ROLE = 3
     C_ADD_USER_TO_GROUP = 4
     C_CREATE_GROUP = 5
-    C_CREATE_GROLE = 6
-    C_ADD_GROLE = 7
+    C_CREATE_GROUP_ROLE = 6
+    C_ADD_GROUP_ROLE = 7
     C_ADD_ROLE_TO_USER = 8
     # TODO: add more perms
 
@@ -175,12 +175,13 @@ def auth_user(*permissions: Permissions):
     Decorator
     Use:
     >>> def endpoint(user: User = Depends(auth_user(Permissions.C_ADD_USER_TO_GROUP)))
-    Auth user by permissions. If user roles does not contain required permissions ->
-    raise HTTP error 403 - forbidden
+    Auth user by permissions.
     Args:
         *permissions: Permissions, which must contain user roles
     Returns:
         function, which auth user
+    Raises:
+        HTTPException: Raise 403 error user hasn`t permissions
     """
 
     async def wrapper(user: User = Depends(get_current_user)) -> User:

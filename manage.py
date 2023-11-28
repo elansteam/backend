@@ -35,9 +35,10 @@ def main():
             else:
                 load_dotenv(dotenv_path="example.env")
                 logger.warning(
-                    """You using the example config 'example.env' instead use your custom config
+                    """You are using the example config 'example.env' instead use your custom config
                     using --config /path/to/config.env"""
                 )
+                print(os.environ.get("A"))
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
         case "test": # run testing
             if args.config:
