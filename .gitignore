@@ -172,5 +172,5 @@ src_cache
 fastapi-async-mongodb
 
 .vscode
-./main_config.env
+main_config.env
 poetry.lock
