@@ -18,12 +18,13 @@ class GroupRole(BaseModel):
     """Parent group name"""
 
     @field_validator("role_code")
-    def validate_gpermission(cls, value) -> None:
+    def validate_group_role_code(cls, value) -> None:
         """
-        Validate gpermission code
-        if value < 0 -> exception
+        Validate role code
         Args:
             value: permission code
+        Raises:
+            ValidationError: if role code not positive
         """
         if value < 0:
-            raise ValidationError("GPermissions must be positive")
+            raise ValidationError("Group role code must be positive")
