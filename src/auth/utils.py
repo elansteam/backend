@@ -109,11 +109,10 @@ def create_token(
     Generating JWT by data and expires time
     Args:
         subject: some useful data to code, like username
-        is_access:
-        expires_delta:
-
+        is_access: if False generate refresh token with longer expiration time
+        expires_delta: how long token available
     Returns:
-
+        JWT in string
     """
     if expires_delta is not None:
         expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
