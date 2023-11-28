@@ -6,15 +6,10 @@ class User(BaseModel):
     """User representation in database"""
 
     name: str
-
     password_hash: str
-
     first_name: str
-
     last_name: str
-
     mid_name: str | None
-
     roles: list[str] = Field([])
     """List of global roles, which user have"""
 
