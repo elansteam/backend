@@ -18,7 +18,7 @@ password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class Permissions(Enum):
     """Permission codes"""
-    ADMIN = 0
+    # ADMIN = 0 fixme: not used
     C_CREATE_USER = 1
     C_SET_ROLE = 2
     C_CREATE_ROLE = 3
@@ -38,8 +38,6 @@ def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
     Returns:
         True - if role has permission, else False
     """
-    if role_staff % 2 == 1:
-        return True
     for perm in permissions:
         if (role_staff >> perm.value) % 2 == 0:
             return False
