@@ -172,3 +172,4 @@ src_cache
 fastapi-async-mongodb
 
 .vscode
+poetry.lock
