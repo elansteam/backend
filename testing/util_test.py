@@ -1,7 +1,6 @@
 """
 Testing micro util functions
 """
-# FIXME import system not working
 import pytest
 from src.auth.utils import (has_role_permissions,
                             gen_code_staff_by_permissions)

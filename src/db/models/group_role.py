@@ -1,9 +1,12 @@
 """Group role definition"""
-from pydantic import BaseModel, field_validator, ValidationError
+from pydantic import BaseModel, field_validator, ValidationError, Field
+from bson.objectid import ObjectId
 
 
 class GroupRole(BaseModel):
     """GroupRole representation in database"""
+
+    id: ObjectId = Field(..., alias='_id')
 
     name: str
     """Role name"""
