@@ -9,7 +9,7 @@ from auth.utils import Permissions
 
 
 @pytest.mark.parametrize("data", [
-    (Permissions.C_CREATE_ROLE),
+    (Permissions.C_CREATE_ROLE,),
     (),
     (Permissions.C_CREATE_USER, Permissions.C_ADD_USER_TO_GROUP),
     (Permissions.C_CREATE_GROUP,
@@ -19,7 +19,7 @@ from auth.utils import Permissions
      Permissions.C_ADD_ROLE_TO_USER,
      Permissions.C_CREATE_USER)
 ])
-def test_has_role_permission(data: tuple):
+def test_has_role_permission(data: tuple[Permissions]):
     """
     Parametrize test, testing `has_role_permission` function
     Args:
@@ -31,7 +31,8 @@ def test_has_role_permission(data: tuple):
     assert has_role_permissions(role_code, *data)
 
     if len(data) != 0:
-        data1 = list(data).pop(-1)
+        data1 = list(data)
+        data1.pop(-1)
 
         role_code2 = gen_code_staff_by_permissions(*data1)
 

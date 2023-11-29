@@ -49,7 +49,7 @@ def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
     """
     Generate role code by permissions
     Args:
-        *permissions: permssions, which should be contained in role code
+        *permissions: permissions, which should be contained in role code
     Returns:
         role code
     """
