@@ -1,6 +1,7 @@
 """GroupDatabaseManager definition"""
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
+from bson.objectid import ObjectId
 from config import Config
 
 
@@ -17,6 +18,19 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         """
 
         await self.db.insert_one(group.model_dump())
+
+    async def get_by_id(self, _id: ObjectId) -> Group | None:
+        """
+        Getting group by id
+        Args:
+            _id: mongo object id
+        Returns:
+            Group object or None if not found
+        """
+        group = await self.db.find_one({"_id": _id})
+        if group is None:
+            return None
+        return Group(**group)
 
     async def get_by_name(self, name: str) -> Group | None:
         """

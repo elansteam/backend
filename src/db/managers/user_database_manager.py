@@ -2,6 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.user import User
 from config import Config
+from bson.objectid import ObjectId
 
 
 class UserDatabaseManager(AbstractDatabaseManager):
@@ -28,6 +29,20 @@ class UserDatabaseManager(AbstractDatabaseManager):
         """
 
         user = await self.db.find_one({"name": user_name})
+        if user is None:
+            return None
+        return User(**user)
+
+    async def get_by_id(self, _id: ObjectId) -> User | None:
+        """
+        Getting user by id
+        Args:
+            _id: mongodb object id
+        Returns:
+            User object or None if not found
+        """
+
+        user = await self.db.find_one({"_id": _id})
         if user is None:
             return None
         return User(**user)

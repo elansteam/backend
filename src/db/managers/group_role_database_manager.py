@@ -2,6 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group_role import GroupRole
 from config import Config
+from bson.objectid import ObjectId
 
 
 class GroupRoleDatabaseManager(AbstractDatabaseManager):
@@ -21,6 +22,22 @@ class GroupRoleDatabaseManager(AbstractDatabaseManager):
         """
         group_role = await self.db.find_one({"name": group_role_name, "group": group_name})
 
+        if group_role is None:
+            return None
+
+        return GroupRole(**group_role)
+
+    async def get_by_id(self, _id: ObjectId) -> GroupRole | None:
+        """
+        Getting group role by id
+        Args:
+            _id: mongo object id
+
+        Returns:
+            group role object or None if not found
+        """
+
+        group_role = await self.db.find_one({"_id": _id})
         if group_role is None:
             return None
 
