@@ -28,6 +28,6 @@ async def signin(user_data: UserSignin):
         return get_error_response("Invalid login or password")
 
     return {
-        "access_token": create_token(user.name),
-        "refresh_token": create_token(user.name, False),
+        "access_token": create_token(str(user.id)),
+        "refresh_token": create_token(str(user.id), False),
     }
