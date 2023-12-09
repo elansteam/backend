@@ -13,7 +13,7 @@ router = APIRouter()
     "/create",
     response_model=GroupRole,
     responses={
-        400: get_error_schema("Failed to create group rolesn"),
+        400: get_error_schema("Failed to create group roles"),
     }
 )
 async def create(group_role: GroupRole,

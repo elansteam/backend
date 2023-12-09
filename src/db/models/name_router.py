@@ -1,10 +1,10 @@
-"""Name router representation"""
+"""Name router representation in the database"""
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
 
 class NameRouter(BaseModel):
-    """Name router"""
+    """Name router representation in the database"""
 
     id: ObjectId = Field(..., alias='_id')
 

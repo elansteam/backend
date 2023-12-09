@@ -77,7 +77,7 @@ async def add_user(user_name: str, group_name: str,
                    ))):
     """Adding user to group"""
 
-    raise Exception("Method not ready")
+    raise NotImplementedError("Method not ready")
     # FIXME
     # group = await db_groups.get_by_name(group_name)
     #
