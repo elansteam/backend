@@ -6,12 +6,11 @@ from bson.objectid import ObjectId
 class User(BaseModel):
     """User representation in database"""
     id: ObjectId = Field(..., alias='_id')
-    name: str
     password_hash: str
     first_name: str
     last_name: str
     mid_name: str | None
-    roles: list[str] = Field([])
+    roles: list[ObjectId] = Field([])
     """List of global roles, which user have"""
 
 

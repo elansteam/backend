@@ -8,9 +8,6 @@ class Role(BaseModel):
 
     id: ObjectId = Field(..., alias='_id')
 
-    name: str
-    """Role name"""
-
     description: str
     """Role description"""
 

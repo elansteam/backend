@@ -8,17 +8,14 @@ class GroupRole(BaseModel):
 
     id: ObjectId = Field(..., alias='_id')
 
-    name: str
-    """Role name"""
-
     description: str = ""
     """Role description"""
 
     role_code: int
     """Coded role permissions in byte representation"""
 
-    group: str
-    """Parent group name"""
+    group: ObjectId
+    """Parent group id"""
 
     @field_validator("role_code")
     def validate_group_role_code(cls, value) -> None:

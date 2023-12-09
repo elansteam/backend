@@ -7,17 +7,14 @@ class Group(BaseModel):
     """Group representation in database"""
     id: ObjectId = Field(..., alias='_id')
 
-    name: str
-    """Group name"""
-
     description: str
     """Group description"""
 
-    members: dict[str, list[str]] = {}
-    """Group members"""
+    members: dict[ObjectId, list[ObjectId]] = {}
+    """Group members. Dict of user : list[ user group permissions ] """
 
-    owner: str
+    owner: ObjectId
     """Group owner name"""
 
-    group_roles: list[str] = []
+    group_roles: list[ObjectId] = []
     """List of names group roles in group"""
