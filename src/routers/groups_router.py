@@ -46,7 +46,7 @@ async def create(group: Group,
         {
             "name": "admin",
             "group": group.name,
-            "gpermissions": ["admin"],
+            "group_permissions": ["admin"],
             "description": "Like owner but lower"  # FIXME
         }
     ))
