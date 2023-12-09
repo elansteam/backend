@@ -1,10 +1,10 @@
-"""Domain router representation in database"""
+"""Domain node representation in database"""
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
 
-class DomainRouter(BaseModel):
-    """Domain router representation in database"""
+class DomainNode(BaseModel):
+    """Domain node representation in database"""
 
     id: ObjectId = Field(..., alias='_id')
 
