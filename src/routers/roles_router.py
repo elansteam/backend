@@ -18,7 +18,7 @@ router = APIRouter()
 )
 async def create(role: Role,
                  _current_user: User = Depends(auth_user(
-                     Permissions.C_CREATE_ROLE
+                     Permissions.CAN_CREATE_ROLE
                  ))):
     """Role creation"""
 

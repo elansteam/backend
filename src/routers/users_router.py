@@ -20,7 +20,7 @@ router = APIRouter()
 )
 async def create(user_auth: UserSignup,
                  _current_user: User = Depends(auth_user(
-                     Permissions.C_CREATE_USER
+                     Permissions.CAN_CREATE_USER
                  ))):
     """Creating new user in database"""
     user_by_name = await db.user.get_by_name(user_auth.name)
@@ -53,7 +53,7 @@ async def create(user_auth: UserSignup,
 )
 async def add_role_to_user(user_name: str, role_name: str,
                            _current_user: User = Depends(auth_user(
-                               Permissions.C_ADD_ROLE_TO_USER
+                               Permissions.CAN_ADD_ROLE_TO_USER
                            ))):
     """Adding role to user"""
 

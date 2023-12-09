@@ -19,7 +19,7 @@ router = APIRouter()
 )
 async def create(group: Group,
                  _current_user: User = Depends(auth_user(
-                     Permissions.C_CREATE_GROUP
+                     Permissions.CAN_CREATE_GROUP
                  ))):
     """Group creating"""
 
@@ -73,7 +73,7 @@ async def create(group: Group,
 )
 async def add_user(user_name: str, group_name: str,
                    _current_user: User = Depends(auth_user(
-                       Permissions.C_ADD_USER_TO_GROUP
+                       Permissions.CAN_ADD_USER_TO_GROUP
                    ))):
     """Adding user to group"""
 

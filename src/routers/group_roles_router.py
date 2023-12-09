@@ -18,7 +18,7 @@ router = APIRouter()
 )
 async def create(group_role: GroupRole,
                  _current_user: User = Depends(auth_user(
-                     Permissions.C_CREATE_GROUP_ROLE
+                     Permissions.CAN_CREATE_GROUP_ROLE
                  ))):
     """Greate group role for group"""
     if await db.group_role.get_by_name(group_role.name, group_role.group) is not None:

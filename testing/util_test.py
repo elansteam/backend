@@ -8,15 +8,15 @@ from auth.utils import Permissions
 
 
 @pytest.mark.parametrize("data", [
-    (Permissions.C_CREATE_ROLE,),
+    (Permissions.CAN_CREATE_ROLE,),
     (),
-    (Permissions.C_CREATE_USER, Permissions.C_ADD_USER_TO_GROUP),
-    (Permissions.C_CREATE_GROUP,
-     Permissions.C_SET_ROLE,
-     Permissions.C_ADD_GROUP_ROLE,
-     Permissions.C_ADD_USER_TO_GROUP,
-     Permissions.C_ADD_ROLE_TO_USER,
-     Permissions.C_CREATE_USER)
+    (Permissions.CAN_CREATE_USER, Permissions.CAN_ADD_USER_TO_GROUP),
+    (Permissions.CAN_CREATE_GROUP,
+     Permissions.CAN_SET_ROLE,
+     Permissions.CAN_ADD_GROUP_ROLE,
+     Permissions.CAN_ADD_USER_TO_GROUP,
+     Permissions.CAN_ADD_ROLE_TO_USER,
+     Permissions.CAN_CREATE_USER)
 ])
 def test_has_role_permission(data: tuple[Permissions]):
     """

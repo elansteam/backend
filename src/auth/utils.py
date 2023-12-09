@@ -21,14 +21,14 @@ password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class Permissions(Enum):
     """Permission codes"""
     # ADMIN = 0 fixme: not used
-    C_CREATE_USER = 1
-    C_SET_ROLE = 2
-    C_CREATE_ROLE = 3
-    C_ADD_USER_TO_GROUP = 4
-    C_CREATE_GROUP = 5
-    C_CREATE_GROUP_ROLE = 6
-    C_ADD_GROUP_ROLE = 7
-    C_ADD_ROLE_TO_USER = 8
+    CAN_CREATE_USER = 1
+    CAN_SET_ROLE = 2
+    CAN_CREATE_ROLE = 3
+    CAN_ADD_USER_TO_GROUP = 4
+    CAN_CREATE_GROUP = 5
+    CAN_CREATE_GROUP_ROLE = 6
+    CAN_ADD_GROUP_ROLE = 7
+    CAN_ADD_ROLE_TO_USER = 8
     # TODO: add more perms
 
 
@@ -175,7 +175,7 @@ def auth_user(*permissions: Permissions):
     """
     Decorator
     Use:
-    >>> def endpoint(user: User = Depends(auth_user(Permissions.C_ADD_USER_TO_GROUP)))
+    >>> def endpoint(user: User = Depends(auth_user(Permissions.CAN_ADD_USER_TO_GROUP)))
     Auth user by permissions.
     Args:
         *permissions: Permissions, which must contain user roles
