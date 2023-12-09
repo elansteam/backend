@@ -37,7 +37,7 @@ async def create(group: Group,
         {
             "name": "owner",
             "group": group.name,
-            "gpermissions": ["owner"],
+            "group_permissions": ["owner"],
             "description": "The most powerful role in group"
         }
     ))
