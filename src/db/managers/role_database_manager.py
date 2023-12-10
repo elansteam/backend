@@ -2,7 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.role import Role
 from config import Config
-from utils.PydanticObjectId import PydanticObjectId
+from utils.utils import ObjectId
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):
@@ -26,7 +26,7 @@ class RoleDatabaseManager(AbstractDatabaseManager):
 
         return Role(**role)
 
-    async def get_by_id(self, _id: PydanticObjectId) -> Role | None:
+    async def get_by_id(self, _id: ObjectId) -> Role | None:
         """
         Getting role by id
         Args:

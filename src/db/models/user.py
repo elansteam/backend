@@ -1,13 +1,11 @@
 """User definition and some useful stuff about user"""
 from pydantic import BaseModel, Field
-from bson.objectid import ObjectId
-
-from utils import PydanticObjectId
+from utils.utils import ObjectId
 
 
 class User(BaseModel):
     """User representation in database"""
-    id: PydanticObjectId = Field(..., alias='_id')
+    id: ObjectId = Field(..., alias='_id')
     password_hash: str
     first_name: str
     last_name: str

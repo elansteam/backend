@@ -1,14 +1,12 @@
 """Domain node representation in database"""
 from pydantic import BaseModel, Field
-from bson.objectid import ObjectId
-
-from utils import PydanticObjectId
+from utils.utils import ObjectId
 
 
 class DomainNode(BaseModel):
     """Domain node representation in database"""
 
-    id: PydanticObjectId = Field(..., alias='_id')
+    id: ObjectId = Field(..., alias='_id')
 
     target_id: ObjectId
     """Id of target object"""

@@ -1,6 +1,28 @@
 """Some useful stuff"""
 
 from starlette.responses import JSONResponse
+from bson.objectid import ObjectId as _ObjectId
+from pydantic.functional_validators import AfterValidator
+from typing import Annotated
+
+
+def check_object_id(value: str) -> str:
+    """
+    Validating object to be a ObjectId
+    Args:
+        value: object id like object
+    Returns:
+        value if validation is successful
+    Raises:
+        ValueError: if value - invalid object
+    """
+    if not _ObjectId.is_valid(value):
+        raise ValueError('Invalid ObjectId')
+    return value
+
+
+ObjectId = Annotated[str, AfterValidator(check_object_id)]
+"""A new representation of a ObjectId with validation"""
 
 
 def get_error_schema(description: str, msg: str = "error msg"):

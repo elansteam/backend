@@ -2,7 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.user import User
 from config import Config
-from utils.PydanticObjectId import PydanticObjectId
+from utils.utils import ObjectId
 
 
 class UserDatabaseManager(AbstractDatabaseManager):
@@ -33,7 +33,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
             return None
         return User(**user)
 
-    async def get_by_id(self, _id: PydanticObjectId) -> User | None:
+    async def get_by_id(self, _id: ObjectId) -> User | None:
         """
         Getting user by id
         Args:

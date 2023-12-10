@@ -2,7 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group_role import GroupRole
 from config import Config
-from utils.PydanticObjectId import PydanticObjectId
+from utils.utils import ObjectId
 
 
 class GroupRoleDatabaseManager(AbstractDatabaseManager):
@@ -27,7 +27,7 @@ class GroupRoleDatabaseManager(AbstractDatabaseManager):
 
         return GroupRole(**group_role)
 
-    async def get_by_id(self, _id: PydanticObjectId) -> GroupRole | None:
+    async def get_by_id(self, _id: ObjectId) -> GroupRole | None:
         """
         Getting group role by id
         Args:
