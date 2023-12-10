@@ -2,11 +2,13 @@
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
+from utils import PydanticObjectId
+
 
 class DomainNode(BaseModel):
     """Domain node representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: PydanticObjectId = Field(..., alias='_id')
 
     target_id: ObjectId
     """Id of target object"""

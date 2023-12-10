@@ -2,7 +2,8 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.domain_node import DomainNode
 from config import Config
-from bson.objectid import ObjectId
+from utils.PydanticObjectId import PydanticObjectId
+
 
 
 class DomainRouter(AbstractDatabaseManager):
@@ -10,7 +11,7 @@ class DomainRouter(AbstractDatabaseManager):
 
     collection_name = Config.Collections.domain_router
 
-    async def get_by_id(self, _id: ObjectId) -> DomainNode | None:
+    async def get_by_id(self, _id: PydanticObjectId) -> DomainNode | None:
         """
         Getting the domain node by id
         Args:
@@ -31,7 +32,7 @@ class DomainRouter(AbstractDatabaseManager):
         """
         raise NotImplementedError  # FIXME
 
-    async def get_by_target_id(self, target_id: ObjectId) -> DomainNode | None:
+    async def get_by_target_id(self, target_id: PydanticObjectId) -> DomainNode | None:
         """
         Getting the domain node by target object id
         Args:
@@ -41,7 +42,7 @@ class DomainRouter(AbstractDatabaseManager):
         """
         raise NotImplementedError  # FIXME
 
-    async def rename_target(self, _id: ObjectId, new_name: str) -> bool:
+    async def rename_target(self, _id: PydanticObjectId, new_name: str) -> bool:
         """
         Renaming node target by own node id
         Args:

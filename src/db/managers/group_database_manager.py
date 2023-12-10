@@ -3,6 +3,7 @@ from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from bson.objectid import ObjectId
 from config import Config
+from utils.PydanticObjectId import PydanticObjectId
 
 
 class GroupDatabaseManager(AbstractDatabaseManager):
@@ -19,7 +20,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
 
         await self.db.insert_one(group.model_dump())
 
-    async def get_by_id(self, _id: ObjectId) -> Group | None:
+    async def get_by_id(self, _id: PydanticObjectId) -> Group | None:
         """
         Getting group by id
         Args:

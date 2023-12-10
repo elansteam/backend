@@ -1,11 +1,14 @@
 """Group definition"""
+from typing import Annotated
+
 from bson import ObjectId
 from pydantic import BaseModel, Field
+from utils.PydanticObjectId import PydanticObjectId
 
 
 class Group(BaseModel):
     """Group representation in database"""
-    id: ObjectId = Field(..., alias='_id')
+    id: PydanticObjectId = Field(..., alias='_id')
 
     description: str
     """Group description"""

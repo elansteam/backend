@@ -2,11 +2,13 @@
 from pydantic import BaseModel, field_validator, ValidationError, Field
 from bson.objectid import ObjectId
 
+from utils import PydanticObjectId
+
 
 class Role(BaseModel):
     """Role representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: PydanticObjectId = Field(..., alias='_id')
 
     description: str
     """Role description"""

@@ -2,10 +2,12 @@
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 
+from utils import PydanticObjectId
+
 
 class User(BaseModel):
     """User representation in database"""
-    id: ObjectId = Field(..., alias='_id')
+    id: PydanticObjectId = Field(..., alias='_id')
     password_hash: str
     first_name: str
     last_name: str
