@@ -35,7 +35,7 @@ class AbstractDatabaseManager(Singleton):
         Returns: special database client
 
         """
-        return self.client
+        return self._client
 
     @classmethod
     def connect_to_database(cls, url: str) -> None:

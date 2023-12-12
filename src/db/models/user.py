@@ -5,7 +5,8 @@ from utils.utils import ObjectId
 
 class User(BaseModel):
     """User representation in database"""
-    id: ObjectId = Field(..., alias='_id')
+    id: ObjectId = Field(default_factory=ObjectId, alias='_id')
+    domain_name: str
     password_hash: str
     first_name: str
     last_name: str

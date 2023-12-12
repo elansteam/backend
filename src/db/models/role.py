@@ -6,7 +6,10 @@ from utils.utils import ObjectId
 class Role(BaseModel):
     """Role representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: ObjectId = Field(default_factory=ObjectId, alias='_id')
+
+    name: str
+    """Role name"""
 
     description: str
     """Role description"""

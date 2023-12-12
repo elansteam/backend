@@ -2,6 +2,9 @@
 Main fixtures
 """
 import pytest
+import pytest_asyncio
+
+
 from src.config import Config
 from src.db.abstract_database_manager import AbstractDatabaseManager
 
@@ -17,13 +20,15 @@ class DatabaseInterface(AbstractDatabaseManager):
         return self._db
 
 
-@pytest.fixture(autouse=True)
-def setup_and_teardown():
+@pytest_asyncio.fixture(autouse=True)
+async def setup_and_teardown():
     """Base fixture, that setting up database and start fastapi client"""
     AbstractDatabaseManager.connect_to_database(url=Config.db_connect_url)
 
     _db = DatabaseInterface().get_db()  # TODO: add normal db connect
     client = AbstractDatabaseManager().client
+
+
 
     yield
 

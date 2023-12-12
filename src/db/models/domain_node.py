@@ -6,7 +6,7 @@ from utils.utils import ObjectId
 class DomainNode(BaseModel):
     """Domain node representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: ObjectId = Field(default_factory=ObjectId, alias='_id')
 
     target_id: ObjectId
     """Id of target object"""
