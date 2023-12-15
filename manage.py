@@ -21,6 +21,10 @@ def parse_arguments():
     run_parser = subparsers.add_parser('run')
     run_parser.set_defaults(command='run')
     run_parser.add_argument('--config', help='Path to the .env file', required=True)
+
+    test_parser = subparsers.add_parser('test')
+    test_parser.set_defaults(command='test')
+    test_parser.add_argument('--config', help='Path to the .env file', required=True)
     return parser.parse_args()
 
 

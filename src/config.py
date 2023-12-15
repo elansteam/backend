@@ -19,6 +19,21 @@ class Config:
         os.environ.get("JWT_REFRESH_SECRET_KEY"),
         os.environ.get("APP_TITLE")
     ]):
+        print([
+        os.environ.get("DB_CONNECT_URL"),
+        os.environ.get("DB_NAME"),
+        os.environ.get("COLLECTION_USERS"),
+        os.environ.get("COLLECTION_ROLES"),
+        os.environ.get("COLLECTION_GROUP_ROLES"),
+        os.environ.get("COLLECTION_GROUPS"),
+        os.environ.get("COLLECTION_NAME_ROUTER"),
+        os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES"),
+        os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES"),
+        os.environ.get("ALGORITHM"),
+        os.environ.get("JWT_SECRET_KEY"),
+        os.environ.get("JWT_REFRESH_SECRET_KEY"),
+        os.environ.get("APP_TITLE")
+    ])
         exit(1)
     db_connect_url: str = os.environ.get("DB_CONNECT_URL") or ""
 
