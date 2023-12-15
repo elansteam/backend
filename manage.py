@@ -46,7 +46,7 @@ def main(): # pylint: disable=missing-function-docstring
             if args.config.endswith("example.env"):
                 logger.error((
                     "You are using the example config 'example.env' instead of "
-                    "using your own one. Example config is not meant to be used "
+                    "your own one. Example config is not meant to be used "
                     "in production for security and other concerns. Please "
                     "create your own config file and run the app using "
                     "--config /path/to/config.env"
