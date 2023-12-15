@@ -2,8 +2,8 @@
 Testing micro util functions
 """
 import pytest
-from src.auth.utils import (has_role_permissions,
-                            gen_code_staff_by_permissions)
+from auth.utils import has_role_permissions, \
+                       gen_code_staff_by_permissions
 from auth.utils import Permissions
 
 

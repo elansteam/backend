@@ -6,7 +6,7 @@ from db.models.user import User, UserSignup
 from db.models.role import Role
 from auth.utils import auth_user, Permissions
 from auth.utils import get_hashed_password
-from utils.utils import get_error_response, get_error_schema
+from utils.response_utils import get_error_response, get_error_schema
 
 router = APIRouter()
 

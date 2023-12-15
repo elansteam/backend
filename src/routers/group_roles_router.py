@@ -4,7 +4,7 @@ import db
 from db.models.user import User
 from src.auth.utils import auth_user, Permissions
 from src.db.models.group_role import GroupRole
-from utils.utils import get_error_response, get_error_schema
+from utils.response_utils import get_error_response, get_error_schema
 
 router = APIRouter()
 

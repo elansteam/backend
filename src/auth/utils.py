@@ -3,8 +3,6 @@ Helpers for auth stuff
 """
 from datetime import datetime, timedelta
 from enum import Enum
-
-from bson import ObjectId
 from fastapi import HTTPException, Depends
 from passlib.context import CryptContext
 from jose import jwt

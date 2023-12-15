@@ -5,7 +5,7 @@ import db
 from db.models.user import UserSignin
 from auth.utils import verify_password, create_token
 from auth.token_schema import TokenSchema
-from utils.utils import get_error_response, get_error_schema
+from utils.response_utils import get_error_response, get_error_schema
 
 router = APIRouter()
 
