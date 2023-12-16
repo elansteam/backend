@@ -1,8 +1,8 @@
 """GroupDatabaseManager definition"""
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
-from bson.objectid import ObjectId
 from config import Config
+from db.models.group_role import GroupRole
 
 
 class GroupDatabaseManager(AbstractDatabaseManager):
@@ -19,7 +19,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
 
         await self.db.insert_one(group.model_dump())
 
-    async def get_by_id(self, _id: ObjectId) -> Group | None:
+    async def get(self, _id: int) -> Group | None:
         """
         Getting group by id
         Args:
@@ -32,64 +32,52 @@ class GroupDatabaseManager(AbstractDatabaseManager):
             return None
         return Group(**group)
 
-    async def get_by_name(self, name: str) -> Group | None:
-        """
-        Getting group by name
-        Args:
-            name: group name to find
-
-        Returns:
-            Group object or None if not found
-        """
-
-        group = await self.db.find_one({"name": name})
-        if group is None:
-            return None
-        return Group(**group)
-
-    async def add_user(self, group_name: str, user_name: str) -> None:
+    async def add_user(self, group_id: int, user_id: int) -> None:
         """
         Adding user to group members
         Args:
             group_name: where add user
             user_name: user to add
         """
+        await self.db.update_one({"_id": group_id},
+                                 {"$set": {f"members.{user_id}": []}})
 
-        await self.db.update_one({"name": group_name},
-                                 {"$set": {f"members.{user_name}": []}})
+    async def add_role(self, group_role: GroupRole) -> None:
+        """Adding group role to group
 
-    async def add_group_role(self, group_name: str, group_role_name: str) -> None:
-        """
-        Adding group_role to group
         Args:
-            group_name: where add group_role
-            group_role_name: role name to add
+            group_role (GroupRole): group role to add
         """
-        await self.db.update_one({"name": group_name},
-                                 {"$push": {"group_roles": group_role_name}})
+        # change format group<gid>_<rid> -> <rid>
+        await self.db.update_one(
+            {"_id": group_role.group},
+            {"$push": {"group_roles": group_role.id.split("_")[1]}}
+        )
 
-    async def get_members(self, group_name) -> list[str]:
+    async def get_members(self, group_id: int) -> list[int]:
         """
         Getting list of group members
         Args:
-            group_name:
+            group_id: the group
         Returns:
-            list of usernames
+            list of user ids
         """
 
-        members = await self.db.find_one({"name": group_name})
+        members = await self.db.find_one({"_id": group_id})
+        if members is None:
+            return list()
+        return [int(user_id) for user_id in members["members"].keys()]
 
-        return list(members["members"].keys())
-
-    async def get_member_group_roles(self, group_name: str, user_name: str) -> list[str]:
+    async def get_member_roles(self, group_id: int, user_id: int) -> list[str]:
         """
-        Getting list of group roles of concrete group member
+        Getting list of group roles, which has user with given id
         Args:
-            group_name: group, where user being
-            user_name: user to get group roles
+            group_id: the group
+            user_id: the user
         Returns:
-            list if group roles names, which has user with name user_name.
+            list if group roles names, which has user user with given id
         """
-        members = await self.db.find_one({"name": group_name})
-
-        return members[user_name]
+        members = await self.db.find_one({"_id": group_id})
+        if members is None:
+            return list()
+        return members["members"][user_id]
