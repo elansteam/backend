@@ -2,8 +2,8 @@
 from fastapi import APIRouter, Depends
 import db
 from db.models.user import User
-from auth.utils import auth_user, Permissions
 from db.models.group_role import GroupRole
+from auth.utils import auth_user, Permissions
 from utils.response_utils import get_error_response, get_error_schema
 
 router = APIRouter()

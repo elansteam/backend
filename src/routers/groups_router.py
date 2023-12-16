@@ -22,44 +22,44 @@ async def create(group: Group,
                      Permissions.CAN_CREATE_GROUP
                  ))):
     """Group creating"""
+    raise NotImplementedError()
+    # if await db.domain.resolve(group.domain) is not None:
+    #     return get_error_response(f"Domain <{group.domain}> already exists")
 
-    if await db.domain.resolve(group.domain) is not None:
-        return get_error_response(f"Domain <{group.domain}> already exists")
+    # if await db.user.get_by_name(group.owner) is None:
+    #     return get_error_response(f"Owner with name <{group.owner}> doesn't exist",
+    #                               400)
 
-    if await db.user.get_by_name(group.owner) is None:
-        return get_error_response(f"Owner with name <{group.owner}> doesn't exist",
-                                  400)
+    # # FIXME
+    # # TODO вынести это в отдельное поле и сделать расширяемым
+    # await db.group_role.create(GroupRole.model_validate(
+    #     {
+    #         "name": "owner",
+    #         "group": group.name,
+    #         "group_permissions": ["owner"],
+    #         "description": "The most powerful role in group"
+    #     }
+    # ))
 
-    # FIXME
-    # TODO вынести это в отдельное поле и сделать расширяемым
-    await db.group_role.create(GroupRole.model_validate(
-        {
-            "name": "owner",
-            "group": group.name,
-            "group_permissions": ["owner"],
-            "description": "The most powerful role in group"
-        }
-    ))
+    # await db.group_role.create(GroupRole.model_validate(
+    #     {
+    #         "name": "admin",
+    #         "group": group.name,
+    #         "group_permissions": ["admin"],
+    #         "description": "Like owner but lower"  # FIXME
+    #     }
+    # ))
 
-    await db.group_role.create(GroupRole.model_validate(
-        {
-            "name": "admin",
-            "group": group.name,
-            "group_permissions": ["admin"],
-            "description": "Like owner but lower"  # FIXME
-        }
-    ))
+    # group.group_roles = []
+    # group.members = {}
 
-    group.group_roles = []
-    group.members = {}
+    # group.group_roles.append("owner")
+    # group.group_roles.append("admin")
 
-    group.group_roles.append("owner")
-    group.group_roles.append("admin")
+    # group.members[group.owner] = ["owner"]
 
-    group.members[group.owner] = ["owner"]
-
-    await db.group_role.create(group)
-    return group
+    # await db.group_role.create(group)
+    # return group
 
 
 # TODO: add auth

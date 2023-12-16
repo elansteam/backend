@@ -1,3 +1,4 @@
+"""Module to manage routers"""
 from . import users_router
 from . import roles_router
 from . import group_roles_router
