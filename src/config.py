@@ -1,5 +1,6 @@
 """Project config file"""
 import os
+import sys
 
 
 class Config:
@@ -34,7 +35,7 @@ class Config:
         os.environ.get("JWT_REFRESH_SECRET_KEY"),
         os.environ.get("APP_TITLE")
     ])
-        exit(1)
+        sys.exit(1)
     db_connect_url: str = os.environ.get("DB_CONNECT_URL") or ""
 
     db_name: str = os.environ.get("DB_NAME") or ""
