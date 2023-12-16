@@ -1,12 +1,12 @@
 """Group role definition"""
 from pydantic import BaseModel, field_validator, ValidationError, Field
-from bson.objectid import ObjectId
 
 
 class GroupRole(BaseModel):
     """GroupRole representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: str = Field(..., alias='_id')
+    """Group ID + string ID (e.g. 'group1_admin'))"""
 
     name: str
     """Role name"""
@@ -15,13 +15,13 @@ class GroupRole(BaseModel):
     """Role description"""
 
     role_code: int
-    """Coded role permissions in byte representation"""
+    """Encoded role permissions representation"""
 
-    group: str
-    """Parent group name"""
+    group: id
+    """ID of the group to which the role belongs"""
 
     @field_validator("role_code")
-    def validate_group_role_code(cls, value) -> None:
+    def validate_group_role_code(self, value) -> None:
         """
         Validate role code
         Args:

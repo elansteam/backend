@@ -2,7 +2,6 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.role import Role
 from config import Config
-from bson.objectid import ObjectId
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):
@@ -10,37 +9,22 @@ class RoleDatabaseManager(AbstractDatabaseManager):
 
     collection_name = Config.Collections.roles
 
-    async def get_by_name(self, role_name: str) -> Role | None:
-        """Get role by name
+    async def get(self, role_id: str) -> Role | None:
+        """Get role by ID
 
         Args:
-            role_name (str): the role name
+            role_id (str): the role
 
         Returns:
             role object or None if not found
         """
-        role = await self.db.find_one({"name": role_name})
+        role = await self.db.find_one({"_id": role_id})
 
         if role is None:
             return None
 
         return Role(**role)
 
-    async def get_by_id(self, _id: ObjectId) -> Role | None:
-        """
-        Getting role by id
-        Args:
-            _id: mongo object id
-
-        Returns:
-            Role object or None if not found
-        """
-
-        role = await self.db.find_one({"_id": _id})
-        if role is None:
-            return None
-
-        return Role(**role)
 
     async def create(self, role: Role) -> None:
         """Insert new role to the database
