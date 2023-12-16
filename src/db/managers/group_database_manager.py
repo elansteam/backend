@@ -18,7 +18,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
 
         await self.db.insert_one(group.model_dump())
 
-    async def get_by_id(self, _id: int) -> Group | None:
+    async def get(self, _id: int) -> Group | None:
         """
         Getting group by id
         Args:
@@ -64,7 +64,7 @@ class GroupDatabaseManager(AbstractDatabaseManager):
 
         return (int(user_id) for user_id in members["members"].keys())
 
-    async def get_member_group_roles(self, group_id: int, user_id: int) -> list[str]:
+    async def get_member_roles(self, group_id: int, user_id: int) -> list[str]:
         """
         Getting list of group roles, which has user with given id
         Args:
