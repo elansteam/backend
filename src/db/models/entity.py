@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
-class DomainRouter(BaseModel):
+class Entity(BaseModel):
     """Domain router representation in the database"""
 
     id: str = Field(..., alias='_id')

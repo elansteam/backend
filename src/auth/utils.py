@@ -103,7 +103,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_token(
-        subject: str, is_access=True, expires_delta: int = None
+        subject: str, is_access=True, expires_delta: int | None = None
 ) -> str:
     """
     Generating JWT by data and expires time
@@ -158,7 +158,7 @@ async def get_current_user(token: str) -> User:
             headers={"WWW-Authenticate": "Bearer"},
         ) from exc
 
-    user = await db_user.get_by_name(token_sub)
+    user = await db_user.get(int(token_sub))
 
     if user is None:
         raise HTTPException(

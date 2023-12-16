@@ -17,7 +17,7 @@ class GroupRole(BaseModel):
     role_code: int
     """Encoded role permissions representation"""
 
-    group: id
+    group: int
     """ID of the group to which the role belongs"""
 
     @field_validator("role_code")

@@ -1,7 +1,8 @@
 """AbstractDatabaseManager definition"""
 import logging
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
-from motor.core import AgnosticCollection
+from typing import Any
+from motor.motor_asyncio import AsyncIOMotorClient
+from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
 from config import Config
 from utils.singleton import Singleton
 
@@ -13,10 +14,9 @@ class AbstractDatabaseManager(Singleton):
     redefine collection_name, it should be representation of collection
     in database
     """
-    _db: AsyncIOMotorDatabase = None
-    _client: AsyncIOMotorClient = None
-
-    collection_name = None
+    _db: AgnosticDatabase | None = None
+    _client: AgnosticClient | None = None
+    collection_name: str = ""
     """Child class collection name"""
 
     @property
@@ -26,10 +26,12 @@ class AbstractDatabaseManager(Singleton):
         Returns: special collection by self.collection_name in MongoDB
 
         """
+        if self._db is None:
+            raise ConnectionError("Database is not connected")
         return self._db[self.collection_name]
 
     @property
-    def client(self) -> AsyncIOMotorClient:
+    def client(self) -> AgnosticClient:
         """
 
         Returns: special database client
@@ -57,6 +59,8 @@ class AbstractDatabaseManager(Singleton):
         """
         Close connection to the database
         """
+        if cls._client is None:
+            return
         logging.info("Closing connection with MongoDB.")
         cls._client.close()
         logging.info("Closed connection with MongoDB.")

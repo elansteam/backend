@@ -61,8 +61,9 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         """
 
         members = await self.db.find_one({"_id": group_id})
-
-        return (int(user_id) for user_id in members["members"].keys())
+        if members is None:
+            return list()
+        return [int(user_id) for user_id in members["members"].keys()]
 
     async def get_member_roles(self, group_id: int, user_id: int) -> list[str]:
         """
@@ -74,5 +75,6 @@ class GroupDatabaseManager(AbstractDatabaseManager):
             list if group roles names, which has user user with given id
         """
         members = await self.db.find_one({"_id": group_id})
-
+        if members is None:
+            return list()
         return members["members"][user_id]

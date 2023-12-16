@@ -23,9 +23,8 @@ async def create(group: Group,
                  ))):
     """Group creating"""
 
-    if await db.group.get_by_name(group.name) is not None:
-        return get_error_response(f"Group with name <{group.name}> doesn't exist",
-                                  400)
+    if await db.domain.resolve(group.domain) is not None:
+        return get_error_response(f"Domain <{group.domain}> already exists")
 
     if await db.user.get_by_name(group.owner) is None:
         return get_error_response(f"Owner with name <{group.owner}> doesn't exist",

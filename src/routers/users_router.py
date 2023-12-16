@@ -23,7 +23,7 @@ async def create(user_auth: UserSignup,
                      Permissions.CAN_CREATE_USER
                  ))):
     """Creating new user in database"""
-    user_by_name = await db.user.get_by_name(user_auth.name)
+    entity = await db.domain.resolve(user_auth.name)
     if user_by_name is not None:
         return get_error_response(
             f"User with this user name <{user_auth.name}> already exists")
@@ -51,26 +51,25 @@ async def create(user_auth: UserSignup,
         400: get_error_schema("Failed to add role to user")
     }
 )
-async def add_role_to_user(user_name: str, role_name: str,
+async def add_role_to_user(user_id: int, role_id: str,
                            _current_user: User = Depends(auth_user(
                                Permissions.CAN_ADD_ROLE_TO_USER
                            ))):
     """Adding role to user"""
+    user_to_add = await db.user.get(user_id)
 
-    cur_user = await db.user.get_by_name(user_name)
+    if user_to_add is None:
+        return get_error_response(f"User with id {user_id} doesn't exist")
 
-    if cur_user is None:
-        return get_error_response(f"User with user name {user_name} doesn't exist")
-
-    role = await db.role.get_by_name(role_name)
+    role = await db.role.get(role_id)
 
     if role is None:
-        return get_error_response(f"Role with name <{role_name}> doesn't exist")
+        return get_error_response(f"Role with id <{role_id}> doesn't exist")
 
-    if role_name in cur_user.roles:
+    if role_id in user_to_add.roles:
         return get_error_response(
-            f"Role with name <{role_name}> doesn't exist now in User <{user_name}>"
+            f"Role with id <{role_id}> already exists for user with id <{user_id}>"
         )
 
-    await db.role.add_role(user_name, role_name)
+    await db.user.add_role(user_id, role_id)
     return role

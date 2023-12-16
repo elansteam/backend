@@ -32,6 +32,21 @@ class UserDatabaseManager(AbstractDatabaseManager):
             return None
         return User(**user)
 
+    async def get_by_email(self, email: str) -> User | None:
+        """
+        Getting user by email
+        Args:
+            email: the email
+
+        Returns:
+            User object or None, if not found
+        """
+
+        user = await self.db.find_one({"email": email})
+        if user is None:
+            return None
+        return User(**user)
+
 
     async def add_role(self, user_id: int, role_id: str) -> None:
         """
