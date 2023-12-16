@@ -2,6 +2,7 @@
 from db.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config
+from db.models.group_role import GroupRole
 
 
 class GroupDatabaseManager(AbstractDatabaseManager):
@@ -41,15 +42,17 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         await self.db.update_one({"_id": group_id},
                                  {"$set": {f"members.{user_id}": []}})
 
-    # async def add_group_role(self, group_id: int, group_role_id: str) -> None:
-    #     """
-    #     Adding group_role to group
-    #     Args:
-    #         group_id: group to add
-    #         group_role_id: role name to add
-    #     """
-    #     await self.db.update_one({"name": group_name},
-    #                              {"$push": {"group_roles": group_role_name}})
+    async def add_role(self, group_role: GroupRole) -> None:
+        """Adding group role to group
+
+        Args:
+            group_role (GroupRole): group role to add
+        """
+        # change format group<gid>_<rid> -> <rid>
+        await self.db.update_one(
+            {"_id": group_role.group},
+            {"$push": {"group_roles": group_role.id.split("_")[1]}}
+        )
 
     async def get_members(self, group_id: int) -> list[int]:
         """

@@ -9,8 +9,7 @@ from jose import jwt
 from starlette import status
 from starlette.responses import JSONResponse
 from config import Config
-from db.managers.user_database_manager import UserDatabaseManager
-from db.managers.role_database_manager import RoleDatabaseManager
+import db
 from db.models.user import User
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -59,9 +58,6 @@ def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
 
     return role_code
 
-
-db_user = UserDatabaseManager()
-db_role = RoleDatabaseManager()
 
 AUTH_RESPONSE_MODEL = {
     "description": "Failed auth",
@@ -158,7 +154,7 @@ async def get_current_user(token: str) -> User:
             headers={"WWW-Authenticate": "Bearer"},
         ) from exc
 
-    user = await db_user.get(int(token_sub))
+    user = await db.user.get(int(token_sub))
 
     if user is None:
         raise HTTPException(
@@ -187,7 +183,7 @@ def auth_user(*permissions: Permissions):
         result_mask = 0
 
         for role_name in user.roles:
-            cur_role = await db_role.get_by_name(role_name)
+            cur_role = await db.role.get(role_name)
             if cur_role is not None:
                 result_mask |= cur_role.permissions
 

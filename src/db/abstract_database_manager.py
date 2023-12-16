@@ -1,6 +1,5 @@
 """AbstractDatabaseManager definition"""
 import logging
-from typing import Any
 from motor.motor_asyncio import AsyncIOMotorClient
 from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
 from config import Config

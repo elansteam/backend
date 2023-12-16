@@ -21,17 +21,25 @@ async def create(group_role: GroupRole,
                      Permissions.CAN_CREATE_GROUP_ROLE
                  ))):
     """Greate group role for group"""
-    if await db.group_role.get_by_name(group_role.name, group_role.group) is not None:
-        return get_error_response(
-            f"Group role with name <{group_role.name}> and group with name <{group_role.group}> "
-            f"doesn't exist")
-
-    group = await db.group.get_by_name(group_role.group)
+    group = await db.group.get(group_role.group)
 
     if group is None:
-        return get_error_response(f"Group with name <{group_role.group}> doesn't exist")
+        return get_error_response(f"Group with id <{group_role.group}> doesn't exist")
 
-    await db.group_role.create(group_role)
-
-    await db.group.add_group_role(group_role.group, group_role.name)
+    if await db.group_role.get(
+        group_role.group, f"group{group_role.group}_{group_role.id}"
+    ) is not None:
+        return get_error_response(
+            f"Group role with given id <{group_role.id}> already exists"
+        )
+    # group from basemodel has id=<role_id>
+    # so we should change it to the DB format - group<group_id>_<role_id>
+    new_group_role = GroupRole(
+        _id=f"group{group_role.group}_{group_role.id}",
+        name=group_role.name, group=group_role.group,
+        role_code=group_role.role_code,
+        description=group_role.description
+    )
+    await db.group_role.create(new_group_role)
+    await db.group.add_role(group_role)
     return group_role

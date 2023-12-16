@@ -23,25 +23,26 @@ async def create(user_auth: UserSignup,
                      Permissions.CAN_CREATE_USER
                  ))):
     """Creating new user in database"""
-    entity = await db.domain.resolve(user_auth.name)
-    if user_by_name is not None:
-        return get_error_response(
-            f"User with this user name <{user_auth.name}> already exists")
+    raise NotImplementedError()
+    # entity = await db.domain.resolve(user_auth.name)
+    # if user_by_name is not None:
+    #     return get_error_response(
+    #         f"User with this user name <{user_auth.name}> already exists")
 
-    password_hash = get_hashed_password(user_auth.password)
+    # password_hash = get_hashed_password(user_auth.password)
 
-    user_to_create = {
-        **user_auth.model_dump(),
-        "password_hash": password_hash
-    }
+    # user_to_create = {
+    #     **user_auth.model_dump(),
+    #     "password_hash": password_hash
+    # }
 
-    user_to_create.pop("password")
+    # user_to_create.pop("password")
 
-    user = User(**user_to_create)
+    # user = User(**user_to_create)
 
-    await db.user.create(user)
+    # await db.user.create(user)
 
-    return user
+    # return user
 
 
 @router.post(
