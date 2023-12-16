@@ -36,6 +36,7 @@ def main(): # pylint: disable=missing-function-docstring
     handler = colorlog.StreamHandler()
 
     logger = colorlog.getLogger(__name__)
+    logger.setLevel(colorlog.INFO)
     logger.addHandler(handler)
     handler.setFormatter(colorlog.ColoredFormatter('%(red)s%(levelname)s:%(name)s:%(message)s'))
 
