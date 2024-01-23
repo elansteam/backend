@@ -1,5 +1,5 @@
 """DomainRouterDatabaseManager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from config import Config
 from db.models.entity import Entity
 

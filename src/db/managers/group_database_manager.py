@@ -1,5 +1,5 @@
 """GroupDatabaseManager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config
 from db.models.group_role import GroupRole

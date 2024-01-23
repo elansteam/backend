@@ -47,6 +47,7 @@ class Config:
         group_roles = os.environ.get("COLLECTION_GROUP_ROLES") or ""
         groups = os.environ.get("COLLECTION_GROUPS") or ""
         name_router = os.environ.get("COLLECTION_NAME_ROUTER") or ""
+        internal_counters = os.environ.get("COLLECTION_INTERNAL_COUNTERS") or ""
 
     class Auth:
         """Data for auth system"""
