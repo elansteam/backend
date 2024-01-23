@@ -28,7 +28,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def main(): # pylint: disable=missing-function-docstring
+def main():  # pylint: disable=missing-function-docstring
     project_root = Path(__file__).resolve().parent
     sys.path.append(str(project_root) + "/src")
     args = parse_arguments()
@@ -55,13 +55,13 @@ def main(): # pylint: disable=missing-function-docstring
                 sys.exit(1)
             load_dotenv(dotenv_path=args.config)
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
-        case "test": # run testing
+        case "test":  # run testing
             if args.config:
                 load_dotenv(dotenv_path=args.config)
             else:
                 load_dotenv(dotenv_path="testing/testing.env")
             os.system("pytest ./testing")
-        case "lint": # run linting
+        case "lint":  # run linting
             logger.info("Running pylint...")
             os.system("pylint --recursive=y ./src/ ./testing/")
             logger.info("Running ruff...")

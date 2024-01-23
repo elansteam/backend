@@ -21,7 +21,7 @@ class GroupRole(BaseModel):
     """ID of the group to which the role belongs"""
 
     @field_validator("role_code")
-    def validate_group_role_code(self, value) -> None:
+    def validate_group_role_code(cls, value) -> None:
         """
         Validate role code
         Args:
@@ -29,5 +29,6 @@ class GroupRole(BaseModel):
         Raises:
             ValidationError: if role code not positive
         """
+
         if value < 0:
             raise ValidationError("Group role code must be positive")

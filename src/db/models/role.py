@@ -18,7 +18,7 @@ class Role(BaseModel):
     """Role representation in integer"""
 
     @field_validator("role_code")
-    def validate_role_code(self, value):
+    def validate_role_code(cls, value):
         """
         Validate role code
         Args:
