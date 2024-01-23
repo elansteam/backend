@@ -56,11 +56,8 @@ def main():  # pylint: disable=missing-function-docstring
             load_dotenv(dotenv_path=args.config)
             uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
         case "test":  # run testing
-            if args.config:
-                load_dotenv(dotenv_path=args.config)
-            else:
-                load_dotenv(dotenv_path="testing/testing.env")
-            os.system("pytest ./testing")
+            load_dotenv(dotenv_path=args.config)
+            os.system("pytest ./testing -vv")
         case "lint":  # run linting
             logger.info("Running pylint...")
             os.system("pylint --recursive=y ./src/ ./testing/")
