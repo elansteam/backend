@@ -1,5 +1,5 @@
 """Roles database manager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.role import Role
 from config import Config
 

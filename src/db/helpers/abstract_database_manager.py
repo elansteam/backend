@@ -1,9 +1,11 @@
 """AbstractDatabaseManager definition"""
 import logging
+from typing import Any
 from motor.motor_asyncio import AsyncIOMotorClient
 from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
 from config import Config
 from utils.singleton import Singleton
+from db.helpers.counters import InternalCountersDatabaseManager
 
 
 class AbstractDatabaseManager(Singleton):
@@ -28,6 +30,16 @@ class AbstractDatabaseManager(Singleton):
         if self._db is None:
             raise ConnectionError("Database is not connected")
         return self._db[self.collection_name]
+    
+    # def get_db(self, collection_name: str ) -> AgnosticCollection:
+    #     """
+
+    #     Returns: special collection by collection_name in MongoDB
+
+    #     """
+    #     if self._db is None:
+    #         raise ConnectionError("Database is not connected")
+    #     return self._db[collection_name]
 
     @property
     def client(self) -> AgnosticClient:
@@ -49,7 +61,8 @@ class AbstractDatabaseManager(Singleton):
         cls._client = AsyncIOMotorClient(
             url,
             maxPoolSize=10,
-            minPoolSize=10)
+            minPoolSize=10
+        )
         cls._db = cls._client[Config.db_name]
         logging.info("Connected to MongoDB.")
 
@@ -63,3 +76,13 @@ class AbstractDatabaseManager(Singleton):
         logging.info("Closing connection with MongoDB.")
         cls._client.close()
         logging.info("Closed connection with MongoDB.")
+
+    # async def insert_one_with_id(self, document: Any) -> Any:
+    #     """
+    #     Insert document to the collection with generated id
+    #     Args:
+    #         document: the document to insert
+    #     Returns:
+    #         Result of `insert_one` method
+    #     """
+        InternalCountersDatabaseManager._insert_one_with_id()

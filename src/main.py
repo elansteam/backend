@@ -3,7 +3,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Config
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 import routers.users_router
 import routers.auth_router
 import routers.roles_router

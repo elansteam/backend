@@ -1,5 +1,5 @@
 """UserDatabaseManager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.user import User
 from config import Config
 

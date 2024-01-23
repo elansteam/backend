@@ -3,7 +3,7 @@ Main fixtures
 """
 import pytest
 from config import Config
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 
 
 class DatabaseInterface(AbstractDatabaseManager):
