@@ -18,7 +18,7 @@ class RoleDatabaseManager(AbstractDatabaseManager):
         Returns:
             role object or None if not found
         """
-        role = await self.db.find_one({"_id": role_id})
+        role = await self.collection.find_one({"_id": role_id})
 
         if role is None:
             return None
@@ -32,4 +32,4 @@ class RoleDatabaseManager(AbstractDatabaseManager):
         Args:
             role: the role to insert
         """
-        await self.db.insert_one(role.model_dump())
+        await self.collection.insert_one(role.model_dump())

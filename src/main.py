@@ -1,13 +1,11 @@
 """Main project file"""
 
+from loguru import logger
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Config
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
-import routers.users_router
 import routers.auth_router
-import routers.roles_router
-import routers.groups_router
 import routers.group_roles_router
 
 
@@ -19,8 +17,12 @@ async def lifespan(_app: FastAPI):
     Args:
         _app (FastAPI): application object. It is not using right now
     """
+    # TODO: add logger options
+
     # on startup
     AbstractDatabaseManager.connect_to_database(url=Config.db_connect_url)
+
+    # await AbstractDatabaseManager.get_db()["Users"].insert_one({"users": "admin"})
     yield
     # on shutdown
     AbstractDatabaseManager.close_database_connection()

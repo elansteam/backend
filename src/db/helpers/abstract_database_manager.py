@@ -1,11 +1,10 @@
 """AbstractDatabaseManager definition"""
-import logging
+from loguru import logger
 from typing import Any
 from motor.motor_asyncio import AsyncIOMotorClient
 from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
 from config import Config
 from utils.singleton import Singleton
-from db.helpers.counters import InternalCountersDatabaseManager
 
 
 class AbstractDatabaseManager(Singleton):
@@ -16,73 +15,45 @@ class AbstractDatabaseManager(Singleton):
     in database
     """
     _db: AgnosticDatabase | None = None
-    _client: AgnosticClient | None = None
+    client: AgnosticClient | None = None
     collection_name: str = ""
     """Child class collection name"""
 
     @property
-    def db(self) -> AgnosticCollection:
+    def collection(self) -> AgnosticCollection:
         """
-
         Returns: special collection by self.collection_name in MongoDB
-
         """
         if self._db is None:
             raise ConnectionError("Database is not connected")
         return self._db[self.collection_name]
-    
-    # def get_db(self, collection_name: str ) -> AgnosticCollection:
-    #     """
-
-    #     Returns: special collection by collection_name in MongoDB
-
-    #     """
-    #     if self._db is None:
-    #         raise ConnectionError("Database is not connected")
-    #     return self._db[collection_name]
-
-    @property
-    def client(self) -> AgnosticClient:
-        """
-
-        Returns: special database client
-
-        """
-        return self.client
 
     @classmethod
     def connect_to_database(cls, url: str) -> None:
         """Method to connect to the database
-
         Args:
             url: MongoDB url
         """
-        logging.info("Connecting to MongoDB.")
-        cls._client = AsyncIOMotorClient(
-            url,
-            maxPoolSize=10,
-            minPoolSize=10
-        )
-        cls._db = cls._client[Config.db_name]
-        logging.info("Connected to MongoDB.")
+
+        # Create a new client and connect to the server
+        cls.client = AsyncIOMotorClient(url)
+        cls._db = cls.client[Config.db_name]
+        logger.info("Successfully connected to MongoDB.")
 
     @classmethod
     def close_database_connection(cls) -> None:
         """
         Close connection to the database
         """
-        if cls._client is None:
+        if cls.client is None:
             return
-        logging.info("Closing connection with MongoDB.")
-        cls._client.close()
-        logging.info("Closed connection with MongoDB.")
+        logger.info("Closing connection with MongoDB.")
+        cls.client.close()
+        logger.info("Successfully closed connection with MongoDB.")
 
-    # async def insert_one_with_id(self, document: Any) -> Any:
-    #     """
-    #     Insert document to the collection with generated id
-    #     Args:
-    #         document: the document to insert
-    #     Returns:
-    #         Result of `insert_one` method
-    #     """
-        InternalCountersDatabaseManager._insert_one_with_id()
+    @classmethod
+    def get_db(cls) -> AgnosticDatabase | None:
+        """
+        Returns: database object
+        """
+        return cls._db

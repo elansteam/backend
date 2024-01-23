@@ -17,7 +17,7 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
         Returns:
             id or None if not found
         """
-        res = await self.db.find_one({"_id": domain})
+        res = await self.collection.find_one({"_id": domain})
         if res is None:
             return None
         return Entity(**res)

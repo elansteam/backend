@@ -15,7 +15,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
         Args:
             user: user object to create
         """
-        await self.db.insert_one(**user.model_dump())
+        await self.collection.insert_one(**user.model_dump())
 
     async def get(self, user_id: int) -> User | None:
         """
@@ -27,7 +27,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
             User object or None, if not found
         """
 
-        user = await self.db.find_one({"_id": user_id})
+        user = await self.collection.find_one({"_id": user_id})
         if user is None:
             return None
         return User(**user)
@@ -42,7 +42,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
             User object or None, if not found
         """
 
-        user = await self.db.find_one({"email": email})
+        user = await self.collection.find_one({"email": email})
         if user is None:
             return None
         return User(**user)
@@ -56,7 +56,7 @@ class UserDatabaseManager(AbstractDatabaseManager):
             role_id: the role
         """
 
-        await self.db.update_one(
+        await self.collection.update_one(
             {"_id": user_id},
             {"$push": {"roles": role_id}}
         )

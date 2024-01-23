@@ -19,7 +19,7 @@ class GroupRoleDatabaseManager(AbstractDatabaseManager):
         Returns:
             group role or None if not found
         """
-        group_role = await self.db.find_one({"_id": f"group{group_id}_{group_role_name}"})
+        group_role = await self.collection.find_one({"_id": f"group{group_id}_{group_role_name}"})
 
         if group_role is None:
             return None
@@ -32,4 +32,4 @@ class GroupRoleDatabaseManager(AbstractDatabaseManager):
         Args:
             group_role: role to insert
         """
-        await self.db.insert_one(group_role.model_dump())
+        await self.collection.insert_one(group_role.model_dump())

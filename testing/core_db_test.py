@@ -21,4 +21,10 @@ async def test_db_connection():
 
     await Database.db.get_collection(Config.Collections.users).insert_one({"test": "test"})
 
+    num_documents = await Database.db.get_collection(Config.Collections.users).count_documents(
+        {"test": "test"}
+    )
+
     assert num_documents == 2
+
+
