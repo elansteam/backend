@@ -3,17 +3,21 @@ from typing import Any, TypeVar
 import db.helpers.abstract_database_manager
 from config import Config
 from pymongo.errors import DuplicateKeyError
+from pydantic import BaseModel
+from abc import abstractmethod
 
 DatabaseManagerType = TypeVar("DatabaseManagerType",
                               bound=db.helpers.abstract_database_manager.AbstractDatabaseManager)
 
 
-class AbstractAutoIncrementDatabase:
+class AutoIncrementDatabaseInterface:
     """Internal database methods for auto increment ids"""
 
     __internal_collection_name: str = Config.Collections.internal_counters
 
-    async def _insert_one_with_id(self, database_manager: DatabaseManagerType, document: Any) -> Any:
+    async def _insert_one_with_id(self,
+                                  database_manager: DatabaseManagerType,
+                                  document: BaseModel) -> Any:
         """
         Insert document to the collection with generated id
         Args:
@@ -36,8 +40,15 @@ class AbstractAutoIncrementDatabase:
                     {"_id": database_manager.collection_name},
                     {"$inc": {"counter": 1}}, upsert=True, return_document=True
                 )
+
+                to_insert = document.model_dump(by_alias=True)
+                to_insert["_id"] = res["counter"]
+
                 return await database_manager.collection.insert_one(
-                    {"_id": res["counter"], **document}
+                    to_insert
                 )
             except DuplicateKeyError:
                 continue
+
+    @abstractmethod
+    async def insert_with_id(self, document) -> None: ...

@@ -1,10 +1,11 @@
 """UserDatabaseManager definition"""
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.counters import AutoIncrementDatabaseInterface
 from db.models.user import User
 from config import Config
 
 
-class UserDatabaseManager(AbstractDatabaseManager):
+class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
     """Database methods to work with users"""
 
     collection_name = Config.Collections.users
@@ -47,7 +48,6 @@ class UserDatabaseManager(AbstractDatabaseManager):
             return None
         return User(**user)
 
-
     async def add_role(self, user_id: int, role_id: str) -> None:
         """
         Adding role to user
@@ -60,3 +60,11 @@ class UserDatabaseManager(AbstractDatabaseManager):
             {"_id": user_id},
             {"$push": {"roles": role_id}}
         )
+
+    async def insert_with_id(self, user: User) -> None:
+        """
+        Insert used with auto increment
+        Args:
+            user: used document to insert
+        """
+        await self._insert_one_with_id(self, user)

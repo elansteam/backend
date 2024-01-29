@@ -1,0 +1,1 @@
+poetry run python manage.py test --config testing/testing.env

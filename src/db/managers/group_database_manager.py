@@ -2,10 +2,11 @@
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config
+from db.helpers.counters import AutoIncrementDatabaseInterface
 from db.models.group_role import GroupRole
 
 
-class GroupDatabaseManager(AbstractDatabaseManager):
+class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
     """Database methods with groups"""
 
     collection_name = Config.Collections.groups
@@ -81,3 +82,11 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         if members is None:
             return list()
         return members["members"][user_id]
+
+    async def insert_with_id(self, group: Group) -> None:
+        """
+        Insert used with auto increment
+        Args:
+            user: used document to insert
+        """
+        await self._insert_one_with_id(self, group)

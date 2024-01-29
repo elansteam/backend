@@ -7,7 +7,8 @@ from motor.core import AgnosticDatabase
 
 from config import Config
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
-
+import asyncio
+import time
 
 class Database:
     db: AgnosticDatabase | None = None
@@ -19,10 +20,14 @@ async def setup_and_teardown():
 
     # connection to database
     AbstractDatabaseManager.connect_to_database(url=Config.db_connect_url)
+    await AbstractDatabaseManager.client.drop_database(Config.db_name)
     Database.db = AbstractDatabaseManager.get_db()
+
+
 
     yield
 
-    await AbstractDatabaseManager.client.drop_database(Config.db_name)
+
+    # await asyncio.sleep(5)
     AbstractDatabaseManager.close_database_connection()
     logger.info("Dropped database and closed connection")
