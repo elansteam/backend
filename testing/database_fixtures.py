@@ -5,8 +5,8 @@ from loguru import logger
 import pytest_asyncio
 from motor.core import AgnosticDatabase
 
-from src.config import Config
-from src.db.MongoManager import MongoManager
+from config import Config
+from db.MongoManager import MongoManager
 import asyncio
 import time
 

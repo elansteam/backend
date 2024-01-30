@@ -1,9 +1,9 @@
 """Counters internal database manager for auto increment ids"""
-from src.config import Config
+from config import Config
 from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
 from abc import abstractmethod
-from src.db.MongoManager import MongoManager
+from db.MongoManager import MongoManager
 
 
 class AutoIncrementDatabaseInterface:

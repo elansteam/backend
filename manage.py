@@ -7,9 +7,9 @@ import argparse
 import sys
 from pathlib import Path
 from dotenv import load_dotenv
-import colorlog
 import uvicorn
 from loguru import logger
+
 
 def parse_arguments():
     """Parsing args from command line"""

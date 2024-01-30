@@ -1,12 +1,12 @@
 """File to test core database methods"""
 import pytest
-from src.config import Config
+from config import Config
 import pytest_asyncio
 from testing.database_fixtures import setup_and_teardown
-from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
-import src.db
-from src.db.models.group import Group
-from src.db.MongoManager import MongoManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
+import db
+from db.models.group import Group
+from db.MongoManager import MongoManager
 
 
 @pytest.mark.asyncio
@@ -30,7 +30,7 @@ async def test_autoincrement_simple():
 
     collection = MongoManager.get_db().get_collection(Config.Collections.groups)
 
-    await src.db.group.insert_with_id(group_first)
+    await db.group.insert_with_id(group_first)
 
     assert await collection.count_documents({"name": "first"}) == 1
 
@@ -38,7 +38,7 @@ async def test_autoincrement_simple():
 
     assert temp_user["_id"] == 1
 
-    await src.db.group.insert_with_id(group_second)
+    await db.group.insert_with_id(group_second)
 
     assert await collection.count_documents({"name": "second"}) == 1
 
@@ -54,7 +54,7 @@ async def test_autoincrement_simple():
 
     assert await collection.count_documents({"name": "first"}) == 0
 
-    await src.db.group.insert_with_id(group_third)
+    await db.group.insert_with_id(group_third)
 
     assert await collection.count_documents({"name": "third"}) == 1
 
@@ -72,7 +72,7 @@ async def test_autoincrement_stress():
             owner=-1
         )
 
-        await src.db.group.insert_with_id(current_user)
+        await db.group.insert_with_id(current_user)
 
         temp_user = await collection.find_one({"name": str(i + 1)})
 

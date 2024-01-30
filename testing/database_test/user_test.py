@@ -1,13 +1,13 @@
 """File to test core database methods"""
 import pytest
-from src.config import Config
+from config import Config
 import pytest_asyncio
 from testing.database_fixtures import setup_and_teardown
-from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from loguru import logger
-import src.db as db
-from src.db.models.user import User
-from src.db.MongoManager import MongoManager
+import db as db
+from db.models.user import User
+from db.MongoManager import MongoManager
 
 
 @pytest.mark.asyncio

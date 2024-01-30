@@ -1,10 +1,9 @@
 """DomainRouterDatabaseManager definition"""
 from pymongo.errors import DuplicateKeyError
 
-from src.db.MongoManager import MongoManager
-from src.config import Config
-from src.db.models.entity import Entity
-from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
+from config import Config
+from db.models.entity import Entity
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 
 
 class DomainRouterDatabaseManager(AbstractDatabaseManager):

@@ -1,7 +1,7 @@
 """AbstractDatabaseManager definition"""
 from motor.core import AgnosticCollection, AgnosticClient
-from src.utils.singleton import Singleton
-from src.db.MongoManager import MongoManager
+from utils.singleton import Singleton
+from db.MongoManager import MongoManager
 
 
 class AbstractDatabaseManager(Singleton):

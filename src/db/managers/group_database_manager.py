@@ -1,8 +1,8 @@
 """GroupDatabaseManager definition"""
-from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
-from src.db.models.group import Group
-from src.config import Config
-from src.db.helpers.AutoIncrementDatabaseInterface import AutoIncrementDatabaseInterface
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.models.group import Group
+from config import Config
+from db.helpers.AutoIncrementDatabaseInterface import AutoIncrementDatabaseInterface
 
 
 class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):

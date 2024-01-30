@@ -1,9 +1,8 @@
 """Core database mongo manager"""
 
 from loguru import logger
-from typing import Any
 from motor.motor_asyncio import AsyncIOMotorClient
-from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
+from motor.core import AgnosticDatabase, AgnosticClient
 
 
 class MongoManager:

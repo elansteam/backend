@@ -3,12 +3,13 @@ from typing import Literal
 
 from fastapi import APIRouter
 
-import src.db as db
-from src.db.models.user import UserSignup, User
-from src.auth.utils import get_hashed_password
-from src.auth.utils import verify_password, create_token
-from src.auth.token_schema import TokenSchema
-from src.utils.response_utils import get_error_response, get_response_model, get_error_schema, get_response
+import db as db
+from db.models.user import UserSignup, User
+from auth.utils import get_hashed_password
+from auth.utils import verify_password, create_token
+from auth.token_schema import TokenSchema
+from utils.response_utils import get_error_response, get_response_model, get_error_schema, \
+    get_response
 
 router = APIRouter()
 

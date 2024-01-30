@@ -2,7 +2,6 @@
 Helpers for auth stuff
 """
 from datetime import datetime, timedelta
-from enum import Enum
 from fastapi import HTTPException, Depends
 from passlib.context import CryptContext
 from jose import jwt
@@ -11,22 +10,9 @@ from starlette.responses import JSONResponse
 from config import Config
 import db
 from db.models.user import User
+from auth.Permissions import Permissions
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-class Permissions(Enum):
-    """Permission codes"""
-    # ADMIN = 0 fixme: not used
-    CAN_CREATE_USER = 1
-    CAN_SET_ROLE = 2
-    CAN_CREATE_ROLE = 3
-    CAN_ADD_USER_TO_GROUP = 4
-    CAN_CREATE_GROUP = 5
-    CAN_CREATE_GROUP_ROLE = 6
-    CAN_ADD_GROUP_ROLE = 7
-    CAN_ADD_ROLE_TO_USER = 8
-    # TODO: add more perms
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
@@ -169,7 +155,7 @@ def auth_user(*permissions: Permissions):
     """
     Decorator
     Use:
-    >>> def endpoint(user: User = Depends(auth_user(Permissions.CAN_ADD_USER_TO_GROUP)))
+    >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
     Auth user by permissions.
     Args:
         *permissions: Permissions, which must contain user roles

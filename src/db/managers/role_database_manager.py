@@ -1,8 +1,8 @@
 """Role database manager."""
 
-from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
-from src.db.models.role import Role
-from src.config import Config
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.models.role import Role
+from config import Config
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):
