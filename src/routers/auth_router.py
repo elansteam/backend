@@ -33,10 +33,10 @@ async def signin(login: str, password: str, login_type: Literal["email", "domain
         case "id":
             user = await db.user.get(int(login))
     if user is None:
-        return get_error_response("Invalid login")
+        return get_error_response("INVALID_LOGIN")
 
     if not verify_password(password, user.password_hash):
-        return get_error_response("Invalid password")
+        return get_error_response("INVALID_PASSWORD")
 
     return get_response({
         "access_token": create_token(str(user.id)),
@@ -63,12 +63,12 @@ async def signup(user: UserSignup):
 
     user_with_exact_email = await db.user.get_by_email(user.email)
     if user_with_exact_email is not None:
-        return get_error_response("Email already in use")
+        return get_error_response("EMAIL_IN_USE")
 
     if user.domain is not None:
         status = await db.domain.reserve(user.domain)
         if status is False:
-            return get_error_response("Domain already in use")
+            return get_error_response("DOMAIN_IN_USE")
 
     created_user_id = await db.user.insert_with_id(User(**user_to_create))
 
