@@ -9,7 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import colorlog
 import uvicorn
-
+from loguru import logger
 
 def parse_arguments():
     """Parsing args from command line"""
@@ -33,13 +33,6 @@ def main():  # pylint: disable=missing-function-docstring
     sys.path.append(str(project_root) + "/src")
     args = parse_arguments()
 
-    handler = colorlog.StreamHandler()
-
-    logger = colorlog.getLogger(__name__)
-    logger.setLevel(colorlog.INFO)
-    logger.addHandler(handler)
-    handler.setFormatter(colorlog.ColoredFormatter('%(red)s%(levelname)s:%(name)s:%(message)s'))
-
     # Check the command and execute the corresponding logic
     match args.command:
         case "run":
@@ -60,11 +53,11 @@ def main():  # pylint: disable=missing-function-docstring
             os.system("pytest ./testing -vv")
         case "lint":  # run linting
             logger.info("Running pylint...")
-            os.system("pylint --recursive=y ./src/ ./testing/")
+            os.system("pylint --recursive=y ./src/")
             logger.info("Running ruff...")
             os.system("ruff .")
             logger.info("Running mypy...")
-            os.system("mypy ./src/ ./testing/")
+            os.system("mypy ./src/")
         case _:
             print(f"Unknown command: {args.command}")
 
