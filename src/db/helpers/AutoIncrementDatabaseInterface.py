@@ -1,13 +1,9 @@
 """Counters internal database manager for auto increment ids"""
-from typing import Any, TypeVar
-import db.helpers.abstract_database_manager
-from config import Config
+from src.config import Config
 from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
 from abc import abstractmethod
-
-DatabaseManagerType = TypeVar("DatabaseManagerType",
-                              bound=db.helpers.abstract_database_manager.AbstractDatabaseManager)
+from src.db.MongoManager import MongoManager
 
 
 class AutoIncrementDatabaseInterface:
@@ -16,20 +12,18 @@ class AutoIncrementDatabaseInterface:
     __internal_collection_name: str = Config.Collections.internal_counters
 
     async def _insert_one_with_id(self,
-                                  database_manager: DatabaseManagerType,
-                                  document: BaseModel) -> Any:
+                                  target_collection: str,
+                                  document: BaseModel) -> int:
         """
         Insert document to the collection with generated id
         Args:
-            database_manager: the collection name
+            target_collection: target collection name
             document: the document to insert
         Returns:
-            Result of `insert_one` method
+            id for new created element
         """
 
-        internal_database_collection = database_manager.get_db().get_collection(
-            self.__internal_collection_name
-        )
+        internal_database_collection = MongoManager.get_db().get_collection(self.__internal_collection_name)
 
         if internal_database_collection is None:
             raise ConnectionError("Database is not connected")
@@ -37,18 +31,21 @@ class AutoIncrementDatabaseInterface:
         while True:
             try:
                 res = await internal_database_collection.find_one_and_update(
-                    {"_id": database_manager.collection_name},
+                    {"_id": target_collection},
                     {"$inc": {"counter": 1}}, upsert=True, return_document=True
                 )
 
                 to_insert = document.model_dump(by_alias=True)
                 to_insert["_id"] = res["counter"]
 
-                return await database_manager.collection.insert_one(
+                await MongoManager.get_db().get_collection(target_collection).insert_one(
                     to_insert
                 )
+                return res["counter"]
             except DuplicateKeyError:
                 continue
+        return -1
 
     @abstractmethod
-    async def insert_with_id(self, document) -> None: ...
+    async def insert_with_id(self, document) -> None:
+        ...

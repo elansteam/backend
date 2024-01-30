@@ -15,11 +15,11 @@ class Group(BaseModel):
     domain: str | None = Field(None)
     """Group domain"""
 
-    members: dict[int, list[str]] = {}
+    members: dict[int, tuple[int, list[str]]] = {}
     """Group members"""
 
     owner: int
     """User ID of group owner"""
 
-    group_roles: list[str] = Field(list())
+    group_roles: dict[str, int] = Field(dict())
     """List of names group roles in group"""

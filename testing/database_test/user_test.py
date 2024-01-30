@@ -1,16 +1,16 @@
 """File to test core database methods"""
 import pytest
-from config import Config
+from src.config import Config
 import pytest_asyncio
-from testing.database_fixtures import Database, setup_and_teardown
+from testing.database_fixtures import setup_and_teardown
 from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
 from loguru import logger
-import db
+import src.db as db
 from src.db.models.user import User
+from src.db.MongoManager import MongoManager
 
 
 @pytest.mark.asyncio
-# @pytest.mark.parametrize("mode", ["simple", "stress"], ids=["simple", "stress"])
 async def test_autoincrement_simple():
     """Testing autoincrement technology for user"""
 
@@ -37,7 +37,7 @@ async def test_autoincrement_simple():
 
     logger.info("Created all users")
 
-    collection = Database.db.get_collection(Config.Collections.users)
+    collection = MongoManager.get_db().get_collection(Config.Collections.users)
 
     await db.user.insert_with_id(user_first)
 
@@ -78,7 +78,8 @@ async def test_autoincrement_simple():
 
 @pytest.mark.asyncio
 async def test_autoincrement_stress():
-    collection = Database.db.get_collection(Config.Collections.users)
+    collection = MongoManager.get_db().get_collection(Config.Collections.users)
+
     for i in range(100):
         current_user = User(
             first_name=str(i + 1),
@@ -86,7 +87,6 @@ async def test_autoincrement_stress():
             email="test@gmail.com",
             password_hash="test_hash"
         )
-
         await db.user.insert_with_id(current_user)
 
         temp_user = await collection.find_one({"first_name": str(i + 1)})

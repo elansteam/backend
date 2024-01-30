@@ -12,7 +12,7 @@ class Config:
         os.environ.get("COLLECTION_ROLES"),
         os.environ.get("COLLECTION_GROUP_ROLES"),
         os.environ.get("COLLECTION_GROUPS"),
-        os.environ.get("COLLECTION_NAME_ROUTER"),
+        os.environ.get("COLLECTION_DOMAIN"),
         os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES"),
         os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES"),
         os.environ.get("ALGORITHM"),
@@ -27,7 +27,7 @@ class Config:
         os.environ.get("COLLECTION_ROLES"),
         os.environ.get("COLLECTION_GROUP_ROLES"),
         os.environ.get("COLLECTION_GROUPS"),
-        os.environ.get("COLLECTION_NAME_ROUTER"),
+        os.environ.get("COLLECTION_DOMAIN"),
         os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES"),
         os.environ.get("REFRESH_TOKEN_EXPIRE_MINUTES"),
         os.environ.get("ALGORITHM"),
@@ -46,7 +46,7 @@ class Config:
         roles = os.environ.get("COLLECTION_ROLES") or ""
         group_roles = os.environ.get("COLLECTION_GROUP_ROLES") or ""
         groups = os.environ.get("COLLECTION_GROUPS") or ""
-        name_router = os.environ.get("COLLECTION_NAME_ROUTER") or ""
+        domain_router = os.environ.get("COLLECTION_DOMAIN") or ""
         internal_counters = os.environ.get("COLLECTION_INTERNAL_COUNTERS") or ""
 
     class Auth:

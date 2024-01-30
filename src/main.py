@@ -4,9 +4,9 @@ from loguru import logger
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Config
-from db.helpers.abstract_database_manager import AbstractDatabaseManager
 import routers.auth_router
 import routers.group_roles_router
+from src.db.MongoManager import MongoManager
 
 
 @asynccontextmanager
@@ -20,12 +20,12 @@ async def lifespan(_app: FastAPI):
     # TODO: add logger options
 
     # on startup
-    AbstractDatabaseManager.connect_to_database(url=Config.db_connect_url)
+    MongoManager.connect(Config.db_connect_url, Config.db_name)
 
-    # await AbstractDatabaseManager.get_db()["Users"].insert_one({"users": "admin"})
     yield
     # on shutdown
-    AbstractDatabaseManager.close_database_connection()
+    # await MongoManager.get_client().drop_database(Config.db_name)
+    MongoManager.disconnect()
 
 
 app = FastAPI(title=Config.app_title, debug=True, lifespan=lifespan)

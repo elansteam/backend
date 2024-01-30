@@ -1,22 +1,15 @@
 """UserDatabaseManager definition"""
-from db.helpers.abstract_database_manager import AbstractDatabaseManager
-from db.helpers.counters import AutoIncrementDatabaseInterface
-from db.models.user import User
-from config import Config
+from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
+from src.db.helpers.AutoIncrementDatabaseInterface import AutoIncrementDatabaseInterface
+from src.db.models.user import User
+from src.config import Config
+from loguru import logger
 
 
 class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
     """Database methods to work with users"""
 
     collection_name = Config.Collections.users
-
-    async def create(self, user: User) -> None:
-        """
-        Creating user in database
-        Args:
-            user: user object to create
-        """
-        await self.collection.insert_one(**user.model_dump())
 
     async def get(self, user_id: int) -> User | None:
         """
@@ -29,6 +22,7 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
         """
 
         user = await self.collection.find_one({"_id": user_id})
+        logger.debug(f"User with id {user_id} found as {user}")
         if user is None:
             return None
         return User(**user)
@@ -61,10 +55,10 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
             {"$push": {"roles": role_id}}
         )
 
-    async def insert_with_id(self, user: User) -> None:
+    async def insert_with_id(self, user: User) -> int:
         """
         Insert used with auto increment
         Args:
             user: used document to insert
         """
-        await self._insert_one_with_id(self, user)
+        return await self._insert_one_with_id(self.collection_name, user)

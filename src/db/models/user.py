@@ -17,10 +17,12 @@ class User(BaseModel):
 
 class UserSignup(BaseModel):
     """Data for Signup user"""
+    domain: str | None = Field(None)
     password: str
     first_name: str
     last_name: str
-    mid_name: str | None = None
+    mid_name: str | None = Field(None)
+    email: str
 
 
 class UserSignin(BaseModel):

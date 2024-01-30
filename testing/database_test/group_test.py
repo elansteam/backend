@@ -1,12 +1,12 @@
 """File to test core database methods"""
 import pytest
-from config import Config
+from src.config import Config
 import pytest_asyncio
-from testing.database_fixtures import Database, setup_and_teardown
+from testing.database_fixtures import setup_and_teardown
 from src.db.helpers.abstract_database_manager import AbstractDatabaseManager
-from loguru import logger
-import db
+import src.db
 from src.db.models.group import Group
+from src.db.MongoManager import MongoManager
 
 
 @pytest.mark.asyncio
@@ -28,9 +28,9 @@ async def test_autoincrement_simple():
         owner=-1
     )
 
-    collection = Database.db.get_collection(Config.Collections.groups)
+    collection = MongoManager.get_db().get_collection(Config.Collections.groups)
 
-    await db.group.insert_with_id(group_first)
+    await src.db.group.insert_with_id(group_first)
 
     assert await collection.count_documents({"name": "first"}) == 1
 
@@ -38,7 +38,7 @@ async def test_autoincrement_simple():
 
     assert temp_user["_id"] == 1
 
-    await db.group.insert_with_id(group_second)
+    await src.db.group.insert_with_id(group_second)
 
     assert await collection.count_documents({"name": "second"}) == 1
 
@@ -54,7 +54,7 @@ async def test_autoincrement_simple():
 
     assert await collection.count_documents({"name": "first"}) == 0
 
-    await db.group.insert_with_id(group_third)
+    await src.db.group.insert_with_id(group_third)
 
     assert await collection.count_documents({"name": "third"}) == 1
 
@@ -65,14 +65,14 @@ async def test_autoincrement_simple():
 
 @pytest.mark.asyncio
 async def test_autoincrement_stress():
-    collection = Database.db.get_collection(Config.Collections.groups)
+    collection = MongoManager.get_db().get_collection(Config.Collections.groups)
     for i in range(100):
         current_user = Group(
             name=str(i + 1),
             owner=-1
         )
 
-        await db.group.insert_with_id(current_user)
+        await src.db.group.insert_with_id(current_user)
 
         temp_user = await collection.find_one({"name": str(i + 1)})
 

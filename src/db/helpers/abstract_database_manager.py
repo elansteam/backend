@@ -1,59 +1,29 @@
 """AbstractDatabaseManager definition"""
-from loguru import logger
-from typing import Any
-from motor.motor_asyncio import AsyncIOMotorClient
-from motor.core import AgnosticCollection, AgnosticDatabase, AgnosticClient
-from config import Config
-from utils.singleton import Singleton
+from motor.core import AgnosticCollection, AgnosticClient
+from src.utils.singleton import Singleton
+from src.db.MongoManager import MongoManager
 
 
 class AbstractDatabaseManager(Singleton):
-    """Base class for database managers
-    Usage:
-    Make new database manager class and inherit of this class
-    redefine collection_name, it should be representation of collection
-    in database
-    """
-    _db: AgnosticDatabase | None = None
-    client: AgnosticClient | None = None
-    collection_name: str = ""
-    """Child class collection name"""
+    """Abstract DatabaseManager for inheritance"""
+
+    collection_name: str | None = None
+
+    @property
+    def client(self) -> AgnosticClient:
+        """
+        Get MongoClient
+        Returns: MongoClient instance
+        """
+        return MongoManager.get_client()
 
     @property
     def collection(self) -> AgnosticCollection:
         """
-        Returns: special collection by self.collection_name in MongoDB
+        Get MongoCollection for current collection name
+        Returns: MongoCollection instance
         """
-        if self._db is None:
-            raise ConnectionError("Database is not connected")
-        return self._db[self.collection_name]
+        if self.collection_name is None:
+            raise NotImplementedError("collection name is not defined")
 
-    @classmethod
-    def connect_to_database(cls, url: str) -> None:
-        """Method to connect to the database
-        Args:
-            url: MongoDB url
-        """
-
-        # Create a new client and connect to the server
-        cls.client = AsyncIOMotorClient(url)
-        cls._db = cls.client[Config.db_name]
-        logger.info("Successfully connected to MongoDB.")
-
-    @classmethod
-    def close_database_connection(cls) -> None:
-        """
-        Close connection to the database
-        """
-        if cls.client is None:
-            return
-        logger.info("Closing connection with MongoDB.")
-        cls.client.close()
-        logger.info("Successfully closed connection with MongoDB.")
-
-    @classmethod
-    def get_db(cls) -> AgnosticDatabase | None:
-        """
-        Returns: database object
-        """
-        return cls._db
+        return MongoManager.get_db().get_collection(self.collection_name)
