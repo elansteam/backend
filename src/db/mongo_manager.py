@@ -18,6 +18,11 @@ class MongoManager:
         Get database
         Returns: database
         """
+
+        if cls._db is None:
+            logger.error("Database not initialized")
+            raise ConnectionError("Database not initialized")
+
         return cls._db
 
     @classmethod
@@ -26,6 +31,11 @@ class MongoManager:
         Get mongo client
         Returns: mongo client
         """
+
+        if cls._client is None:
+            logger.error("Client not initialized")
+            raise ConnectionError("Client not initialized")
+
         return cls._client
 
     @classmethod
