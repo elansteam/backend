@@ -60,8 +60,6 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
     """
     name = model.__name__
 
-    logger.debug(name)
-
     response_model: Type[BaseModel] = type(f"ResponseModel{name}", (BaseModel,), {
         "__annotations__": {
             "status": Literal["OK"],

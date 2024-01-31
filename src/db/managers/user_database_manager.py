@@ -22,7 +22,6 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
         """
 
         user = await self.collection.find_one({"_id": user_id})
-        logger.debug(f"User with id {user_id} found as {user}")
         if user is None:
             return None
         return User(**user)
