@@ -3,6 +3,7 @@
 from starlette.responses import JSONResponse
 from typing import Any, Type
 from pydantic import BaseModel
+from typing import Literal
 
 
 def get_error_schema(description: str):
@@ -56,7 +57,7 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]]) -> Type[Ba
     """
     response_model: Type[BaseModel] = type(f"ResponseModel{model.__name__}", (BaseModel,), {
         "__annotations__": {
-            "status": str,
+            "status": Literal["OK"],
             "response": model
         }
     })
@@ -66,7 +67,7 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]]) -> Type[Ba
 def get_response(model: BaseModel | dict[str, Any]) -> JSONResponse:
     if isinstance(model, BaseModel):
         model = model.model_dump(by_alias=True)
-        
+
     return JSONResponse(status_code=200, content={
         "status": "OK",
         "response": model
