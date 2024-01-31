@@ -23,10 +23,10 @@ class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfa
             return None
         return Group(**group)
 
-    async def insert_with_id(self, group: Group) -> None:
+    async def insert_with_id(self, group: Group) -> int:
         """
         Insert used with auto increment
         Args:
             group: used document to insert
         """
-        await self._insert_one_with_id(self.collection_name, group)
+        return await self._insert_one_with_id(self.collection_name, group)
