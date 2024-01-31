@@ -4,6 +4,7 @@ from starlette.responses import JSONResponse
 from typing import Any, Type
 from pydantic import BaseModel
 from typing import Literal
+from loguru import logger
 
 
 def get_error_schema(description: str):
@@ -44,27 +45,36 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
     if isinstance(data, BaseModel):
         data = data.model_dump(by_alias=True)
 
-    return JSONResponse(status_code=status_code, content={"status": status,
-                                                          "response": data
-                                                          })
+    response = JSONResponse(status_code=status_code, content={"status": status,
+                                                              "response": data
+                                                              })
+    return response
 
 
-def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]]) -> Type[BaseModel]:
+def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
+                       dict[str, Any]) -> Type[BaseModel]:
     """
     Return a pydantic custom model for response model
     Args:
         model: target template model
     """
-    response_model: Type[BaseModel] = type(f"ResponseModel{model.__name__}", (BaseModel,), {
+    name = model.__name__
+    
+    logger.debug(name)
+
+    response_model: Type[BaseModel] = type(f"ResponseModel{name}", (BaseModel,), {
         "__annotations__": {
             "status": Literal["OK"],
             "response": model
         }
     })
+
     return response_model
 
 
-def get_response(model: BaseModel | dict[str, Any]) -> JSONResponse:
+def get_response(model: BaseModel | dict[str, Any] = None) -> JSONResponse:
+    if model is None:
+        model = {}
     if isinstance(model, BaseModel):
         model = model.model_dump(by_alias=True)
 
