@@ -2,7 +2,7 @@
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config
-from db.helpers.AutoIncrementDatabaseInterface import AutoIncrementDatabaseInterface
+from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 
 
 class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):

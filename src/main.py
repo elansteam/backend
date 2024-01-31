@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Config
 import routers.auth_router
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 
 
 @asynccontextmanager

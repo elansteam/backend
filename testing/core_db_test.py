@@ -1,7 +1,7 @@
 """File to test core database methods"""
 import pytest
 from config import Config
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 from database_fixtures import setup_and_teardown
 
 

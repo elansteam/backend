@@ -6,7 +6,7 @@ from testing.database_fixtures import setup_and_teardown
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
 import db
 from db.models.group import Group
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 
 
 @pytest.mark.asyncio

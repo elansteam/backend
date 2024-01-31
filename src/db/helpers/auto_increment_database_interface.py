@@ -3,7 +3,7 @@ from config import Config
 from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
 from abc import abstractmethod
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 
 
 class AutoIncrementDatabaseInterface:
@@ -47,5 +47,5 @@ class AutoIncrementDatabaseInterface:
         return -1
 
     @abstractmethod
-    async def insert_with_id(self, document) -> None:
+    async def insert_with_id(self, document) -> int:
         ...

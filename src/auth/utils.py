@@ -23,6 +23,9 @@ def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
     Returns:
         True - if role has permission, else False
     """
+    if role_staff % 2 == 1:
+        return True  # if user is admin
+
     for perm in permissions:
         if (role_staff >> perm.value) % 2 == 0:
             return False
@@ -171,12 +174,14 @@ def auth_user(*permissions: Permissions):
         for role_name in user.roles:
             cur_role = await db.role.get(role_name)
             if cur_role is not None:
-                result_mask |= cur_role.permissions
+                result_mask |= cur_role.role_code
 
         if not has_role_permissions(result_mask, *permissions):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"User <{user.name}> has no required permission"
+                detail=f"User <{user.id}> with email <{user.email}> has "
+                       f"no required permissions: "
+                       f"{', '.join(map(lambda x: str(x).split('.')[1], permissions))}"
             )
         return user
 

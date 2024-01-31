@@ -7,7 +7,7 @@ from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from loguru import logger
 import db as db
 from db.models.user import User
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 
 
 @pytest.mark.asyncio

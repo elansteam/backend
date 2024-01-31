@@ -1,6 +1,6 @@
 """UserDatabaseManager definition"""
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
-from db.helpers.AutoIncrementDatabaseInterface import AutoIncrementDatabaseInterface
+from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 from db.models.user import User
 from config import Config
 from loguru import logger

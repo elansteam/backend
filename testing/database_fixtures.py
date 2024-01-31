@@ -6,7 +6,7 @@ import pytest_asyncio
 from motor.core import AgnosticDatabase
 
 from config import Config
-from db.MongoManager import MongoManager
+from db.mongo_manager import MongoManager
 import asyncio
 import time
 
