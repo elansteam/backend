@@ -59,7 +59,7 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
 
         return True
 
-    async def attach(self, domain: str, entity_type: str, entity_id: str) -> None:
+    async def attach(self, domain: str, entity_type: str, entity_id: int) -> None:
         """
         Attaching entity to existing reserved entity. Defined entity type and id
         Args:
