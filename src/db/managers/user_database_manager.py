@@ -55,6 +55,18 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
             {"$push": {"roles": role_id}}
         )
 
+    async def delete_role(self, user_id: int, role_id: str) -> None:
+        """
+        Deleting role to user
+        Args:
+            user_id: target user
+            role_id: role to delete
+        """
+        await self.collection.update_one(
+            {"_id": user_id},
+            {"$pull": {"roles": role_id}}
+        )
+
     async def insert_with_id(self, user: User) -> int:
         """
         Insert used with auto increment
