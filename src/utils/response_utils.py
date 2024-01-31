@@ -3,7 +3,6 @@
 from typing import Literal
 from typing import Any, Type
 from pydantic import BaseModel
-from loguru import logger
 from starlette.responses import JSONResponse
 
 

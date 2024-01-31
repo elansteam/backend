@@ -4,7 +4,7 @@ Helpers for auth stuff
 from datetime import datetime, timedelta
 from fastapi import HTTPException, Depends
 from passlib.context import CryptContext
-from jose import jwt
+from jose import jwt, ExpiredSignatureError
 from starlette import status
 from starlette.responses import JSONResponse
 from config import Config
@@ -115,6 +115,7 @@ def create_token(
 
     to_encode = {"exp": result_expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM)
+
     return encoded_jwt
 
 
@@ -130,19 +131,18 @@ async def get_current_user(token: str) -> User:
     """
     try:
         payload = jwt.decode(token, Config.Auth.JWT_SECRET_KEY, algorithms=[Config.Auth.ALGORITHM])
-        token_exp = payload["exp"]
         token_sub = payload["sub"]
 
-        if datetime.fromtimestamp(token_exp) < datetime.now():
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token expired",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+    except ExpiredSignatureError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="TOKEN_EXPIRED",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
+            detail="ERR_WHILE_VALIDATING",
             headers={"WWW-Authenticate": "Bearer"},
         ) from exc
 
@@ -151,7 +151,7 @@ async def get_current_user(token: str) -> User:
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not find user",
+            detail="COULD_NOT_FIND_USER",
         )
 
     return user
