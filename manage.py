@@ -55,7 +55,7 @@ def main():  # pylint: disable=missing-function-docstring
             logger.info("Running pylint...")
             os.system("pylint --recursive=y ./src/")
             logger.info("Running ruff...")
-            os.system("ruff .")
+            os.system("ruff src/")
             logger.info("Running mypy...")
             os.system("mypy ./src/")
         case _:

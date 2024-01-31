@@ -21,5 +21,5 @@ class Group(BaseModel):
     owner: int
     """User ID of group owner"""
 
-    group_roles: dict[str, int] = Field(dict())
+    group_roles: dict[str, int] = Field({})
     """List of names group roles in group"""

@@ -10,7 +10,7 @@ from starlette.responses import JSONResponse
 from config import Config
 import db
 from db.models.user import User
-from auth.Permissions import Permissions
+from auth.permissions import Permissions
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

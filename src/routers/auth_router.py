@@ -3,7 +3,7 @@ from typing import Literal
 
 from fastapi import APIRouter
 
-import db as db
+import db
 from db.models.user import UserSignup, User
 from auth.utils import get_hashed_password
 from auth.utils import verify_password, create_token

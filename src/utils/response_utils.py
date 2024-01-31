@@ -1,10 +1,10 @@
 """Some useful stuff"""
 
-from starlette.responses import JSONResponse
+from typing import Literal
 from typing import Any, Type
 from pydantic import BaseModel
-from typing import Literal
 from loguru import logger
+from starlette.responses import JSONResponse
 
 
 def get_error_schema(description: str):
@@ -59,7 +59,7 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
         model: target template model
     """
     name = model.__name__
-    
+
     logger.debug(name)
 
     response_model: Type[BaseModel] = type(f"ResponseModel{name}", (BaseModel,), {
@@ -72,7 +72,14 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
     return response_model
 
 
-def get_response(model: BaseModel | dict[str, Any] = None) -> JSONResponse:
+def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONResponse:
+    """
+    Returns an object that should return API method
+    Args:
+        model: model that provides response form
+    Returns:
+    Object that should return API method
+    """
     if model is None:
         model = {}
     if isinstance(model, BaseModel):

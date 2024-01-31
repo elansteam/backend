@@ -1,5 +1,5 @@
 """Role definition"""
-from pydantic import BaseModel, field_validator, ValidationError, Field
+from pydantic import BaseModel, Field
 
 
 class Role(BaseModel):

@@ -2,17 +2,18 @@
 
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient
-from motor.core import AgnosticDatabase, AgnosticClient
+from motor.core import AgnosticClient
+from pymongo.database import Database
 
 
 class MongoManager:
     """The main class for communicate with database"""
 
-    _db: AgnosticDatabase | None = None
+    _db: Database | None = None
     _client: AgnosticClient | None = None
 
     @classmethod
-    def get_db(cls) -> AgnosticDatabase:
+    def get_db(cls) -> Database:
         """
         Get database
         Returns: database
@@ -36,7 +37,7 @@ class MongoManager:
             db_name: name for target database
         """
         cls._client = AsyncIOMotorClient(url)
-        cls._db = cls._client[db_name]
+        cls._db = cls._client.get_database(db_name)
         logger.info(f"Connecting to database: {db_name} by pass {url}")
 
         if cls._db is None:
