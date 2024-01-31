@@ -49,7 +49,8 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
         """
         to_reserve = Entity(
             _id=domain,
-            entity_type="reserve"
+            entity_type="reserve",
+            entity_id=-1
         )
 
         try:

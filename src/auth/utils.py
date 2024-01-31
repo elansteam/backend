@@ -99,18 +99,21 @@ def create_token(
     Returns:
         JWT in string
     """
+
+    result_expires_delta: datetime
+
     if expires_delta is not None:
-        expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
+        result_expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
     elif is_access:
-        expires_delta = datetime.utcnow() + timedelta(
+        result_expires_delta = datetime.utcnow() + timedelta(
             minutes=Config.Auth.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     else:
-        expires_delta = datetime.utcnow() + timedelta(
+        result_expires_delta = datetime.utcnow() + timedelta(
             minutes=Config.Auth.REFRESH_TOKEN_EXPIRE_MINUTES
         )
 
-    to_encode = {"exp": expires_delta, "sub": str(subject)}
+    to_encode = {"exp": result_expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM)
     return encoded_jwt
 
