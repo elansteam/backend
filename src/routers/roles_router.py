@@ -1,4 +1,5 @@
 """Roles endpoints"""
+from loguru import logger
 from fastapi import APIRouter, Depends
 from db.models.user import User
 from db.models.role import Role, RoleCreate, role_name_to_id
@@ -6,7 +7,6 @@ from auth.utils import auth_user, Permissions
 from utils.response_utils import get_error_schema, get_error_response, get_response, \
     get_response_model
 import db
-from loguru import logger
 
 router = APIRouter()
 

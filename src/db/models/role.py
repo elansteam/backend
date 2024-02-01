@@ -1,6 +1,6 @@
 """Role definition"""
-from pydantic import BaseModel, Field, AfterValidator, ValidationError
 from typing import Annotated
+from pydantic import BaseModel, Field, AfterValidator
 
 
 def not_negative(value: int) -> int:
