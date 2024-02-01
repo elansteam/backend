@@ -1,25 +1,16 @@
 """GroupDatabaseManager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
-from bson.objectid import ObjectId
 from config import Config
+from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 
 
-class GroupDatabaseManager(AbstractDatabaseManager):
+class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
     """Database methods with groups"""
 
     collection_name = Config.Collections.groups
 
-    async def create(self, group: Group) -> None:
-        """
-        Creating new group in database
-        Args:
-            group: group object to create
-        """
-
-        await self.db.insert_one(group.model_dump())
-
-    async def get_by_id(self, _id: ObjectId) -> Group | None:
+    async def get(self, _id: int) -> Group | None:
         """
         Getting group by id
         Args:
@@ -27,69 +18,15 @@ class GroupDatabaseManager(AbstractDatabaseManager):
         Returns:
             Group object or None if not found
         """
-        group = await self.db.find_one({"_id": _id})
+        group = await self.collection.find_one({"_id": _id})
         if group is None:
             return None
         return Group(**group)
 
-    async def get_by_name(self, name: str) -> Group | None:
+    async def insert_with_id(self, group: Group) -> int:
         """
-        Getting group by name
+        Insert used with auto increment
         Args:
-            name: group name to find
-
-        Returns:
-            Group object or None if not found
+            group: used document to insert
         """
-
-        group = await self.db.find_one({"name": name})
-        if group is None:
-            return None
-        return Group(**group)
-
-    async def add_user(self, group_name: str, user_name: str) -> None:
-        """
-        Adding user to group members
-        Args:
-            group_name: where add user
-            user_name: user to add
-        """
-
-        await self.db.update_one({"name": group_name},
-                                 {"$set": {f"members.{user_name}": []}})
-
-    async def add_group_role(self, group_name: str, group_role_name: str) -> None:
-        """
-        Adding group_role to group
-        Args:
-            group_name: where add group_role
-            group_role_name: role name to add
-        """
-        await self.db.update_one({"name": group_name},
-                                 {"$push": {"group_roles": group_role_name}})
-
-    async def get_members(self, group_name) -> list[str]:
-        """
-        Getting list of group members
-        Args:
-            group_name:
-        Returns:
-            list of usernames
-        """
-
-        members = await self.db.find_one({"name": group_name})
-
-        return list(members["members"].keys())
-
-    async def get_member_group_roles(self, group_name: str, user_name: str) -> list[str]:
-        """
-        Getting list of group roles of concrete group member
-        Args:
-            group_name: group, where user being
-            user_name: user to get group roles
-        Returns:
-            list if group roles names, which has user with name user_name.
-        """
-        members = await self.db.find_one({"name": group_name})
-
-        return members[user_name]
+        return await self._insert_one_with_id(self.collection_name, group)

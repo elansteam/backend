@@ -1,51 +1,32 @@
-"""Roles database manager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+"""Role database manager."""
+
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.role import Role
 from config import Config
-from bson.objectid import ObjectId
 
 
 class RoleDatabaseManager(AbstractDatabaseManager):
-    """Role database methods"""
+    """Role database manager."""
 
     collection_name = Config.Collections.roles
 
-    async def get_by_name(self, role_name: str) -> Role | None:
-        """Get role by name
-
+    async def insert(self, role: Role) -> None:
+        """
+        Insert new role to database
         Args:
-            role_name (str): the role name
+            role: role to insert
+        """
+        await self.collection.insert_one(role.model_dump(by_alias=True))
 
+    async def get(self, role_id: str) -> Role | None:
+        """
+        Get role by id
+        Args:
+            role_id: Target role id
         Returns:
-            role object or None if not found
+            Role or None
         """
-        role = await self.db.find_one({"name": role_name})
-
-        if role is None:
+        result = await self.collection.find_one({"_id": role_id})
+        if result is None:
             return None
-
-        return Role(**role)
-
-    async def get_by_id(self, _id: ObjectId) -> Role | None:
-        """
-        Getting role by id
-        Args:
-            _id: mongo object id
-
-        Returns:
-            Role object or None if not found
-        """
-
-        role = await self.db.find_one({"_id": _id})
-        if role is None:
-            return None
-
-        return Role(**role)
-
-    async def create(self, role: Role) -> None:
-        """Insert new role to the database
-
-        Args:
-            role: the role to insert
-        """
-        await self.db.insert_one(role.model_dump())
+        return Role(**result)

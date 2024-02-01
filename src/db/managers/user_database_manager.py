@@ -1,59 +1,74 @@
 """UserDatabaseManager definition"""
-from db.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 from db.models.user import User
 from config import Config
-from bson.objectid import ObjectId
 
 
-class UserDatabaseManager(AbstractDatabaseManager):
+class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
     """Database methods to work with users"""
 
     collection_name = Config.Collections.users
 
-    async def create(self, user: User) -> None:
+    async def get(self, user_id: int) -> User | None:
         """
-        Creating user in database
+        Getting user by id
         Args:
-            user: user object to create
-        """
-        await self.db.insert_one(**user.model_dump())
-
-    async def get_by_name(self, user_name: str) -> User | None:
-        """
-        Getting user by username
-        Args:
-            user_name: username
+            user_id: the user id
 
         Returns:
             User object or None, if not found
         """
 
-        user = await self.db.find_one({"name": user_name})
+        user = await self.collection.find_one({"_id": user_id})
         if user is None:
             return None
         return User(**user)
 
-    async def get_by_id(self, _id: ObjectId) -> User | None:
+    async def get_by_email(self, email: str) -> User | None:
         """
-        Getting user by id
+        Getting user by email
         Args:
-            _id: mongodb object id
+            email: the email
+
         Returns:
-            User object or None if not found
+            User object or None, if not found
         """
 
-        user = await self.db.find_one({"_id": _id})
+        user = await self.collection.find_one({"email": email})
         if user is None:
             return None
         return User(**user)
 
-    async def add_role(self, user_name: str, role_name: str) -> None:
+    async def add_role(self, user_id: int, role_id: str) -> None:
         """
         Adding role to user
         Args:
-            user_name: user where add
-            role_name: role which add
+            user_id: the user
+            role_id: the role
         """
 
-        await self.db.update_one({"name": user_name},
-                                 {"$push": {"roles": role_name}})
+        await self.collection.update_one(
+            {"_id": user_id},
+            {"$push": {"roles": role_id}}
+        )
+
+    async def delete_role(self, user_id: int, role_id: str) -> None:
+        """
+        Deleting role to user
+        Args:
+            user_id: target user
+            role_id: role to delete
+        """
+        await self.collection.update_one(
+            {"_id": user_id},
+            {"$pull": {"roles": role_id}}
+        )
+
+    async def insert_with_id(self, user: User) -> int:
+        """
+        Insert used with auto increment
+        Args:
+            user: used document to insert
+        """
+        return await self._insert_one_with_id(self.collection_name, user)

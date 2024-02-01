@@ -1,12 +1,31 @@
 """Role definition"""
-from pydantic import BaseModel, field_validator, ValidationError, Field
-from bson.objectid import ObjectId
+from typing import Annotated
+from pydantic import BaseModel, Field, AfterValidator
+
+
+def not_negative(value: int) -> int:
+    """
+    Check if value is not negative
+    Args:
+        value: integer
+    Returns:
+        value
+    Raises:
+        ValidationError: if value is negative
+    """
+    if not value >= 0:
+        raise ValueError("role code must be not negative")
+    return value
+
+
+NotNegative = Annotated[int, AfterValidator(not_negative)]  # custom type
 
 
 class Role(BaseModel):
     """Role representation in database"""
 
-    id: ObjectId = Field(..., alias='_id')
+    id: str = Field("__untitled", alias='_id')
+    """Short string ID (e.g. 'admin'))"""
 
     name: str
     """Role name"""
@@ -14,18 +33,29 @@ class Role(BaseModel):
     description: str
     """Role description"""
 
-    role_code: int
+    role_code: NotNegative
     """Role representation in integer"""
 
-    @field_validator("role_code")
-    def validate_role_code(cls, value):
-        """
-        Validate role code
-        Args:
-            value: permission code
-        Raises:
-            ValidationError: if role code not positive
-        """
-        if value < 0:
-            raise ValidationError("Role code must be positive")
-        return value
+
+class RoleCreate(BaseModel):
+    """Model for interface to create role"""
+
+    name: str
+    """Role name"""
+
+    description: str
+    """Role description"""
+
+    role_code: NotNegative
+    """Role representation in integer"""
+
+
+def role_name_to_id(role_name: str) -> str:
+    """
+    Converts role name to role id
+    Args:
+        role_name: role name to convert
+
+    Returns: result id
+    """
+    return role_name.lower().replace(" ", "_")

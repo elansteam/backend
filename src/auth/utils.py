@@ -2,34 +2,31 @@
 Helpers for auth stuff
 """
 from datetime import datetime, timedelta
-from enum import Enum
-
-from bson import ObjectId
-from fastapi import HTTPException, Depends
+from fastapi import Depends
 from passlib.context import CryptContext
-from jose import jwt
+from jose import jwt, ExpiredSignatureError
 from starlette import status
-from starlette.responses import JSONResponse
 from config import Config
-from db.managers.user_database_manager import UserDatabaseManager
-from db.managers.role_database_manager import RoleDatabaseManager
+import db
 from db.models.user import User
+from auth.permissions import Permissions
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-class Permissions(Enum):
-    """Permission codes"""
-    # ADMIN = 0 fixme: not used
-    CAN_CREATE_USER = 1
-    CAN_SET_ROLE = 2
-    CAN_CREATE_ROLE = 3
-    CAN_ADD_USER_TO_GROUP = 4
-    CAN_CREATE_GROUP = 5
-    CAN_CREATE_GROUP_ROLE = 6
-    CAN_ADD_GROUP_ROLE = 7
-    CAN_ADD_ROLE_TO_USER = 8
-    # TODO: add more perms
+class AuthException(Exception):
+    """Custom exception for auth errors"""
+    status: str
+    status_code: int
+    response: dict
+
+    def __init__(self, _status: str, _status_code: int, _response: dict | None = None):
+        self.status = _status
+        self.status_code = _status_code
+        if _response is None:
+            self.response = {}
+        else:
+            self.response = _response
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
@@ -40,6 +37,7 @@ def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
     Returns:
         True - if role has permission, else False
     """
+
     for perm in permissions:
         if (role_staff >> perm.value) % 2 == 0:
             return False
@@ -60,23 +58,6 @@ def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
         role_code += 1 << perm.value
 
     return role_code
-
-
-db_user = UserDatabaseManager()
-db_role = RoleDatabaseManager()
-
-AUTH_RESPONSE_MODEL = {
-    "description": "Failed auth",
-    "content": {
-        "application/json": {
-            "example": {"detail": [{"msg": "Auth failed"}]},
-        }
-    },
-}
-
-AUTH_FAILED = JSONResponse(
-    status_code=401, content={"detail": [{"msg": "Auth failed"}]}
-)
 
 
 def get_hashed_password(password: str) -> str:
@@ -105,7 +86,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_token(
-        subject: str, is_access=True, expires_delta: int = None
+        subject: str, is_access=True, expires_delta: int | None = None
 ) -> str:
     """
     Generating JWT by data and expires time
@@ -116,19 +97,23 @@ def create_token(
     Returns:
         JWT in string
     """
+
+    result_expires_delta: datetime
+
     if expires_delta is not None:
-        expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
+        result_expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
     elif is_access:
-        expires_delta = datetime.utcnow() + timedelta(
+        result_expires_delta = datetime.utcnow() + timedelta(
             minutes=Config.Auth.ACCESS_TOKEN_EXPIRE_MINUTES
         )
     else:
-        expires_delta = datetime.utcnow() + timedelta(
+        result_expires_delta = datetime.utcnow() + timedelta(
             minutes=Config.Auth.REFRESH_TOKEN_EXPIRE_MINUTES
         )
 
-    to_encode = {"exp": expires_delta, "sub": str(subject)}
+    to_encode = {"exp": result_expires_delta, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM)
+
     return encoded_jwt
 
 
@@ -138,34 +123,31 @@ async def get_current_user(token: str) -> User:
         token (str): access token
 
     Raises:
-        HTTPException: Raise 401/403 error if access token is invalid
+        AuthException: Raise 401 error if access token is invalid
     Returns:
         User: user object
     """
     try:
         payload = jwt.decode(token, Config.Auth.JWT_SECRET_KEY, algorithms=[Config.Auth.ALGORITHM])
-        token_exp = payload["exp"]
         token_sub = payload["sub"]
 
-        if datetime.fromtimestamp(token_exp) < datetime.now():
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token expired",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
+    except ExpiredSignatureError as exc:
+        raise AuthException(
+            _status="TOKEN_EXPIRED",
+            _status_code=status.HTTP_401_UNAUTHORIZED
+        ) from exc
     except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+        raise AuthException(
+            _status="VALIDATE_ERROR",
+            _status_code=status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
-    user = await db_user.get_by_name(token_sub)
+    user = await db.user.get(int(token_sub))
 
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not find user",
+        raise AuthException(
+            _status="COULD_NOT_FIND_USER",
+            _status_code=status.HTTP_401_UNAUTHORIZED,
         )
 
     return user
@@ -175,28 +157,40 @@ def auth_user(*permissions: Permissions):
     """
     Decorator
     Use:
-    >>> def endpoint(user: User = Depends(auth_user(Permissions.CAN_ADD_USER_TO_GROUP)))
+    >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
     Auth user by permissions.
     Args:
         *permissions: Permissions, which must contain user roles
     Returns:
         function, which auth user
     Raises:
-        HTTPException: Raise 403 error user hasn`t permissions
+        AuthException: Raise 403 error user hasn`t permissions
     """
 
     async def wrapper(user: User = Depends(get_current_user)) -> User:
         result_mask = 0
 
         for role_name in user.roles:
-            cur_role = await db_role.get_by_name(role_name)
+            cur_role = await db.role.get(role_name)
             if cur_role is not None:
-                result_mask |= cur_role.permissions
+                result_mask |= cur_role.role_code
 
         if not has_role_permissions(result_mask, *permissions):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"User <{user.name}> has no required permission"
+
+            required_permissions = []
+
+            for permission in permissions:
+                if not has_role_permissions(result_mask, permission):
+                    required_permissions.append(permission)
+
+            raise AuthException(
+                _status="ACCESS_DENIED",
+                _status_code=status.HTTP_403_FORBIDDEN,
+                _response={
+                    "required_permissions": [
+                        *map(lambda x: str(x).split(".")[1], required_permissions)
+                    ]
+                }
             )
         return user
 

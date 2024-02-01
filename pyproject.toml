@@ -13,11 +13,21 @@ passlib = "^1.7.4"
 python-dotenv = "^1.0.0"
 uvicorn = "^0.24.0.post1"
 python-jose = "^3.3.0"
-pylint = "^3.0.2"
-pytest = "^7.4.3"
 logging = "^0.4.9.6"
 colorlog = "^6.7.0"
+pytest-asyncio = "^0.23.3"
+loguru = "^0.7.2"
+httpx = "^0.26.0"
+trio = "^0.24.0"
 
+
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.0.2"
+pytest = "^7.4.3"
+ruff = "^0.1.8"
+mypy = "^1.7.1"
+types-passlib = "^1.7.7.13"
+types-python-jose = "^3.3.4.8"
 
 [build-system]
 requires = ["poetry-core"]
@@ -27,3 +37,7 @@ build-backend = "poetry.core.masonry.api"
 pythonpath = [
   "."
 ]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"

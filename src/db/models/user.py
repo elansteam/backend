@@ -1,30 +1,31 @@
 """User definition and some useful stuff about user"""
 from pydantic import BaseModel, Field
-from bson.objectid import ObjectId
 
 
 class User(BaseModel):
     """User representation in database"""
-    id: ObjectId = Field(..., alias='_id')
-    name: str
+    id: int = Field(-1, alias='_id')
+    email: str
+    domain: str | None = Field(None)
     password_hash: str
     first_name: str
     last_name: str
-    mid_name: str | None
+    mid_name: str | None = Field(None)
     roles: list[str] = Field([])
     """List of global roles, which user have"""
 
 
 class UserSignup(BaseModel):
     """Data for Signup user"""
-    name: str
+    domain: str | None = Field(None)
     password: str
     first_name: str
     last_name: str
-    mid_name: str | None = None
+    mid_name: str | None = Field(None)
+    email: str
 
 
 class UserSignin(BaseModel):
     """Data for user signin"""
-    name: str
+    login: str
     password: str

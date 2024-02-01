@@ -2,21 +2,15 @@
 Testing micro util functions
 """
 import pytest
-from src.auth.utils import (has_role_permissions,
-                            gen_code_staff_by_permissions)
+from auth.utils import has_role_permissions, \
+                       gen_code_staff_by_permissions
 from auth.utils import Permissions
 
 
 @pytest.mark.parametrize("data", [
-    (Permissions.CAN_CREATE_ROLE,),
+    (Permissions.CREATE_ROLE,),
     (),
-    (Permissions.CAN_CREATE_USER, Permissions.CAN_ADD_USER_TO_GROUP),
-    (Permissions.CAN_CREATE_GROUP,
-     Permissions.CAN_SET_ROLE,
-     Permissions.CAN_ADD_GROUP_ROLE,
-     Permissions.CAN_ADD_USER_TO_GROUP,
-     Permissions.CAN_ADD_ROLE_TO_USER,
-     Permissions.CAN_CREATE_USER)
+    (Permissions.CHANGE_USER_ROLES, Permissions.CREATE_ROLE),
 ])
 def test_has_role_permission(data: tuple[Permissions]):
     """

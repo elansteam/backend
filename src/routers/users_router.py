@@ -1,76 +1,72 @@
 """Users endpoints"""
 from fastapi import APIRouter, Depends
 
+from db.models.user import User
 import db
-from db.models.user import User, UserSignup
-from db.models.role import Role
-from auth.utils import auth_user, Permissions
-from auth.utils import get_hashed_password
-from utils.utils import get_error_response, get_error_schema
+from utils.response_utils import get_error_response, get_response_model, get_error_schema, \
+    get_response
+from auth.utils import auth_user
+from auth.utils import Permissions
 
 router = APIRouter()
 
 
 @router.post(
-    "/create",
-    response_model=User,
+    "/add_role",
+    response_model=get_response_model(),
     responses={
-        400: get_error_schema("Failed to create user")
+        400: get_error_schema("Failed to add role")
     }
 )
-async def create(user_auth: UserSignup,
-                 _current_user: User = Depends(auth_user(
-                     Permissions.CAN_CREATE_USER
-                 ))):
-    """Creating new user in database"""
-    user_by_name = await db.user.get_by_name(user_auth.name)
-    if user_by_name is not None:
-        return get_error_response(
-            f"User with this user name <{user_auth.name}> already exists")
+async def add_role(user_id: int, role_id: str,
+                   _current_user: User = Depends(auth_user(
+                       Permissions.CHANGE_USER_ROLES
+                   ))):
+    """Add a role to the user"""
+    user_to_add = await db.user.get(user_id)
 
-    password_hash = get_hashed_password(user_auth.password)
+    if user_to_add is None:
+        return get_error_response("USER_NOT_FOUND")
 
-    user_to_create = {
-        **user_auth.model_dump(),
-        "password_hash": password_hash
-    }
+    role_to_add = await db.role.get(role_id)
 
-    user_to_create.pop("password")
+    if role_to_add is None:
+        return get_error_response("ROLE_NOT_FOUND")
 
-    user = User(**user_to_create)
+    if role_id in user_to_add.roles:
+        return get_error_response("ROLE_ALREADY_EXISTS")
 
-    await db.user.create(user)
+    await db.user.add_role(user_id, role_id)
 
-    return user
+    return get_response()
 
 
 @router.post(
-    "/add_role",
-    response_model=Role,
+    "/delete_role",
+    response_model=get_response_model(),
     responses={
-        400: get_error_schema("Failed to add role to user")
+        400: get_error_schema("Failed to delete role from user")
     }
 )
-async def add_role_to_user(user_name: str, role_name: str,
-                           _current_user: User = Depends(auth_user(
-                               Permissions.CAN_ADD_ROLE_TO_USER
-                           ))):
-    """Adding role to user"""
+async def delete_role(user_id: int, role_id: str,
+                      _current_user: User = Depends(auth_user(
+                          Permissions.CHANGE_USER_ROLES
+                      ))):
+    """Delete a role from the user"""
 
-    cur_user = await db.user.get_by_name(user_name)
+    user_to_delete = await db.user.get(user_id)
 
-    if cur_user is None:
-        return get_error_response(f"User with user name {user_name} doesn't exist")
+    if user_to_delete is None:
+        return get_error_response("USER_NOT_FOUND")
 
-    role = await db.role.get_by_name(role_name)
+    role_to_delete = await db.role.get(role_id)
 
-    if role is None:
-        return get_error_response(f"Role with name <{role_name}> doesn't exist")
+    if role_to_delete is None:
+        return get_error_response("ROLE_NOT_FOUND")
 
-    if role_name in cur_user.roles:
-        return get_error_response(
-            f"Role with name <{role_name}> doesn't exist now in User <{user_name}>"
-        )
+    if role_id not in user_to_delete.roles:
+        return get_error_response("ROLE_NOT_EXISTS")
 
-    await db.role.add_role(user_name, role_name)
-    return role
+    await db.user.delete_role(user_id, role_id)
+
+    return get_response()

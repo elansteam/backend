@@ -1,23 +1,25 @@
 """Group definition"""
-from bson import ObjectId
 from pydantic import BaseModel, Field
 
 
 class Group(BaseModel):
     """Group representation in database"""
-    id: ObjectId = Field(..., alias='_id')
+    id: int = Field(-1, alias='_id')
 
     name: str
     """Group name"""
 
-    description: str
+    description: str = Field("")
     """Group description"""
 
-    members: dict[str, list[str]] = {}
+    domain: str | None = Field(None)
+    """Group domain"""
+
+    members: dict[int, tuple[int, list[str]]] = {}
     """Group members"""
 
-    owner: str
-    """Group owner name"""
+    owner: int
+    """User ID of group owner"""
 
-    group_roles: list[str] = []
+    group_roles: dict[str, int] = Field({})
     """List of names group roles in group"""
