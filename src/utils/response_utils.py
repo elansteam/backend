@@ -53,7 +53,8 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
 def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
                        dict[str, Any]) -> Type[BaseModel]:
     """
-    Return a pydantic custom model for response model
+    Return a pydantic custom model for response model.
+    Use without argument to make response empty.
     Args:
         model: target template model
     """
