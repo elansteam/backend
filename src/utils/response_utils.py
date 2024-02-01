@@ -44,9 +44,13 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
     if isinstance(data, BaseModel):
         data = data.model_dump(by_alias=True)
 
-    response = JSONResponse(status_code=status_code, content={"status": status,
-                                                              "response": data
-                                                              })
+    response = JSONResponse(
+        status_code=status_code,
+        content={
+            "status": status,
+            "response": data
+        }
+    )
     return response
 
 
