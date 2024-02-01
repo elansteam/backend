@@ -6,6 +6,7 @@ from auth.utils import auth_user, Permissions
 from utils.response_utils import get_error_schema, get_error_response, get_response, \
     get_response_model
 import db
+from loguru import logger
 
 router = APIRouter()
 
@@ -32,7 +33,8 @@ async def create(role: RoleCreate,
     role_id = role_name_to_id(role.name)
 
     if await db.role.get(role_id) is not None:
-        return get_error_response(f"Role with id <{role_id}> already exists")
+        logger.info(f"Role with id <{role_id}> already exists")
+        return get_error_response("ROLE_ALREADY_EXISTS")
 
     await db.role.insert(Role(
         _id=role_id,
