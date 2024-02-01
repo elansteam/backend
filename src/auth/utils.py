@@ -23,8 +23,6 @@ def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
     Returns:
         True - if role has permission, else False
     """
-    if role_staff % 2 == 1:
-        return True  # if user is admin
 
     for perm in permissions:
         if (role_staff >> perm.value) % 2 == 0:
