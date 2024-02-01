@@ -15,14 +15,12 @@ async def lifespan(_app: FastAPI):
     Args:
         _app (FastAPI): application object. It is not using right now
     """
-    # TODO: add logger options
 
     # on startup
     MongoManager.connect(Config.db_connect_url, Config.db_name)
 
     yield
     # on shutdown
-    # await MongoManager.get_client().drop_database(Config.db_name)
     MongoManager.disconnect()
 
 
