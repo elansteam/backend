@@ -24,7 +24,7 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
             return None
         return Entity(**res)
 
-    async def resolve_by_id(self, domain: str, entity_type: str) -> int | None:
+    async def resolve_id(self, domain: str, entity_type: str) -> int | None:
         """
         Resolving entity by domain with type and id
         Args:
