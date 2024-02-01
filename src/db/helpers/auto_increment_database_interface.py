@@ -44,7 +44,6 @@ class AutoIncrementDatabaseInterface:
                 return res["counter"]
             except DuplicateKeyError:
                 continue
-        return -1
 
     @abstractmethod
     async def insert_with_id(self, document) -> int:
