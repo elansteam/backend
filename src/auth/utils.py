@@ -2,17 +2,31 @@
 Helpers for auth stuff
 """
 from datetime import datetime, timedelta
-from fastapi import HTTPException, Depends
+from fastapi import Depends
 from passlib.context import CryptContext
 from jose import jwt, ExpiredSignatureError
 from starlette import status
-from starlette.responses import JSONResponse
 from config import Config
 import db
 from db.models.user import User
 from auth.permissions import Permissions
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class AuthException(Exception):
+    """Custom exception for auth errors"""
+    status: str
+    status_code: int
+    response: dict
+
+    def __init__(self, _status: str, _status_code: int, _response: dict | None = None):
+        self.status = _status
+        self.status_code = _status_code
+        if _response is None:
+            self.response = {}
+        else:
+            self.response = _response
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
@@ -44,20 +58,6 @@ def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
         role_code += 1 << perm.value
 
     return role_code
-
-
-AUTH_RESPONSE_MODEL = {
-    "description": "Failed auth",
-    "content": {
-        "application/json": {
-            "example": {"detail": [{"msg": "Auth failed"}]},
-        }
-    },
-}
-
-AUTH_FAILED = JSONResponse(
-    status_code=401, content={"detail": [{"msg": "Auth failed"}]}
-)
 
 
 def get_hashed_password(password: str) -> str:
@@ -123,7 +123,7 @@ async def get_current_user(token: str) -> User:
         token (str): access token
 
     Raises:
-        HTTPException: Raise 401/403 error if access token is invalid
+        AuthException: Raise 401 error if access token is invalid
     Returns:
         User: user object
     """
@@ -132,24 +132,22 @@ async def get_current_user(token: str) -> User:
         token_sub = payload["sub"]
 
     except ExpiredSignatureError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="TOKEN_EXPIRED",
-            headers={"WWW-Authenticate": "Bearer"},
+        raise AuthException(
+            _status="TOKEN_EXPIRED",
+            _status_code=status.HTTP_401_UNAUTHORIZED
         ) from exc
     except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="ERR_WHILE_VALIDATING",
-            headers={"WWW-Authenticate": "Bearer"},
+        raise AuthException(
+            _status="VALIDATE_ERROR",
+            _status_code=status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
     user = await db.user.get(int(token_sub))
 
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="COULD_NOT_FIND_USER",
+        raise AuthException(
+            _status="COULD_NOT_FIND_USER",
+            _status_code=status.HTTP_401_UNAUTHORIZED,
         )
 
     return user
@@ -166,7 +164,7 @@ def auth_user(*permissions: Permissions):
     Returns:
         function, which auth user
     Raises:
-        HTTPException: Raise 403 error user hasn`t permissions
+        AuthException: Raise 403 error user hasn`t permissions
     """
 
     async def wrapper(user: User = Depends(get_current_user)) -> User:
@@ -178,11 +176,21 @@ def auth_user(*permissions: Permissions):
                 result_mask |= cur_role.role_code
 
         if not has_role_permissions(result_mask, *permissions):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"User <{user.id}> with email <{user.email}> has "
-                       f"no required permissions: "
-                       f"{', '.join(map(lambda x: str(x).split('.')[1], permissions))}"
+
+            required_permissions = []
+
+            for permission in permissions:
+                if not has_role_permissions(result_mask, permission):
+                    required_permissions.append(permission)
+
+            raise AuthException(
+                _status="ACCESS_DENIED",
+                _status_code=status.HTTP_403_FORBIDDEN,
+                _response={
+                    "required_permissions": [
+                        *map(lambda x: str(x).split(".")[1], required_permissions)
+                    ]
+                }
             )
         return user
 
