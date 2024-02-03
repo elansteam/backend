@@ -4,4 +4,4 @@ from . import group
 from . import role
 from . import entity
 
-__all__ = ["user", "group", "role", "entity", "entity"]
+__all__ = ["user", "group", "role", "entity"]
