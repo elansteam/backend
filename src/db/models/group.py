@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 class Group(BaseModel):
     """Group representation in database"""
-    id: int = Field(-1, alias='_id')
+    id: int = Field(alias='_id')
 
     name: str
     """Group name"""

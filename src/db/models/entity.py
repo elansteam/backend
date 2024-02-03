@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class Entity(BaseModel):
     """Domain router representation in the database"""
 
-    id: str = Field("", alias='_id')
+    id: str = Field(alias='_id')
     """Domain router domain"""
 
     entity_type: Literal["group"] | Literal["user"] | Literal["reserve"]

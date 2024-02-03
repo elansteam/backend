@@ -24,7 +24,7 @@ NotNegative = Annotated[int, AfterValidator(not_negative)]  # custom type
 class Role(BaseModel):
     """Role representation in database"""
 
-    id: str = Field("__untitled", alias='_id')
+    id: str = Field(alias='_id')
     """Short string ID (e.g. 'admin'))"""
 
     name: str
