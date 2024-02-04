@@ -60,7 +60,7 @@ async def signup(user: UserSignup):
     user_to_create = {
         **user.model_dump(),
         "password_hash": password_hash,
-        "_id": -1
+        "_id": 1
     }
 
     user_with_exact_email = await db.user.get_by_email(user.email)
