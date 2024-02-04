@@ -59,7 +59,8 @@ async def signup(user: UserSignup):
 
     user_to_create = {
         **user.model_dump(),
-        "password_hash": password_hash
+        "password_hash": password_hash,
+        "_id": -1
     }
 
     user_with_exact_email = await db.user.get_by_email(user.email)
@@ -71,7 +72,9 @@ async def signup(user: UserSignup):
         if status is False:
             return get_error_response("DOMAIN_IN_USE")
 
-    created_user_id = await db.user.insert_with_id(User(**user_to_create))
+    created_user_id = await db.user.insert_with_id(
+        User(**user_to_create)
+    )  # TODO: set here try except
 
     if user.domain is not None:
         await db.domain.attach(user.domain, "user", created_user_id)
