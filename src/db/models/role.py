@@ -1,7 +1,6 @@
 """Role definition"""
-from typing import Annotated
-from pydantic import BaseModel, Field, AfterValidator
-from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
+from pydantic import BaseModel, Field
+from db.models.annotations import NameAnnotation, DescriptionAnnotation, \
     RoleCodeAnnotation, StrIdAnnotation
 
 

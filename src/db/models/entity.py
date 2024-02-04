@@ -13,5 +13,5 @@ class Entity(BaseModel):
     entity_type: Literal["group"] | Literal["user"] | Literal["reserve"]
     """Type of the linked entity"""
 
-    entity_id: IntIdAnnotation | None = Field(None)
+    entity_id: IntIdAnnotation | None = None
     """ID of the linked entity"""

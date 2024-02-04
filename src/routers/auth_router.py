@@ -29,7 +29,7 @@ async def signin(login: str, password: str, login_type: Literal["email", "domain
             user = await db.user.get_by_email(login)
         case "domain":
             entity = await db.domain.resolve(login)
-            if entity is not None and entity.entity_type == "user":
+            if entity is not None and entity.entity_type == "user" and entity.entity_id is not None:
                 user = await db.user.get(entity.entity_id)
         case "id":
             user = await db.user.get(int(login))

@@ -1,6 +1,7 @@
-import db.models.annotations.validators
+"""Annotations for BaseModels fields"""
 from typing import Annotated
 from pydantic import AfterValidator
+from db.models.annotations import validators
 
 IntIdAnnotation = Annotated[int, AfterValidator(validators.positive_number)]
 EmailAnnotation = Annotated[str, AfterValidator(validators.email_string)]
