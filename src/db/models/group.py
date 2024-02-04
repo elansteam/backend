@@ -1,24 +1,26 @@
 """Group definition"""
 from pydantic import BaseModel, Field
+from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
+    DomainAnnotation
 
 
 class Group(BaseModel):
     """Group representation in database"""
-    id: int = Field(alias='_id')
+    id: IntIdAnnotation = Field(alias='_id')
 
-    name: str
+    name: NameAnnotation
     """Group name"""
 
-    description: str = Field("")
+    description: DescriptionAnnotation = Field("")
     """Group description"""
 
-    domain: str | None = Field(None)
+    domain: DomainAnnotation | None = Field(None)
     """Group domain"""
 
     members: dict[int, tuple[int, list[str]]] = {}
     """Group members"""
 
-    owner: int
+    owner: IntIdAnnotation
     """User ID of group owner"""
 
     group_roles: dict[str, int] = Field({})
