@@ -72,9 +72,14 @@ async def signup(user: UserSignup):
         if status is False:
             return get_error_response("DOMAIN_IN_USE")
 
-    created_user_id = await db.user.insert_with_id(
-        User(**user_to_create)
-    )  # TODO: set here try except
+    try:
+        created_user_id = await db.user.insert_with_id(
+            User(**user_to_create)
+        )
+    except Exception as e:
+        if user.domain is not None:
+            await db.domain.delete(user.domain)  # deleting reserved entity
+        raise e
 
     if user.domain is not None:
         await db.domain.attach(user.domain, "user", created_user_id)

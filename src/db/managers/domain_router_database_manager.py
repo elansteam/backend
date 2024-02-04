@@ -72,3 +72,11 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
             "entity_type": entity_type,
             "entity_id": entity_id
         }}, upsert=True)
+
+    async def delete(self, domain: str) -> None:
+        """
+        Deleting entity by domain
+        Args:
+            domain: domain
+        """
+        await self.collection.delete_one({"_id": domain})
