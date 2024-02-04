@@ -104,7 +104,7 @@ def string_id(string: str) -> str:
     Raises:
         ValueError: is string is not valid
     """
-    pattern = r"[a-zA-Z]+(?:_[a-zA-Z]+)*"
-    if re.match(pattern, string) is None:
+    pattern = r"[a-z]+(?:_[a-z]+)*"
+    if re.fullmatch(pattern, string) is None:
         raise ValueError("String is not valid")
     return string
