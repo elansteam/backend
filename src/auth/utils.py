@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from fastapi import Depends
 from passlib.context import CryptContext
 from jose import jwt, ExpiredSignatureError
-from starlette import status
+from starlette import status as http_status
 from config import Config
 import db
 from db.models.user import User
@@ -20,13 +20,13 @@ class AuthException(Exception):
     status_code: int
     response: dict
 
-    def __init__(self, _status: str, _status_code: int, _response: dict | None = None):
-        self.status = _status
-        self.status_code = _status_code
-        if _response is None:
+    def __init__(self, status: str, status_code: int, response: dict | None = None):
+        self.status = status
+        self.status_code = status_code
+        if response is None:
             self.response = {}
         else:
-            self.response = _response
+            self.response = response
 
 
 def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
@@ -133,21 +133,21 @@ async def get_current_user(token: str) -> User:
 
     except ExpiredSignatureError as exc:
         raise AuthException(
-            _status="TOKEN_EXPIRED",
-            _status_code=status.HTTP_401_UNAUTHORIZED
+            status="TOKEN_EXPIRED",
+            status_code=http_status.HTTP_401_UNAUTHORIZED
         ) from exc
     except Exception as exc:
         raise AuthException(
-            _status="VALIDATE_ERROR",
-            _status_code=status.HTTP_401_UNAUTHORIZED,
+            status="VALIDATE_ERROR",
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
     user = await db.user.get(int(token_sub))
 
     if user is None:
         raise AuthException(
-            _status="COULD_NOT_FIND_USER",
-            _status_code=status.HTTP_401_UNAUTHORIZED,
+            status="COULD_NOT_FIND_USER",
+            status_code=http_status.HTTP_401_UNAUTHORIZED,
         )
 
     return user
@@ -185,7 +185,7 @@ def auth_user(*permissions: Permissions):
 
             raise AuthException(
                 _status="ACCESS_DENIED",
-                _status_code=status.HTTP_403_FORBIDDEN,
+                _status_code=http_status.HTTP_403_FORBIDDEN,
                 _response={
                     "required_permissions": [
                         *map(lambda x: str(x).split(".")[1], required_permissions)
