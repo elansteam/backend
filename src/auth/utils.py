@@ -184,9 +184,9 @@ def auth_user(*permissions: Permissions):
                     required_permissions.append(permission)
 
             raise AuthException(
-                _status="ACCESS_DENIED",
-                _status_code=http_status.HTTP_403_FORBIDDEN,
-                _response={
+                status="ACCESS_DENIED",
+                status_code=http_status.HTTP_403_FORBIDDEN,
+                response={
                     "required_permissions": [
                         *map(lambda x: str(x).split(".")[1], required_permissions)
                     ]
