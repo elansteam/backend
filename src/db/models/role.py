@@ -1,52 +1,35 @@
 """Role definition"""
-from typing import Annotated
-from pydantic import BaseModel, Field, AfterValidator
-
-
-def not_negative(value: int) -> int:
-    """
-    Check if value is not negative
-    Args:
-        value: integer
-    Returns:
-        value
-    Raises:
-        ValidationError: if value is negative
-    """
-    if not value >= 0:
-        raise ValueError("role code must be not negative")
-    return value
-
-
-NotNegative = Annotated[int, AfterValidator(not_negative)]  # custom type
+from pydantic import BaseModel, Field
+from db.models.annotations import NameAnnotation, DescriptionAnnotation, \
+    RoleCodeAnnotation, StrIdAnnotation
 
 
 class Role(BaseModel):
     """Role representation in database"""
 
-    id: str = Field("__untitled", alias='_id')
+    id: StrIdAnnotation = Field(alias='_id')
     """Short string ID (e.g. 'admin'))"""
 
-    name: str
+    name: NameAnnotation
     """Role name"""
 
-    description: str
+    description: DescriptionAnnotation
     """Role description"""
 
-    role_code: NotNegative
+    role_code: RoleCodeAnnotation
     """Role representation in integer"""
 
 
 class RoleCreate(BaseModel):
     """Model for interface to create role"""
 
-    name: str
+    name: NameAnnotation
     """Role name"""
 
-    description: str
+    description: DescriptionAnnotation
     """Role description"""
 
-    role_code: NotNegative
+    role_code: RoleCodeAnnotation
     """Role representation in integer"""
 
 

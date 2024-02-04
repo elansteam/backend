@@ -29,7 +29,7 @@ async def signin(login: str, password: str, login_type: Literal["email", "domain
             user = await db.user.get_by_email(login)
         case "domain":
             entity = await db.domain.resolve(login)
-            if entity is not None and entity.entity_type == "user":
+            if entity is not None and entity.entity_type == "user" and entity.entity_id is not None:
                 user = await db.user.get(entity.entity_id)
         case "id":
             user = await db.user.get(int(login))
@@ -59,7 +59,8 @@ async def signup(user: UserSignup):
 
     user_to_create = {
         **user.model_dump(),
-        "password_hash": password_hash
+        "password_hash": password_hash,
+        "_id": 1
     }
 
     user_with_exact_email = await db.user.get_by_email(user.email)
@@ -71,7 +72,14 @@ async def signup(user: UserSignup):
         if status is False:
             return get_error_response("DOMAIN_IN_USE")
 
-    created_user_id = await db.user.insert_with_id(User(**user_to_create))
+    try:
+        created_user_id = await db.user.insert_with_id(
+            User(**user_to_create)
+        )
+    except Exception as e:
+        if user.domain is not None:
+            await db.domain.delete(user.domain)  # deleting reserved entity
+        raise e
 
     if user.domain is not None:
         await db.domain.attach(user.domain, "user", created_user_id)
