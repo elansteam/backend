@@ -1,48 +1,74 @@
-from db.abstract_database_manager import AbstractDatabaseManager
-from db.models.role import Role
+"""UserDatabaseManager definition"""
+from db.helpers.abstract_database_manager import AbstractDatabaseManager
+from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 from db.models.user import User
-from db.oid import OID
-from bson import ObjectId
-from pydantic import EmailStr
 from config import Config
 
 
-class UserDatabaseManager(AbstractDatabaseManager):
-    """Методы базы данных с пользователями"""
+class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
+    """Database methods to work with users"""
 
     collection_name = Config.Collections.users
 
-    async def create(self, user: User) -> None:
-        """Создание пользователя в базе данных"""
-        await self.db.insert_one({**user.model_dump()})
+    async def get(self, user_id: int) -> User | None:
+        """
+        Getting user by id
+        Args:
+            user_id: the user id
 
-    async def get_by_id(self, oid: OID) -> User | None:
-        """Получение пользователя по ID"""
-        user = await self.db.find_one({"_id": ObjectId(oid)})
+        Returns:
+            User object or None, if not found
+        """
+
+        user = await self.collection.find_one({"_id": user_id})
         if user is None:
             return None
+        return User(**user)
 
-        return User.model_validate(user)
+    async def get_by_email(self, email: str) -> User | None:
+        """
+        Getting user by email
+        Args:
+            email: the email
 
-    async def get_by_name(self, user_name: str) -> User | None:
-        """Получение пользователя по user_name"""
+        Returns:
+            User object or None, if not found
+        """
 
-        user = await self.db.find_one({"user_name": user_name})
+        user = await self.collection.find_one({"email": email})
         if user is None:
             return None
-        return User.model_validate(user)
+        return User(**user)
 
-    async def get_by_email(self, email: EmailStr) -> User | None:
-        """Получение пользователя по email"""
+    async def add_role(self, user_id: int, role_id: str) -> None:
+        """
+        Adding role to user
+        Args:
+            user_id: the user
+            role_id: the role
+        """
 
-        user = await self.db.find_one({"email": email})
-        if user is None:
-            return None
+        await self.collection.update_one(
+            {"_id": user_id},
+            {"$push": {"roles": role_id}}
+        )
 
-        return User.model_validate(User)
+    async def delete_role(self, user_id: int, role_id: str) -> None:
+        """
+        Deleting role to user
+        Args:
+            user_id: target user
+            role_id: role to delete
+        """
+        await self.collection.update_one(
+            {"_id": user_id},
+            {"$pull": {"roles": role_id}}
+        )
 
-    async def add_role(self, user_name: str, role_name: str) -> None:
-        """Добавление пользователю роли."""
-
-        await self.db.update_one({"user_name": user_name},
-                                 {"$push": {"roles": role_name}})
+    async def insert_with_id(self, user: User) -> int:
+        """
+        Insert used with auto increment
+        Args:
+            user: used document to insert
+        """
+        return await self._insert_one_with_id(self.collection_name, user)

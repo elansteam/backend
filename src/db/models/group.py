@@ -1,22 +1,27 @@
-from pydantic import BaseModel
-from typing import List, Dict
-from config import Config
+"""Group definition"""
+from pydantic import BaseModel, Field
+from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
+    DomainAnnotation
 
 
 class Group(BaseModel):
-    """Представление группы в базе данных"""
+    """Group representation in database"""
+    id: IntIdAnnotation = Field(alias='_id')
 
-    name: str
-    """Уникальное имя группы"""
+    name: NameAnnotation
+    """Group name"""
 
-    description: str
-    """Описание группы"""
+    description: DescriptionAnnotation = Field("")
+    """Group description"""
 
-    members: Dict[str, List[str]] = {}
-    """Словарь пользователь : список ролей"""
+    domain: DomainAnnotation | None = Field(None)
+    """Group domain"""
 
-    owner: str
-    """user_name пользователя, создавшего группу"""
+    members: dict[int, tuple[int, list[str]]] = {}
+    """Group members"""
 
-    groles: List[str] = []
-    """Список ролей созданных в этой группе"""
+    owner: IntIdAnnotation
+    """User ID of group owner"""
+
+    group_roles: dict[str, int] = Field({})
+    """List of names group roles in group"""

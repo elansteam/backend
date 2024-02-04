@@ -1,61 +1,33 @@
-from pydantic import BaseModel, EmailStr
-from db.oid import OID
-from bson import ObjectId
-from typing import List
-from .role import Role
+"""User definition and some useful stuff about user"""
+from pydantic import BaseModel, Field
+from db.models.annotations import IntIdAnnotation, DomainAnnotation, EmailAnnotation, \
+    StrIdAnnotation
 
 
 class User(BaseModel):
-    """Модель пользователя в базе данных"""
-
-    _id: ObjectId
-    """Уникальный идентификатор пользователя"""
-
-    user_name: str
-    """Идентификатор пользователя"""
-
+    """User representation in database"""
+    id: IntIdAnnotation = Field(alias='_id')
+    email: EmailAnnotation
+    domain: DomainAnnotation | None = Field(None)
     password_hash: str
-    """SHA-256 хеш пароля"""
-
-    # email: EmailStr | None # TODO: add in future
-    # """Уникальный адрес электронной почты"""
-
     first_name: str
-    """Имя"""
-
     last_name: str
-    """Фамилия"""
-
-    mid_name: str | None
-    """Отчество"""
-
-    roles: List[str] = []
-    """Список ролей пользователя по их именам"""
-
-    # TODO: ADD BELOW IN FUTURE
-
-    # groups: List[ObjectId]
-    # """Группы, в которых состоит пользователь"""
-
-    # # permission: int
-    # # """Уровень доступа пользователя:
-    # # 0 - Нулевой
-    # # 1 - Пользователь может создавать группы
-    # # 3 - Пользователь может создавать задачи
-    # # 2 - Пользователь админ"""
+    mid_name: str | None = Field(None)
+    roles: list[StrIdAnnotation] = Field([])
+    """List of global roles, which user have"""
 
 
 class UserSignup(BaseModel):
-    """Представление пользователя для его создания"""
-    user_name: str
+    """Data for Signup user"""
+    domain: DomainAnnotation | None = Field(None)
     password: str
     first_name: str
     last_name: str
-    mid_name: str | None = None
-    # email: EmailStr | None = None # TODO: add in future
+    mid_name: str | None = Field(None)
+    email: EmailAnnotation
 
 
 class UserSignin(BaseModel):
-    """Представление пользователя для авторизации"""
-    user_name: str
+    """Data for user signin"""
+    login: str
     password: str

@@ -1,11 +1,20 @@
-from pydantic import BaseModel
-from typing import List
-from .permission import Permission
+"""Role definition"""
+from pydantic import BaseModel, Field
+from db.models.annotations import NameAnnotation, DescriptionAnnotation, \
+    RoleCodeAnnotation, StrIdAnnotation
 
 
 class Role(BaseModel):
-    """Представление роли пользователя, роль - совокупность permissions"""
-    name: str
-    description: str
-    permissions: List[str]
-    """Список прав доступа по именам"""
+    """Role representation in database"""
+
+    id: StrIdAnnotation = Field(alias='_id')
+    """Short string ID (e.g. 'admin'))"""
+
+    name: NameAnnotation
+    """Role name"""
+
+    description: DescriptionAnnotation
+    """Role description"""
+
+    role_code: RoleCodeAnnotation
+    """Role representation in integer"""
