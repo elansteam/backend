@@ -14,18 +14,21 @@ async def test_autoincrement_simple():
     """Testing autoincrement technology for group"""
 
     group_first = Group(
+        _id=1,  # not used
         name="first",
-        owner=-1
+        owner=1
     )
 
     group_second = Group(
+        _id=1,  # not used
         name="second",
-        owner=-1
+        owner=1
     )
 
     group_third = Group(
+        _id=1,  # not used
         name="third",
-        owner=-1
+        owner=1
     )
 
     collection = MongoManager.get_db().get_collection(Config.Collections.groups)
@@ -68,8 +71,9 @@ async def test_autoincrement_stress():
     collection = MongoManager.get_db().get_collection(Config.Collections.groups)
     for i in range(100):
         current_user = Group(
+            _id=1,  # not used
             name=str(i + 1),
-            owner=-1
+            owner=1
         )
 
         await db.group.insert_with_id(current_user)
