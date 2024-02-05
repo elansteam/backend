@@ -13,8 +13,8 @@ def email_string(email: str) -> str:
         ValueError: If string is not a valid email
     """
     pattern = r"^[a-zA-Z0-9_\.]+@[a-zA-Z0-9_\.]+\.[a-z]{2,5}"
-    match = re.match(pattern, email) is not None
-    if not match:
+    match = re.fullmatch(pattern, email) is None
+    if match:
         raise ValueError(f"String {email} is not a valid email")
     return email
 
