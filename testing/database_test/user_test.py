@@ -15,6 +15,7 @@ async def test_autoincrement_simple():
     """Testing autoincrement technology for user"""
 
     user_first = User(
+        _id=1,  # not used
         first_name="first",
         last_name="user",
         email="test@gmail.com",
@@ -22,6 +23,7 @@ async def test_autoincrement_simple():
     )
 
     user_second = User(
+        _id=1,  # not used
         first_name="second",
         last_name="user",
         email="test@gmail.com",
@@ -29,6 +31,7 @@ async def test_autoincrement_simple():
     )
 
     user_third = User(
+        _id=1,  # not used
         first_name="third",
         last_name="user",
         email="test@gmail.com",
@@ -82,6 +85,7 @@ async def test_autoincrement_stress():
 
     for i in range(100):
         current_user = User(
+            _id=1,  # not used
             first_name=str(i + 1),
             last_name="user",
             email="test@gmail.com",
