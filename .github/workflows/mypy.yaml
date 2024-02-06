@@ -20,11 +20,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install mypy
+        pip install poetry
+        poetry install
 
     - name: Run MyPy
       run: |
-        mypy --strict ${PWD} > mypy_output.txt
+        poetry shell
+        mypy --strict ./src > mypy_output.txt
       continue-on-error: true
 
     - name: Check MyPy results
