@@ -20,12 +20,13 @@ jobs:
         python-version: 3.11
 
     - name: Install dependencies
-      run: pip3 install pylint
+      run: |
+        pip3 install poetry
+        poetry install
 
     - name: Run pylint
       run: |
-        echo -e '"""Temp file for Github Action"""' > __init__.py
-        pylint ${PWD} > pylint_output.txt
+        poetry run pylint --recursive=y ./src/ > pylint_output.txt
       continue-on-error: true
 
     - name: Check pylint results
