@@ -1,12 +1,12 @@
 """Some useful stuff"""
 
 from typing import Literal
-from typing import Any, Type, Collection
+from typing import Any, Type
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
 
-def get_error_schema(description: str) -> Collection[str]:
+def get_error_schema(description: str) -> dict[str, Any]:
     """
     Args:
         description: error description
