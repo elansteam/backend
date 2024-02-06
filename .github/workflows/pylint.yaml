@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master  # Замените "main" на вашу основную ветку
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   pylint:
