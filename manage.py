@@ -57,7 +57,7 @@ def main():  # pylint: disable=missing-function-docstring
             logger.info("Running ruff...")
             os.system("ruff src/")
             logger.info("Running mypy...")
-            os.system("mypy ./src/")
+            os.system("mypy --strict ./src/")
         case _:
             print(f"Unknown command: {args.command}")
 

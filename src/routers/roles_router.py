@@ -1,9 +1,11 @@
 """Roles endpoints"""
+from typing import Any
 from loguru import logger
 from fastapi import APIRouter, Depends
 from db.models.user import User
 from db.models.role import Role
-from auth.utils import auth_user, Permissions
+from auth.utils import auth_user
+from auth.permissions import Permissions
 from utils.response_utils import get_error_schema, get_error_response, get_response, \
     get_response_model
 import db
@@ -21,7 +23,7 @@ router = APIRouter()
 async def create(role: Role,
                  _current_user: User = Depends(auth_user(
                      Permissions.CREATE_ROLE
-                 ))):
+                 ))) -> Any:
     """
     Role creation
     Args:

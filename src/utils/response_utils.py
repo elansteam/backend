@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
 
-def get_error_schema(description: str):
+def get_error_schema(description: str) -> dict[str, Any]:
     """
     Args:
         description: error description

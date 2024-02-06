@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   mypy:
@@ -20,11 +22,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install mypy
+        pip install poetry
+        poetry install
 
     - name: Run MyPy
       run: |
-        mypy --strict ${PWD} > mypy_output.txt
+        poetry run mypy --strict ./src > mypy_output.txt
       continue-on-error: true
 
     - name: Check MyPy results
