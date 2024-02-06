@@ -1,6 +1,9 @@
 """Global permissions enum"""
 import enum
 
+ALL_PERMISSIONS_ROLE_CODE: int = 2 ** 31 - 1
+"""Number that contains all bits of permissions"""
+
 
 class Permissions(enum.Enum):
     """Global Permissions enum"""

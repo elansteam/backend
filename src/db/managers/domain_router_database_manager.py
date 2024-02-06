@@ -1,6 +1,6 @@
 """DomainRouterDatabaseManager definition"""
 from pymongo.errors import DuplicateKeyError
-
+from loguru import logger
 from config import Config
 from db.models.entity import Entity
 from db.helpers.abstract_database_manager import AbstractDatabaseManager
@@ -54,6 +54,7 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
 
         try:
             await self.collection.insert_one(to_reserve.model_dump(by_alias=True))
+            logger.info(f"Reserved entity <{domain}>")
         except DuplicateKeyError:
             return False
 
@@ -80,3 +81,4 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
             domain: domain
         """
         await self.collection.delete_one({"_id": domain})
+        logger.info(f"Deleted entity <{domain}>")

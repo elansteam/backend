@@ -102,3 +102,23 @@ def string_id(string: str) -> str:
     if re.fullmatch(pattern, string) is None:
         raise ValueError("String is not valid")
     return string
+
+
+def string_positive_number(string: str) -> str:
+    """
+    Check if given string is a number and positive number
+    Args:
+        string: string to check
+    Returns:
+        string
+    Raises:
+        ValueError: if given string is not a positive number
+    """
+    num = 0
+    try:
+        num = int(string)
+    except Exception as e:
+        raise ValueError("string is not a number") from e
+    if num <= 0:
+        raise ValueError("String is not a positive number")
+    return string

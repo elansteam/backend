@@ -23,7 +23,9 @@ class AutoIncrementDatabaseInterface:
             id for new created element
         """
 
-        internal_database_collection = MongoManager.get_db().get_collection(self.__internal_collection_name)
+        internal_database_collection = MongoManager.get_db().get_collection(
+            self.__internal_collection_name
+        )
 
         if internal_database_collection is None:
             raise ConnectionError("Database is not connected")
