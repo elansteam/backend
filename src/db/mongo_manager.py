@@ -3,7 +3,6 @@
 from loguru import logger
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from motor.core import AgnosticClient
-from pymongo.database import Database
 
 
 class MongoManager:
