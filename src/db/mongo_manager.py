@@ -1,19 +1,18 @@
 """Core database mongo manager"""
 
 from loguru import logger
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from motor.core import AgnosticClient
-from pymongo.database import Database
 
 
 class MongoManager:
     """The main class for communicate with database"""
 
-    _db: Database | None = None
+    _db: AsyncIOMotorDatabase | None = None
     _client: AgnosticClient | None = None
 
     @classmethod
-    def get_db(cls) -> Database:
+    def get_db(cls) -> AsyncIOMotorDatabase:
         """
         Get database
         Returns: database
