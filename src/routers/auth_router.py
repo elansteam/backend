@@ -1,5 +1,5 @@
 """All auth methods and some useful stuff"""
-from typing import Literal
+from typing import Literal, Any
 
 from fastapi import APIRouter
 
@@ -21,7 +21,7 @@ router = APIRouter()
         400: get_error_schema("Failed to signin with provided credentials.")
     }
 )
-async def signin(login: str, password: str, login_type: Literal["email", "domain", "id"]):
+async def signin(login: str, password: str, login_type: Literal["email", "domain", "id"]) -> Any:
     """Auth user and generate JWT"""
     user = None
     match login_type:
@@ -52,7 +52,7 @@ async def signin(login: str, password: str, login_type: Literal["email", "domain
         400: get_error_schema("Signup failed")
     }
 )
-async def signup(user: UserSignup):
+async def signup(user: UserSignup) -> Any:
     """Creating new user"""
 
     password_hash = get_hashed_password(user.password)
