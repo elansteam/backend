@@ -19,6 +19,7 @@ pytest-asyncio = "^0.23.3"
 loguru = "^0.7.2"
 httpx = "^0.26.0"
 trio = "^0.24.0"
+motor-types = "^1.0.0b4"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -28,6 +29,7 @@ ruff = "^0.1.8"
 mypy = "^1.7.1"
 types-passlib = "^1.7.7.13"
 types-python-jose = "^3.3.4.8"
+yapf = "^0.40.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -41,3 +43,7 @@ log_cli = true
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+[tool.yapf]
+based_on_style = "google"
+dedent_closing_brackets = true

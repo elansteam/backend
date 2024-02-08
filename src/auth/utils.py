@@ -1,15 +1,18 @@
 """
 Helpers for auth stuff
 """
+
+# from asyncio import coroutine
+from typing import Any, Callable, Coroutine
 from datetime import datetime, timedelta
 from fastapi import Depends
 from passlib.context import CryptContext
 from jose import jwt, ExpiredSignatureError
 from starlette import status as http_status
 from config import Config
-import db
 from db.models.user import User
 from auth.permissions import Permissions
+import db
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -18,9 +21,14 @@ class AuthException(Exception):
     """Custom exception for auth errors"""
     status: str
     status_code: int
-    response: dict
+    response: dict[str, Any]
 
-    def __init__(self, status: str, status_code: int, response: dict | None = None):
+    def __init__(
+        self,
+        status: str,
+        status_code: int,
+        response: dict[str, Any] | None = None
+    ):
         self.status = status
         self.status_code = status_code
         if response is None:
@@ -86,7 +94,9 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 
 def create_token(
-        subject: str, is_access=True, expires_delta: int | None = None
+    subject: str,
+    is_access: bool = True,
+    expires_delta: int | None = None
 ) -> str:
     """
     Generating JWT by data and expires time
@@ -101,7 +111,9 @@ def create_token(
     result_expires_delta: datetime
 
     if expires_delta is not None:
-        result_expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
+        result_expires_delta = datetime.utcnow() + timedelta(
+            minutes=expires_delta
+        )
     elif is_access:
         result_expires_delta = datetime.utcnow() + timedelta(
             minutes=Config.Auth.ACCESS_TOKEN_EXPIRE_MINUTES
@@ -112,7 +124,9 @@ def create_token(
         )
 
     to_encode = {"exp": result_expires_delta, "sub": str(subject)}
-    encoded_jwt = jwt.encode(to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM)
+    encoded_jwt = jwt.encode(
+        to_encode, Config.Auth.JWT_SECRET_KEY, Config.Auth.ALGORITHM
+    )
 
     return encoded_jwt
 
@@ -128,7 +142,11 @@ async def get_current_user(token: str) -> User:
         User: user object
     """
     try:
-        payload = jwt.decode(token, Config.Auth.JWT_SECRET_KEY, algorithms=[Config.Auth.ALGORITHM])
+        payload = jwt.decode(
+            token,
+            Config.Auth.JWT_SECRET_KEY,
+            algorithms=[Config.Auth.ALGORITHM]
+        )
         token_sub = payload["sub"]
 
     except ExpiredSignatureError as exc:
@@ -153,7 +171,9 @@ async def get_current_user(token: str) -> User:
     return user
 
 
-def auth_user(*permissions: Permissions):
+def auth_user(
+    *permissions: Permissions
+) -> Callable[[Any], Coroutine[Any, Any, User]]:
     """
     Decorator
     Use:
@@ -187,9 +207,13 @@ def auth_user(*permissions: Permissions):
                 status="ACCESS_DENIED",
                 status_code=http_status.HTTP_403_FORBIDDEN,
                 response={
-                    "required_permissions": [
-                        *map(lambda x: str(x).split(".")[1], required_permissions)
-                    ]
+                    "required_permissions":
+                        [
+                            *map(
+                                lambda x: str(x).split(".")[1],
+                                required_permissions
+                            )
+                        ]
                 }
             )
         return user

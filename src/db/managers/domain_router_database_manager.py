@@ -53,13 +53,17 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
         )
 
         try:
-            await self.collection.insert_one(to_reserve.model_dump(by_alias=True))
+            await self.collection.insert_one(
+                to_reserve.model_dump(by_alias=True)
+            )
         except DuplicateKeyError:
             return False
 
         return True
 
-    async def attach(self, domain: str, entity_type: str, entity_id: int) -> None:
+    async def attach(
+        self, domain: str, entity_type: str, entity_id: int
+    ) -> None:
         """
         Attaching entity to existing reserved entity. Defined entity type and id
         Args:
@@ -68,10 +72,14 @@ class DomainRouterDatabaseManager(AbstractDatabaseManager):
             entity_id: attaching entity id
         """
 
-        await self.collection.find_one_and_update({"_id": domain}, {"$set": {
-            "entity_type": entity_type,
-            "entity_id": entity_id
-        }}, upsert=True)
+        await self.collection.find_one_and_update(
+            {"_id": domain},
+            {"$set": {
+                "entity_type": entity_type,
+                "entity_id": entity_id
+            }},
+            upsert=True
+        )
 
     async def delete(self, domain: str) -> None:
         """

@@ -5,7 +5,9 @@ from config import Config
 from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
 
 
-class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
+class GroupDatabaseManager(
+    AbstractDatabaseManager, AutoIncrementDatabaseInterface
+):
     """Database methods with groups"""
 
     collection_name = Config.Collections.groups
