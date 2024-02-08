@@ -5,7 +5,9 @@ from db.models.user import User
 from config import Config
 
 
-class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
+class UserDatabaseManager(
+    AbstractDatabaseManager, AutoIncrementDatabaseInterface
+):
     """Database methods to work with users"""
 
     collection_name = Config.Collections.users
@@ -49,8 +51,9 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
         """
 
         await self.collection.update_one(
-            {"_id": user_id},
-            {"$push": {"roles": role_id}}
+            {"_id": user_id}, {"$push": {
+                "roles": role_id
+            }}
         )
 
     async def delete_role(self, user_id: int, role_id: str) -> None:
@@ -61,8 +64,9 @@ class UserDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
             role_id: role to delete
         """
         await self.collection.update_one(
-            {"_id": user_id},
-            {"$pull": {"roles": role_id}}
+            {"_id": user_id}, {"$pull": {
+                "roles": role_id
+            }}
         )
 
     async def insert_with_id(self, user: User) -> int:

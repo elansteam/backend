@@ -21,7 +21,9 @@ router = APIRouter()
         400: get_error_schema("Failed to signin with provided credentials.")
     }
 )
-async def signin(login: str, password: str, login_type: Literal["email", "domain", "id"]) -> Any:
+async def signin(
+    login: str, password: str, login_type: Literal["email", "domain", "id"]
+) -> Any:
     """Auth user and generate JWT"""
     user = None
     match login_type:
@@ -39,18 +41,18 @@ async def signin(login: str, password: str, login_type: Literal["email", "domain
     if not verify_password(password, user.password_hash):
         return get_error_response("INVALID_PASSWORD")
 
-    return get_response({
-        "access_token": create_token(str(user.id)),
-        "refresh_token": create_token(str(user.id), False),
-    })
+    return get_response(
+        {
+            "access_token": create_token(str(user.id)),
+            "refresh_token": create_token(str(user.id), False),
+        }
+    )
 
 
 @router.post(
     "/signup",
     response_model=get_response_model(User),
-    responses={
-        400: get_error_schema("Signup failed")
-    }
+    responses={400: get_error_schema("Signup failed")}
 )
 async def signup(user: UserSignup) -> Any:
     """Creating new user"""
@@ -73,9 +75,7 @@ async def signup(user: UserSignup) -> Any:
             return get_error_response("DOMAIN_IN_USE")
 
     try:
-        created_user_id = await db.user.insert_with_id(
-            User(**user_to_create)
-        )
+        created_user_id = await db.user.insert_with_id(User(**user_to_create))
     except Exception as e:
         if user.domain is not None:
             await db.domain.delete(user.domain)  # deleting reserved entity

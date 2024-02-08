@@ -16,14 +16,12 @@ router = APIRouter()
 @router.post(
     "/create",
     response_model=get_response_model(Role),
-    responses={
-        400: get_error_schema("Failed to create role")
-    }
+    responses={400: get_error_schema("Failed to create role")}
 )
-async def create(role: Role,
-                 _current_user: User = Depends(auth_user(
-                     Permissions.CREATE_ROLE
-                 ))) -> Any:
+async def create(
+    role: Role,
+    _current_user: User = Depends(auth_user(Permissions.CREATE_ROLE))
+) -> Any:
     """
     Role creation
     Args:
@@ -37,9 +35,7 @@ async def create(role: Role,
         logger.info(f"Role with id <{role.id}> already exists")
         return get_error_response("ROLE_ALREADY_EXISTS")
 
-    await db.role.insert(Role(
-        **role.model_dump(by_alias=True)
-    ))
+    await db.role.insert(Role(**role.model_dump(by_alias=True)))
     result_role = await db.role.get(role.id)
 
     return get_response(result_role)

@@ -14,22 +14,31 @@ def get_error_schema(description: str) -> dict[str, Any]:
     Returns:
         special error schema in special format
     """
-    return {"description": description,
-            "content": {
-                "application/json": {
-                    "example": {
-                        "status": "some status",
-                        "response": {
-                            "first_data": "example first",
-                            "second_data": "example second"
-                        }
-                    },
-                }
-            }}
+    return {
+        "description": description,
+        "content":
+            {
+                "application/json":
+                    {
+                        "example":
+                            {
+                                "status": "some status",
+                                "response":
+                                    {
+                                        "first_data": "example first",
+                                        "second_data": "example second"
+                                    }
+                            },
+                    }
+            }
+    }
 
 
-def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = None,
-                       status_code: int = 400) -> JSONResponse:
+def get_error_response(
+    status: str,
+    data: dict[str, Any] | BaseModel | None = None,
+    status_code: int = 400
+) -> JSONResponse:
     """
     Args:
         status: error status
@@ -45,8 +54,7 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
         data = data.model_dump(by_alias=True)
 
     response = JSONResponse(
-        status_code=status_code,
-        content={
+        status_code=status_code, content={
             "status": status,
             "response": data
         }
@@ -54,8 +62,9 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
     return response
 
 
-def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
-                       dict[str, Any]) -> Type[BaseModel]:
+def get_response_model(
+    model: Type[BaseModel] | Type[dict[str, Any]] = dict[str, Any]
+) -> Type[BaseModel]:
     """
     Return a pydantic custom model for response model.
     Use without argument to make response empty.
@@ -64,17 +73,20 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
     """
     name = model.__name__
 
-    response_model: Type[BaseModel] = type(f"ResponseModel{name}", (BaseModel,), {
-        "__annotations__": {
+    response_model: Type[BaseModel] = type(
+        f"ResponseModel{name}", (BaseModel,),
+        {"__annotations__": {
             "status": Literal["OK"],
             "response": model
-        }
-    })
+        }}
+    )
 
     return response_model
 
 
-def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONResponse:
+def get_response(
+    model: BaseModel | dict[str, Any] | None = None
+) -> JSONResponse:
     """
     Returns an object that should return API method
     Args:
@@ -87,7 +99,9 @@ def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONRespons
     if isinstance(model, BaseModel):
         model = model.model_dump(by_alias=True)
 
-    return JSONResponse(status_code=200, content={
-        "status": "OK",
-        "response": model
-    })
+    return JSONResponse(
+        status_code=200, content={
+            "status": "OK",
+            "response": model
+        }
+    )

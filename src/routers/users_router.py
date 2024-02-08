@@ -15,14 +15,13 @@ router = APIRouter()
 @router.post(
     "/add_role",
     response_model=get_response_model(),
-    responses={
-        400: get_error_schema("Failed to add role")
-    }
+    responses={400: get_error_schema("Failed to add role")}
 )
-async def add_role(user_id: int, role_id: str,
-                   _current_user: User = Depends(auth_user(
-                       Permissions.CHANGE_USER_ROLES
-                   ))) -> Any:
+async def add_role(
+    user_id: int,
+    role_id: str,
+    _current_user: User = Depends(auth_user(Permissions.CHANGE_USER_ROLES))
+) -> Any:
     """Add a role to the user"""
     user_to_add = await db.user.get(user_id)
 
@@ -45,14 +44,13 @@ async def add_role(user_id: int, role_id: str,
 @router.post(
     "/delete_role",
     response_model=get_response_model(),
-    responses={
-        400: get_error_schema("Failed to delete role from user")
-    }
+    responses={400: get_error_schema("Failed to delete role from user")}
 )
-async def delete_role(user_id: int, role_id: str,
-                      _current_user: User = Depends(auth_user(
-                          Permissions.CHANGE_USER_ROLES
-                      ))) -> Any:
+async def delete_role(
+    user_id: int,
+    role_id: str,
+    _current_user: User = Depends(auth_user(Permissions.CHANGE_USER_ROLES))
+) -> Any:
     """Delete a role from the user"""
 
     user_to_delete = await db.user.get(user_id)
