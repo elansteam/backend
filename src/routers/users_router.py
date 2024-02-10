@@ -70,3 +70,15 @@ async def delete_role(user_id: int, role_id: str,
     await db.user.delete_role(user_id, role_id)
 
     return get_response()
+
+
+@router.get(
+    "/get_current",
+    response_model=get_response_model(User),
+    responses={
+        400: get_error_schema("Failed to retrieve current user")
+    }
+)
+async def get_current_user(_current_user: User = Depends(auth_user())):
+    """Get current user"""
+    return get_response(_current_user)

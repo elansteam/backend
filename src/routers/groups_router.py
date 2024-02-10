@@ -82,3 +82,5 @@ async def create_group(group_to_create: GroupToCreate,
         if group_to_create.domain is not None:
             await db.domain.delete(group_to_create.domain)  # if error occurs delete reserved entity
         raise e
+
+
