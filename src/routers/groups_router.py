@@ -3,15 +3,19 @@ from typing import Any
 from fastapi import APIRouter, Depends
 from auth.utils import auth_user
 from auth.permissions import Permissions, ALL_PERMISSIONS_ROLE_CODE
+from db.models.contest import Contest
 from utils.response_utils import get_error_response, get_response, get_response_model, \
     get_error_schema
 from db.models.group import Group, GroupToCreate, GroupRole, GroupMember
 from db.models.user import User
 import db
 from db.models.annotations import IntIdAnnotation
+from pydantic import BaseModel
 
 router = APIRouter()
 
+class ListContests(BaseModel):
+    contests: list[Contest]
 
 @router.post(
     "/create",
@@ -87,7 +91,7 @@ async def create_group(group_to_create: GroupToCreate,
 
 @router.get(
     "/get",
-    response_model=Group,
+    response_model=get_response_model(Group),
     responses={
         400: get_error_schema("Failed to retreive group")
     }
@@ -101,3 +105,32 @@ async def get_group(_id: IntIdAnnotation, _current_user: User = Depends(auth_use
         return get_error_response("GROUP_NOT_FOUND")
 
     return get_response(group)
+
+
+@router.get(
+    "/get_contests",
+    response_model=get_response_model(ListContests),
+    responses={
+        400: get_error_schema("Failed to retreive contests")
+    }
+)
+async def get_contests(
+        group_id: IntIdAnnotation,
+        _current_user: User = Depends(auth_user())
+) -> Any:
+    """Retreive contests by group id"""
+
+    group = await db.group.get(group_id)
+
+    if group is None:
+        return get_error_response("GROUP_NOT_FOUND")
+
+    result = ListContests(contests=[])
+
+    for contest_id in group.contests:
+        contest = await db.contest.get(contest_id)
+        if contest is None:
+            continue
+        result.contests.append(contest)
+
+    return get_response(result)
