@@ -8,6 +8,7 @@ from utils.response_utils import get_error_response, get_response, get_response_
 from db.models.group import Group, GroupToCreate, GroupRole, GroupMember
 from db.models.user import User
 import db
+from db.models.annotations import IntIdAnnotation
 
 router = APIRouter()
 
@@ -84,3 +85,19 @@ async def create_group(group_to_create: GroupToCreate,
         raise e
 
 
+@router.get(
+    "/get",
+    response_model=Group,
+    responses={
+        400: get_error_schema("Failed to retreive group")
+    }
+)
+async def get_group(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())) -> Any:
+    """Retreive group by id"""
+
+    group = await db.group.get(_id)
+
+    if group is None:
+        return get_error_response("GROUP_NOT_FOUND")
+
+    return get_response(group)

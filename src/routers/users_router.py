@@ -1,5 +1,8 @@
 """Users endpoints"""
+from typing import List, Any
+
 from fastapi import APIRouter, Depends
+from starlette.responses import JSONResponse
 
 from db.models.user import User
 import db
@@ -7,6 +10,7 @@ from utils.response_utils import get_error_response, get_response_model, get_err
     get_response
 from auth.utils import auth_user
 from auth.utils import Permissions
+from db.models.annotations import IntIdAnnotation
 
 router = APIRouter()
 
@@ -82,3 +86,36 @@ async def delete_role(user_id: int, role_id: str,
 async def get_current_user(_current_user: User = Depends(auth_user())):
     """Get current user"""
     return get_response(_current_user)
+
+
+@router.get(
+    "/get_groups",
+    responses={
+        400: get_error_schema("Failed to retrieve groups")
+    }
+)
+async def get_groups(
+        _id: IntIdAnnotation,
+        _current_user: User = Depends(auth_user())
+) -> Any | IntIdAnnotation:
+    """Retrieve all groups thet has user"""
+
+    user = await db.user.get(_id)
+
+    if user is None:
+        return get_error_response("USER_NOT_FOUND")
+
+    groups = await db.group.get_all()
+
+    result = []
+
+    for group in groups:
+        if group.owner == _id:
+            result.append(group.id)
+            continue
+        for member in group.members:
+            if member.id == _id:
+                result.append(group.id)
+                break
+
+    return get_response({"result": result})

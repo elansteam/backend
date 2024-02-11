@@ -30,3 +30,12 @@ class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfa
             group: used document to insert
         """
         return await self._insert_one_with_id(self.collection_name, group)
+
+    async def get_all(self) -> list[Group]:
+        to_return = []
+        cursor = self.collection.find({})
+        async for group in cursor:
+            print(group)
+            to_return.append(Group(**group))
+
+        return to_return
