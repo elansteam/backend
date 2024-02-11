@@ -55,6 +55,8 @@ class Group(BaseModel):
     roles: list[GroupRole] = Field([])
     """List of names group roles in group"""
 
+    contests: list[IntIdAnnotation] = Field([])
+
 
 class GroupToCreate(BaseModel):
     """Group to create template"""

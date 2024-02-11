@@ -49,6 +49,7 @@ class Config:
         groups = os.environ.get("COLLECTION_GROUPS") or ""
         domain_router = os.environ.get("COLLECTION_DOMAIN") or ""
         internal_counters = os.environ.get("COLLECTION_INTERNAL_COUNTERS") or ""
+        contests = os.environ.get("COLLECTION_CONTESTS") or ""
 
     class Auth:
         """Data for auth system"""

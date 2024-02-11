@@ -3,6 +3,7 @@ from db.helpers.abstract_database_manager import AbstractDatabaseManager
 from db.models.group import Group
 from config import Config
 from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseInterface
+from db.models.annotations import IntIdAnnotation
 
 
 class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
@@ -39,3 +40,15 @@ class GroupDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfa
             to_return.append(Group(**group))
 
         return to_return
+
+    async def add_contest(self, group_id: IntIdAnnotation, contest_id: IntIdAnnotation) -> None:
+        """
+        Inserting new contest id in group contests
+        Args:
+            group_id: target group
+            contest_id: contest to insert
+        """
+        await self.collection.update_one(
+            {"_id": group_id},
+            {"$push": {"contests": contest_id}}
+        )
