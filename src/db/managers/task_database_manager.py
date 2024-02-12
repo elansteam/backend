@@ -17,9 +17,6 @@ class TaskDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterfac
         Getting user by id
         Args:
             task_id: the user id
-
-        Returns:
-            User object or None, if not found
         """
 
         task = await self.collection.find_one({"_id": task_id})
