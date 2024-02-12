@@ -1,17 +1,19 @@
 """Groups endpoints"""
 import tempfile
 from typing import Any
-from zipfile import ZipFile
 
 from fastapi import APIRouter, Depends, UploadFile
+from pydantic import BaseModel
+
 from auth.utils import auth_user
 from auth.permissions import Permissions, ALL_PERMISSIONS_ROLE_CODE
 from utils.response_utils import get_error_response, get_response, get_response_model, \
     get_error_schema
 from db.models.contest import Contest, ContestToCreate
+from db.models.task import Task
 from db.models.user import User
 import db
-from db.models.user import IntIdAnnotation
+from db.models.annotations import NameAnnotation, IntIdAnnotation
 
 router = APIRouter()
 
@@ -92,16 +94,3 @@ async def get_contest(_id: IntIdAnnotation, _current_user: User = Depends(auth_u
     return get_response(contest)
 
 
-@router.post(
-    "/add_task_by_zip"
-)
-async def add_task_by_zip(contest_id: IntIdAnnotation, task_archive: UploadFile):
-    """Add a task to contest by zip"""
-
-    with tempfile.NamedTemporaryFile() as file_object:
-        # print(file_object.name)
-        with open(file_object.name, "wb") as file_object1:
-            file_object1.write(await task_archive.read())
-        with ZipFile(file_object1.name, "r") as zip_file:
-            with zip_file.open("css/tokens.css", "r") as theme_file:
-                print(str(theme_file.read()))
