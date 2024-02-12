@@ -74,12 +74,16 @@ async def create_group(group_to_create: GroupToCreate,
             description=group_to_create.description,
             domain=group_to_create.domain,
             members=members,
-            roles=starter_roles
+            roles=starter_roles,
+            contests=[]
         )
 
         created_group_id = await db.group.insert_with_id(group)
 
         created_group = await db.group.get(created_group_id)
+
+        if group.domain is not None:
+            await db.domain.attach(group.domain, "group", created_group_id)
 
         return get_response(created_group)
 

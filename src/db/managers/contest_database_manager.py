@@ -6,22 +6,22 @@ from db.helpers.auto_increment_database_interface import AutoIncrementDatabaseIn
 
 
 class ContestDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
-    """Database methods with groups"""
+    """Database methods with contest"""
 
     collection_name = Config.Collections.contests
 
     async def get(self, _id: int) -> Contest | None:
         """
-        Getting group by id
+        Getting contest by id
         Args:
             _id: mongo object id
         Returns:
             Group object or None if not found
         """
-        group = await self.collection.find_one({"_id": _id})
-        if group is None:
+        contest = await self.collection.find_one({"_id": _id})
+        if contest is None:
             return None
-        return Contest(**group)
+        return Contest(**contest)
 
     async def insert_with_id(self, contest: Contest) -> int:
         """
@@ -38,7 +38,6 @@ class ContestDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInter
         to_return = []
         cursor = self.collection.find({})
         async for group in cursor:
-            print(group)
             to_return.append(Contest(**group))
 
         return to_return
