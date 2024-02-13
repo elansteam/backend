@@ -56,8 +56,10 @@ async def get_task_legend(_id: IntIdAnnotation, _current_user: User = Depends(au
     try:
         to_return = FileResponse(path=f'./data/problems/{_id}/legend.mdx', filename="legend.mdx",
                                  media_type='multipart/form-data')
+        print(to_return)
         return to_return
-    except Exception:
+    except Exception as e:
+        print("Exception", e)
         return get_error_response("FILE_NOT_FOUND")
 
 
