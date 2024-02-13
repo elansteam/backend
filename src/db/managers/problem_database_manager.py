@@ -8,7 +8,7 @@ from db.models.annotations import NameAnnotation
 
 
 class ProblemDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseInterface):
-    """Database methods to work with users"""
+    """Database methods to work with problems"""
 
     collection_name = Config.Collections.problems
 

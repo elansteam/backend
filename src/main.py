@@ -11,6 +11,7 @@ import routers.auth_router
 from db.mongo_manager import MongoManager
 import routers.contests_router
 import routers.problems_router
+import routers.submissions_router
 
 
 @asynccontextmanager
@@ -54,6 +55,7 @@ app.include_router(routers.roles_router.router, prefix="/api/roles")
 app.include_router(routers.groups_router.router, prefix="/api/groups")
 app.include_router(routers.contests_router.router, prefix="/api/contests")
 app.include_router(routers.problems_router.router, prefix="/api/problems")
+app.include_router(routers.submissions_router.router, prefix="/api/submissions")
 
 # exception handlers
 app.add_exception_handler(AuthException, auth_exception_handler)

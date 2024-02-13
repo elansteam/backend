@@ -51,6 +51,7 @@ class Config:
         internal_counters = os.environ.get("COLLECTION_INTERNAL_COUNTERS") or ""
         contests = os.environ.get("COLLECTION_CONTESTS") or ""
         problems = os.environ.get("COLLECTION_PROBLEMS") or ""
+        submissions = os.environ.get("COLLECTION_SUBMISSIONS") or ""
 
     class Auth:
         """Data for auth system"""

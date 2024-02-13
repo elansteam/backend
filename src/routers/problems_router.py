@@ -12,49 +12,52 @@ from db.models.problem import Problem
 from db.models.user import User
 import db
 from db.models.annotations import NameAnnotation, IntIdAnnotation
+from config import Config
+
+import os
 
 router = APIRouter()
 
 
-class AddTask(BaseModel):
-    created_task_id: IntIdAnnotation
+class Addproblem(BaseModel):
+    created_problem_id: IntIdAnnotation
 
 
 @router.post(
     "/create",
-    response_model=get_response_model(AddTask)
+    response_model=get_response_model(Addproblem)
 )
-async def create_task(name: NameAnnotation, task_archive: UploadFile, _current_user: User = Depends(
+async def create_problem(name: NameAnnotation, problem_archive: UploadFile, _current_user: User = Depends(
     auth_user()
 )) -> Any:
-    """Add a task to contest by zip"""
+    """Add a problem to contest by zip"""
 
-    #  TODO: add creating directory for tasks
+    #  TODO: add creating directory for problems
     # with tempfile.NamedTemporaryFile() as file_object:
     #     with open(file_object.name, "wb") as file_object1:
-    #         file_object1.write(await task_archive.read())
+    #         file_object1.write(await problem_archive.read())
     #     with ZipFile(file_object1.name, "r") as zip_file:
     #         with zip_file.open("css/tokens.css", "r") as theme_file:
     #             print(str(theme_file.read()))
 
-    # creating task object
-    task_to_create = Problem(
+    # creating problem object
+    problem_to_create = Problem(
         _id=1,  # not used
         name=name
     )
-    created_task_id = await db.problem.insert_with_id(task_to_create)
-    response = AddTask(created_task_id=created_task_id)
+    created_problem_id = await db.problem.insert_with_id(problem_to_create)
+    response = Addproblem(created_problem_id=created_problem_id)
     return get_response(response)
 
 
 @router.get(
     "/get_legend"
 )
-async def get_task_legend(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
-    """Retreive task legend"""
+async def get_problem_legend(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
+    """Retreive problem legend"""
 
     try:
-        to_return = FileResponse(path=f'./data/problems/{_id}/legend.mdx', filename="legend.mdx",
+        to_return = FileResponse(path=f'{Config.elan_path}/problems/problem{_id}/legend.mdx', filename="legend.mdx",
                                  media_type='multipart/form-data')
         print(to_return)
         return to_return
@@ -66,11 +69,11 @@ async def get_task_legend(_id: IntIdAnnotation, _current_user: User = Depends(au
 @router.get(
     "/get_input"
 )
-async def get_task_input(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
-    """Retreive task legend"""
+async def get_problem_input(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
+    """Retreive problem legend"""
 
     try:
-        to_return = FileResponse(path=f'./data/problems/{_id}/input.mdx', filename="input.mdx",
+        to_return = FileResponse(path=f'{Config.elan_path}/problems/problem{_id}/input.mdx', filename="input.mdx",
                                  media_type='multipart/form-data')
         return to_return
     except Exception:
@@ -80,11 +83,11 @@ async def get_task_input(_id: IntIdAnnotation, _current_user: User = Depends(aut
 @router.get(
     "/get_output"
 )
-async def get_task_output(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
-    """Retreive task legend"""
+async def get_problem_output(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
+    """Retreive problem legend"""
 
     try:
-        to_return = FileResponse(path=f'./data/problems/{_id}/output.mdx', filename="output.mdx",
+        to_return = FileResponse(path=f'{Config.elan_path}/problems/problem{_id}/output.mdx', filename="output.mdx",
                                  media_type='multipart/form-data')
         return to_return
     except Exception:
@@ -95,10 +98,10 @@ async def get_task_output(_id: IntIdAnnotation, _current_user: User = Depends(au
     "/get_scoring"
 )
 async def get_problem_scoring(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
-    """Retreive task legend"""
+    """Retreive problem legend"""
 
     try:
-        to_return = FileResponse(path=f'./data/problems/{_id}/scoring.mdx', filename="scoring.mdx",
+        to_return = FileResponse(path=f'{Config.elan_path}/problems/problem{_id}/scoring.mdx', filename="scoring.mdx",
                                  media_type='multipart/form-data')
         return to_return
     except Exception:
@@ -109,10 +112,10 @@ async def get_problem_scoring(_id: IntIdAnnotation, _current_user: User = Depend
     "/get_notes"
 )
 async def get_notes(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
-    """Retreive task legend"""
+    """Retreive problem legend"""
 
     try:
-        to_return = FileResponse(path=f'./data/problems/{_id}/notes.mdx', filename="notes.mdx",
+        to_return = FileResponse(path=f'{Config.elan_path}/problems/problem{_id}/notes.mdx', filename="notes.mdx",
                                  media_type='multipart/form-data')
         return to_return
     except Exception:
@@ -123,11 +126,40 @@ async def get_notes(_id: IntIdAnnotation, _current_user: User = Depends(auth_use
     "/get_name"
 )
 async def get_name(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())) -> Any:
-    """Retreive task name by task id"""
+    """Retreive problem name by problem id"""
 
-    task = await db.problem.get(_id)
+    problem = await db.problem.get(_id)
 
-    if task is None:
-        return get_error_response("TASK_NOT_FOUND")
+    if problem is None:
+        return get_error_response("PROBLEM_NOT_FOUND")
 
-    return task.name
+    return problem.name
+
+
+class Examples(BaseModel):
+
+    input: list[str]
+    output: list[str]
+
+@router.get(
+    "/get_examples",
+    response_model=get_response_model(Examples),
+    responses={
+        400: get_error_schema("Failed to retreive problem examples.")
+    }
+)
+async def get_examples(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())) -> Any:
+    directory = f"{Config.elan_path}/problems/problem{_id}/"
+
+    result = Examples(input=[], output=[])
+
+    for filename in os.scandir(directory):
+        if filename.is_file():
+            if filename.name.startswith("example") and not filename.name.endswith(".a"):
+                with open(filename.path, "r") as file:
+                    result.input.append(file.read())
+                with open(filename.path+".a", "r") as file:
+                    result.output.append(file.read())
+
+    return get_response(result)
+
