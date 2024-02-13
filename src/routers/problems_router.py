@@ -8,7 +8,7 @@ from starlette.responses import FileResponse
 from auth.utils import auth_user
 from utils.response_utils import get_error_response, get_response, get_response_model, \
     get_error_schema
-from db.models.task import Task
+from db.models.problem import Problem
 from db.models.user import User
 import db
 from db.models.annotations import NameAnnotation, IntIdAnnotation
@@ -38,11 +38,11 @@ async def create_task(name: NameAnnotation, task_archive: UploadFile, _current_u
     #             print(str(theme_file.read()))
 
     # creating task object
-    task_to_create = Task(
+    task_to_create = Problem(
         _id=1,  # not used
         name=name
     )
-    created_task_id = await db.task.insert_with_id(task_to_create)
+    created_task_id = await db.problem.insert_with_id(task_to_create)
     response = AddTask(created_task_id=created_task_id)
     return get_response(response)
 
@@ -94,7 +94,7 @@ async def get_task_output(_id: IntIdAnnotation, _current_user: User = Depends(au
 @router.get(
     "/get_scoring"
 )
-async def get_task_scoring(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
+async def get_problem_scoring(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())):
     """Retreive task legend"""
 
     try:
@@ -125,7 +125,7 @@ async def get_notes(_id: IntIdAnnotation, _current_user: User = Depends(auth_use
 async def get_name(_id: IntIdAnnotation, _current_user: User = Depends(auth_user())) -> Any:
     """Retreive task name by task id"""
 
-    task = await db.task.get(_id)
+    task = await db.problem.get(_id)
 
     if task is None:
         return get_error_response("TASK_NOT_FOUND")

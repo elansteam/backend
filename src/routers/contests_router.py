@@ -10,7 +10,7 @@ from auth.permissions import Permissions, ALL_PERMISSIONS_ROLE_CODE
 from utils.response_utils import get_error_response, get_response, get_response_model, \
     get_error_schema
 from db.models.contest import Contest, ContestToCreate
-from db.models.task import Task
+from db.models.problem import Problem
 from db.models.user import User
 import db
 from db.models.annotations import NameAnnotation, IntIdAnnotation
@@ -26,7 +26,8 @@ router = APIRouter()
     }
 )
 async def create_contest(contest_to_create: ContestToCreate,
-                         _current_user: User = Depends(auth_user())) -> Any:
+                         _current_user: User = Depends(
+                             auth_user())) -> Any:  # TODO: set permissions
     """Creating new contest"""
 
     # check existing for all members
@@ -54,7 +55,7 @@ async def create_contest(contest_to_create: ContestToCreate,
             description=contest_to_create.description,
             domain=contest_to_create.domain,
             linked_group=contest_to_create.linked_group,
-            tasks=[]
+            problems=[]
         )
 
         created_contest_id = await db.contest.insert_with_id(contest)
@@ -94,3 +95,25 @@ async def get_contest(_id: IntIdAnnotation, _current_user: User = Depends(auth_u
     return get_response(contest)
 
 
+@router.post(
+    "/add_problem",
+    response_model=get_response_model(),
+    responses={
+        400: get_error_schema("Failed to add task to contest")
+    }
+)
+async def add_problem_to_contest(
+        problem_id: IntIdAnnotation,
+        contest_id: IntIdAnnotation,
+        _current_user: User = Depends(
+            auth_user()
+)) -> Any:
+    """Add a problem to contest"""
+    problem = await db.problem.get(problem_id)
+
+    if problem is None:
+        return get_error_schema("PROBLEM_NOT_FOUND")
+
+    await db.contest.add_problem(contest_id, problem_id)
+
+    return get_response()

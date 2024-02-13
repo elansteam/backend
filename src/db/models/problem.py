@@ -2,8 +2,8 @@ from pydantic import BaseModel, Field
 from db.models.annotations import IntIdAnnotation, NameAnnotation
 
 
-class Task(BaseModel):
-    """Task representation"""
+class Problem(BaseModel):
+    """Problem representation"""
 
     id: IntIdAnnotation = Field(alias='_id')
 

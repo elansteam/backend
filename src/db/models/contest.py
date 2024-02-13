@@ -1,7 +1,19 @@
 """Group definition"""
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
     DomainAnnotation, RoleCodeAnnotation, StrIdAnnotation
+
+
+class Submission(BaseModel):
+    """User submission"""
+
+    # id: IntIdAnnotation = Field(alias="")
+    upload_time: datetime
+    code_text: str
+    status: str | None = None
+    target_problem_id: IntIdAnnotation
 
 
 class Contest(BaseModel):
@@ -21,7 +33,9 @@ class Contest(BaseModel):
     linked_group: IntIdAnnotation
     """Linked group"""
 
-    tasks: list[IntIdAnnotation] = Field([])
+    problems: list[IntIdAnnotation] = Field([])
+
+    submissions: list[Submission] = Field([])
 
 
 class ContestToCreate(BaseModel):

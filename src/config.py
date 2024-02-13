@@ -50,7 +50,7 @@ class Config:
         domain_router = os.environ.get("COLLECTION_DOMAIN") or ""
         internal_counters = os.environ.get("COLLECTION_INTERNAL_COUNTERS") or ""
         contests = os.environ.get("COLLECTION_CONTESTS") or ""
-        tasks = os.environ.get("COLLECTION_TASKS") or ""
+        problems = os.environ.get("COLLECTION_PROBLEMS") or ""
 
     class Auth:
         """Data for auth system"""
@@ -62,3 +62,4 @@ class Config:
         JWT_REFRESH_SECRET_KEY = os.environ.get("JWT_REFRESH_SECRET_KEY") or ""
 
     app_title = os.environ.get("APP_TITLE") or ""
+    elan_path = os.environ.get("ELAN_PATH") or "/ELAN"  # FIXME NOT USED
