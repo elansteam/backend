@@ -47,3 +47,19 @@ class SubmissionDatabaseManager(AbstractDatabaseManager, AutoIncrementDatabaseIn
         await self.collection.update_one({"_id": submission_id}, {"$set": {
             "solution_path": solution_path
         }})
+
+    async def get_all_submission_for_user_in_contest(
+            self,
+            user_id: IntIdAnnotation,
+            contest_id: IntIdAnnotation
+    ) -> list[Submission]:
+        result: list[Submission] = []
+        cursor = self.collection.find({
+            "user_id": user_id,
+            "contest_id": contest_id
+        })
+
+        async for document in cursor:
+            result.append(Submission(**document))
+
+        return result

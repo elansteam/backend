@@ -63,4 +63,7 @@ class Config:
         JWT_REFRESH_SECRET_KEY = os.environ.get("JWT_REFRESH_SECRET_KEY") or ""
 
     app_title = os.environ.get("APP_TITLE") or ""
-    elan_path = os.environ.get("ELAN_PATH") or "/ELAN"  # FIXME NOT USED
+    elan_path = os.environ.get("ELAN_PATH") or "/ELAN"  # FIXME NOT USED or user idk
+
+    # FIXME it may not work later
+    rabbitmq_main_queue = os.environ.get("RABBITMQ_MAIN_QUEUE") or "INVOKER"

@@ -1,4 +1,7 @@
-from pydantic import BaseModel, Field
+from datetime import datetime
+from typing import Annotated
+
+from pydantic import BaseModel, Field, AfterValidator
 from db.models.annotations import IntIdAnnotation
 
 
@@ -24,3 +27,5 @@ class Submission(BaseModel):
     solution_path: str | None = None
 
     status: str | None = None
+
+    upload_time: str
