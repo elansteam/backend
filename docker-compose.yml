@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  backend:
+    container_name: elants_backend
+    build: .
+
+    # depends_on:
+    #  - db
+  # db:
+  testing:
+    container_name: elants_backend_testing
+    build:
+      context: .
+      dockerfile: ./testing/Dockerfile
+  # linting:
