@@ -37,10 +37,10 @@ if not check_json_file(config_path):  # check_json_file
     )
     sys.exit(1)
 
-logger.info(f"Loading configuration from file {CONFIG_PATH_ENV_VARIABLE_NAME}")
+logger.info(f"Loading configuration from file {config_path}")
 
 with open(config_path, "r", encoding="utf-8") as config_file:  # parse && validate config file
     config: config_model.Config = config_model.Config.model_validate_json(config_file.read())
 
-logger.info(f"Successfully loaded configuration from file {CONFIG_PATH_ENV_VARIABLE_NAME}")
+logger.info(f"Successfully loaded configuration from file {config_path}")
 logger.info(f"Current configuration: {config.model_dump_json(indent=4)}")
