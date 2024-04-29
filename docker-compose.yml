@@ -3,8 +3,10 @@ version: "3"
 services:
   backend:
     container_name: elants_backend
-    build: .
-
+    build: 
+      dockerfile: Dockerfile
+      args:
+      - ELANTS_CONFIG_FILE_PATH=./configs/main_config.json
     # depends_on:
     #  - db
   # db:

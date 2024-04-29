@@ -172,8 +172,8 @@ src_cache
 fastapi-async-mongodb
 
 .vscode
-main_config.env
 .ruff_cache
 run.sh
 test.sh
 ./data/*
+configs/main_config.json

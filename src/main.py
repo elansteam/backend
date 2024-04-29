@@ -6,7 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthException
 from utils.handlers import auth_exception_handler
-from config import Config
+from config import config
 import routers.auth_router
 from db.mongo_manager import MongoManager
 import routers.contests_router
@@ -24,14 +24,17 @@ async def lifespan(_app: FastAPI):
     """
 
     # on startup
-    MongoManager.connect(Config.db_connect_url, Config.db_name)
+    MongoManager.connect(
+        config.database.connect_url.get_secret_value(),
+        config.database.name
+    )
 
     yield
     # on shutdown
     MongoManager.disconnect()
 
 
-app = FastAPI(title=Config.app_title, debug=True, lifespan=lifespan)
+app = FastAPI(title=config.app_title, debug=True, lifespan=lifespan)
 
 origins = [
     "http://localhost",
