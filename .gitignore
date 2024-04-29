@@ -177,3 +177,4 @@ run.sh
 test.sh
 ./data/*
 configs/main_config.json
+mongo_data
