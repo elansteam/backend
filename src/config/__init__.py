@@ -3,20 +3,20 @@ import os
 import sys
 from loguru import logger
 
-
 from . import config_model
 
-CONFIG_PATH_ENV_VARIABLE_NAME = "ELANTS_CONFIG_FILE_PATH"
 
-config_path = os.getenv(CONFIG_PATH_ENV_VARIABLE_NAME)
+_CONFIG_PATH_ENV_VARIABLE_NAME = "ELANTS_CONFIG_FILE_PATH"
 
-if config_path is None:  # check for existing env variable
+_config_path = os.getenv(_CONFIG_PATH_ENV_VARIABLE_NAME)
+
+if _config_path is None:  # check for existing env variable
     logger.error(
-        f"Environment variable {CONFIG_PATH_ENV_VARIABLE_NAME} is not set"
+        f"Environment variable {_CONFIG_PATH_ENV_VARIABLE_NAME} is not set"
     )
     sys.exit(1)
 
-def check_json_file(file_path: str) -> bool:
+def _check_json_file(file_path: str) -> bool:
     """Check that file_path is a json file and exists
 
     Args:
@@ -31,16 +31,19 @@ def check_json_file(file_path: str) -> bool:
             return True
     return False
 
-if not check_json_file(config_path):  # check_json_file
+if not _check_json_file(_config_path):  # check_json_file
     logger.error(
-        f"File {config_path} is not a json file or isnt exists"
+        f"File {_config_path} is not a json file or isnt exists"
     )
     sys.exit(1)
 
-logger.info(f"Loading configuration from file {config_path}")
+def _load_config() -> config_model.Config:
+    """parse && validate config file"""
+    with open(_config_path, "r", encoding="utf-8") as config_file:
+        return config_model.Config.model_validate_json(config_file.read())
 
-with open(config_path, "r", encoding="utf-8") as config_file:  # parse && validate config file
-    config: config_model.Config = config_model.Config.model_validate_json(config_file.read())
+logger.info(f"Loading configuration from file {_config_path}")
+config = _load_config()
 
-logger.info(f"Successfully loaded configuration from file {config_path}")
+logger.info(f"Successfully loaded configuration from file {_config_path}")
 logger.info(f"Current configuration: {config.model_dump_json(indent=4)}")
