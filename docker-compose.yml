@@ -7,18 +7,8 @@ services:
       dockerfile: Dockerfile
       args:
       - ELANTS_CONFIG_FILE_PATH=./configs/main_config.json
-  # db:
-  #   image: mongo
-  #   volumes:
-  #     - ./mongo_data:/data/db
-  #     - ./mongo_entrypoint:/docker-entrypoint-initdb.d
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "27017:27017"
   testing:
     container_name: elants_backend_testing
     build:
       context: .
       dockerfile: ./testing/Dockerfile
-  # linting:
