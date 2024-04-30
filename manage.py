@@ -6,8 +6,6 @@ import os
 import argparse
 import sys
 from pathlib import Path
-from dotenv import load_dotenv
-import uvicorn
 from loguru import logger
 
 
@@ -18,13 +16,6 @@ def parse_arguments():
     lint_parser = subparsers.add_parser('lint')
     lint_parser.set_defaults(command='lint')
 
-    run_parser = subparsers.add_parser('run')
-    run_parser.set_defaults(command='run')
-    run_parser.add_argument('--config', help='Path to the .env file', required=True)
-
-    test_parser = subparsers.add_parser('test')
-    test_parser.set_defaults(command='test')
-    test_parser.add_argument('--config', help='Path to the .env file', required=True)
     return parser.parse_args()
 
 
@@ -35,29 +26,13 @@ def main():  # pylint: disable=missing-function-docstring
 
     # Check the command and execute the corresponding logic
     match args.command:
-        case "run":
-            # Run the FastAPI app using uvicorn
-            if args.config.endswith("example.env"):
-                logger.error((
-                    "You are using the example config 'example.env' instead of "
-                    "your own one. Example config is not meant to be used "
-                    "in production for security and other concerns. Please "
-                    "create your own config file and run the app using "
-                    "--config /path/to/config.env"
-                ))
-                sys.exit(1)
-            load_dotenv(dotenv_path=args.config)
-            uvicorn.run("src.main:app", host="127.0.0.1", port=8000, reload=True)
-        case "test":  # run testing
-            load_dotenv(dotenv_path=args.config)
-            os.system("pytest ./testing -vv")
         case "lint":  # run linting
             logger.info("Running pylint...")
             os.system("pylint --recursive=y ./src/")
             logger.info("Running ruff...")
             os.system("ruff src/")
             logger.info("Running mypy...")
-            os.system("mypy ./src/")
+            os.system("mypy --strict ./src/")
         case _:
             print(f"Unknown command: {args.command}")
 

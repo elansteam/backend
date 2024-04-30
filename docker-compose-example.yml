@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  backend:
+    container_name: elants_backend
+    build: 
+      dockerfile: Dockerfile
+      args:
+      - ELANTS_CONFIG_FILE_PATH=./configs/example_config.json
+  testing:
+    container_name: elants_backend_testing
+    build:
+      context: .
+      dockerfile: ./testing/Dockerfile
