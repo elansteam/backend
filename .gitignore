@@ -178,3 +178,4 @@ test.sh
 ./data/*
 configs/main_config.json
 mongo_data
+docker-compose.yml
