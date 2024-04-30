@@ -1,17 +1,17 @@
 {
     "database": {
-        "connect_url": "mongodb://localhost:27017",
-        "name": "ELANDB",
+        "connect_url": null,
+        "name": null,
         "collections": {
-            "users": "Users",
-            "groups": "Groups",
-            "roles": "Roles",
-            "domains": "Domains",
-            "group_roles": "GroupRoles"
+            "users": null,
+            "groups": null,
+            "roles": null,
+            "domains": null,
+            "group_roles": null
         }
     },
     "rabbitmq": {
-        "connect_url": "test urls://localhost"
+        "connect_url": null
     },
     "auth": {
         "algorithm": "HS256",
