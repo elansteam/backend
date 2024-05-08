@@ -2,8 +2,8 @@
 from datetime import datetime
 
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
-    DomainAnnotation, RoleCodeAnnotation, StrIdAnnotation
+from db.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
+    DomainAnnotation
 
 
 class Submission(BaseModel):

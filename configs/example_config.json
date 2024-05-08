@@ -7,7 +7,8 @@
             "groups": null,
             "roles": null,
             "domains": null,
-            "group_roles": null
+            "group_roles": null,
+            "internal_counters": null
         }
     },
     "rabbitmq": {

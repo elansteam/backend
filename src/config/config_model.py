@@ -9,6 +9,7 @@ class MongoDBCollections(BaseModel):
     groups: str
     group_roles: str
     roles: str
+    internal_counters: str
 
 class DatabaseConfig(BaseModel):
     """Database configuration"""

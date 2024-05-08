@@ -1,8 +1,9 @@
 """Annotations for BaseModels fields"""
 from typing import Annotated
 from pydantic import AfterValidator
-from db.models.annotations import validators
+from db.annotations import validators
 
+# this is annotations. They can be use in typehints
 IntIdAnnotation = Annotated[int, AfterValidator(validators.positive_number)]
 EmailAnnotation = Annotated[str, AfterValidator(validators.email_string)]
 DomainAnnotation = Annotated[str, AfterValidator(validators.domain_name)]
