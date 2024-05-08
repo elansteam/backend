@@ -1,14 +1,14 @@
 {
     "database": {
         "connect_url": null,
-        "name": null,
+        "name": "ELANDB",
         "collections": {
-            "users": null,
-            "groups": null,
-            "roles": null,
-            "domains": null,
-            "group_roles": null,
-            "internal_counters": null
+            "users": "Users",
+            "groups": "Groups",
+            "roles": "Roles",
+            "domains": "Domains",
+            "group_roles": "GroupRoles",
+            "internal_counters": "InternalCounters"
         }
     },
     "rabbitmq": {
@@ -21,5 +21,5 @@
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },
-    "app_title": null
+    "app_title": "ELANTS API"
 }
