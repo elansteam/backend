@@ -57,15 +57,3 @@ class Group(BaseModel):
 
     contests: list[IntIdAnnotation] = Field([])
 
-
-class GroupToCreate(BaseModel):
-    """Group to create template"""
-
-    name: NameAnnotation
-
-    description: DescriptionAnnotation = Field("")
-
-    domain: DomainAnnotation | None = Field(None)
-
-    members: list[IntIdAnnotation] = Field([])
-    """Who will be in group"""

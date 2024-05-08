@@ -1,17 +1,7 @@
-from datetime import datetime
-from typing import Annotated
+"""Submission model"""
 
-from pydantic import BaseModel, Field, AfterValidator
+from pydantic import BaseModel, Field
 from db.models.annotations import IntIdAnnotation
-
-
-class SubmissionToCreate(BaseModel):
-
-    problem_id: IntIdAnnotation
-
-    contest_id: IntIdAnnotation
-
-    solution: str
 
 
 class Submission(BaseModel):

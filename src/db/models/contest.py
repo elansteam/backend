@@ -2,18 +2,9 @@
 from datetime import datetime
 
 from pydantic import BaseModel, Field
+from db.models.submission import Submission
 from db.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
     DomainAnnotation
-
-
-class Submission(BaseModel):
-    """User submission"""
-
-    # id: IntIdAnnotation = Field(alias="")
-    upload_time: datetime
-    code_text: str
-    status: str | None = None
-    target_problem_id: IntIdAnnotation
 
 
 class Contest(BaseModel):
@@ -36,15 +27,3 @@ class Contest(BaseModel):
     problems: list[IntIdAnnotation] = Field([])
 
     submissions: list[Submission] = Field([])
-
-
-class ContestToCreate(BaseModel):
-    """Group to create template"""
-
-    name: NameAnnotation
-
-    description: DescriptionAnnotation = Field("")
-
-    domain: DomainAnnotation | None = Field(None)
-
-    linked_group: IntIdAnnotation

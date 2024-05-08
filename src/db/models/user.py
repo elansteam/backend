@@ -15,19 +15,3 @@ class User(BaseModel):
     mid_name: str | None = Field(None)
     roles: list[StrIdAnnotation] = Field([])
     """List of global roles, which user have"""
-
-
-class UserSignup(BaseModel):
-    """Data for Signup user"""
-    domain: DomainAnnotation | None = Field(None)
-    password: str
-    first_name: str
-    last_name: str
-    mid_name: str | None = Field(None)
-    email: EmailAnnotation
-
-
-class UserSignin(BaseModel):
-    """Data for user signin"""
-    login: str
-    password: str

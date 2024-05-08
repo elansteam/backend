@@ -5,5 +5,16 @@ from . import user
 from . import group
 from . import role
 from . import entity
+from . import contest
+from . import problem
+from . import submission
 
-__all__ = ["user", "group", "role", "entity"]  # FIXME: it is not all modules
+__all__ = [
+    "user",
+    "group",
+    "role",
+    "entity",
+    "contest",
+    "submission",
+    "problem",
+]
