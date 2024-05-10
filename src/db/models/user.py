@@ -1,6 +1,6 @@
 """User definition and some useful stuff about user"""
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation, DomainAnnotation, EmailAnnotation, \
+from db.annotations import IntIdAnnotation, DomainAnnotation, EmailAnnotation, \
     StrIdAnnotation
 
 

@@ -1,6 +1,4 @@
 """Group definition"""
-from datetime import datetime
-
 from pydantic import BaseModel, Field
 from db.models.submission import Submission
 from db.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
