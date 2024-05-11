@@ -7,6 +7,7 @@ from . import group
 from . import entity
 from . import contest
 from . import problem
+from . import group_role
 from . import submission
 from . import group_member
 from . import contest_member
@@ -16,9 +17,10 @@ __all__ = [
     "group",
     "role",
     "entity",
+    "problem",
     "contest",
     "submission",
-    "problem",
+    "group_role",
     "group_member",
     "contest_member"
 ]
