@@ -8,7 +8,8 @@
             "roles": "Roles",
             "domains": "Domains",
             "group_roles": "GroupRoles",
-            "internal_counters": "InternalCounters"
+            "internal_counters": "InternalCounters",
+            "group_members": "GroupMembers"
         }
     },
     "rabbitmq": {

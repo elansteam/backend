@@ -1,6 +1,6 @@
 """Group definition"""
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
+from db.annotations import IntIdAnnotation, NameAnnotation, DescriptionAnnotation, \
     DomainAnnotation, StrIdAnnotation
 
 

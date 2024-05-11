@@ -8,6 +8,7 @@ from . import entity
 from . import contest
 from . import problem
 from . import submission
+from . import group_member
 
 __all__ = [
     "user",
@@ -17,4 +18,5 @@ __all__ = [
     "contest",
     "submission",
     "problem",
+    "group_member"
 ]
