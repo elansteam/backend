@@ -5,7 +5,8 @@ from db.annotations import IntIdAnnotation, DomainAnnotation, EmailAnnotation, \
 
 
 class User(BaseModel):
-    """User representation in database"""
+    """https://app.clickup.com/9015604104/v/dc/8cnycw8-115"""
+
     id: IntIdAnnotation = Field(alias='_id')
     domain: DomainAnnotation | None = Field(None)
     password_hash: str
