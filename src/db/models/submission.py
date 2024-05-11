@@ -3,7 +3,7 @@
 import datetime
 from typing import Literal
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation
+from db.annotations import IntIdAnnotation
 
 
 class Submission(BaseModel):
