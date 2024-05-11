@@ -9,6 +9,7 @@ group_roles = _db.get_collection(_config.database.collections.group_roles)
 groups = _db.get_collection(_config.database.collections.groups)
 internal_counters = _db.get_collection(_config.database.collections.internal_counters)
 roles = _db.get_collection(_config.database.collections.roles)
+group_members = _db.get_collection(_config.database.collections.group_members)
 
 __all__ = [
     "users",
