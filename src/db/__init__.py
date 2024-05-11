@@ -14,8 +14,9 @@ from . import models
 from . import schemas
 from . import annotations
 from . import methods
+from . import collections
 
-__all__ = ["models", "annotations", "methods", "schemas"]
+__all__ = ["models", "annotations", "methods", "schemas", "collections"]
 
 # connection to database
 logger.info("Connecting to database")
