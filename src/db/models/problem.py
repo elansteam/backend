@@ -1,12 +1,10 @@
+"""Problem reprsentation in database"""
 from pydantic import BaseModel, Field
 from db.models.annotations import IntIdAnnotation, NameAnnotation
 
 
 class Problem(BaseModel):
-    """Problem representation"""
+    """https://app.clickup.com/9015604104/v/dc/8cnycw8-115/8cnycw8-455"""
 
     id: IntIdAnnotation = Field(alias='_id')
-
     name: NameAnnotation
-
-    # TODO: add tags and other
