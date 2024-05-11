@@ -11,7 +11,7 @@ from . import submission
 
 __all__ = [
     "user",
-    "contest",
     "group",
+    "contest",
     "submission",
 ]
