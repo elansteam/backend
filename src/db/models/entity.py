@@ -1,17 +1,12 @@
-"""Domain router representation in the database"""
+"""Domain entity representation in the database"""
 from typing import Literal
 from pydantic import BaseModel, Field
 from db.models.annotations import IntIdAnnotation, DomainAnnotation
 
 
 class Entity(BaseModel):
-    """Domain router representation in the database"""
+    """https://app.clickup.com/9015604104/v/dc/8cnycw8-115/8cnycw8-395"""
 
     id: DomainAnnotation = Field(alias='_id')
-    """Domain router domain"""
-
-    entity_type: Literal["group"] | Literal["user"] | Literal["reserve"]
-    """Type of the linked entity"""
-
-    entity_id: IntIdAnnotation | None = None
-    """ID of the linked entity"""
+    entity_type: Literal["user", "group", "contest", "reserve"]
+    entity_id: IntIdAnnotation | None = Field(None)
