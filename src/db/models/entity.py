@@ -1,7 +1,7 @@
 """Domain entity representation in the database"""
 from typing import Literal
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation, DomainAnnotation
+from db.annotations import IntIdAnnotation, DomainAnnotation
 
 
 class Entity(BaseModel):

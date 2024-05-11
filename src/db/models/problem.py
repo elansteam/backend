@@ -1,6 +1,6 @@
 """Problem reprsentation in database"""
 from pydantic import BaseModel, Field
-from db.models.annotations import IntIdAnnotation, NameAnnotation
+from db.annotations import IntIdAnnotation, NameAnnotation
 
 
 class Problem(BaseModel):
