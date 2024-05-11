@@ -5,6 +5,7 @@
         "collections": {
             "users": "Users",
             "groups": "Groups",
+            "contests": "Contests",
             "roles": "Roles",
             "domains": "Domains",
             "group_roles": "GroupRoles",

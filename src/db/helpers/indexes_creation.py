@@ -11,3 +11,10 @@ def create_indexes():
         {"email": 1},
         partialFilterExpression={"email": {"$ne": None}}
     )
+    # contests
+    collections.contests.create_index(
+        {
+            "group_id": 1,
+            "local_domain": 1
+        }
+    )

@@ -10,11 +10,14 @@ groups = _db.get_collection(_config.database.collections.groups)
 internal_counters = _db.get_collection(_config.database.collections.internal_counters)
 roles = _db.get_collection(_config.database.collections.roles)
 group_members = _db.get_collection(_config.database.collections.group_members)
+contests = _db.get_collection(_config.database.collections.contests)
 
 __all__ = [
     "users",
     "domains",
     "group_roles",
     "internal_counters",
-    "roles"
+    "roles",
+    "contests",
+    "group_members"
 ]
