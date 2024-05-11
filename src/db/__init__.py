@@ -7,7 +7,7 @@ from loguru import logger
 from pymongo import MongoClient, database
 from pymongo.errors import ServerSelectionTimeoutError
 from config import config
-
+from db.helpers import indexes_creation
 
 # import submodules
 from . import models
@@ -33,6 +33,8 @@ try:
 except ServerSelectionTimeoutError:
     logger.error("Database is not connected")
     sys.exit(1)
+
+indexes_creation.create_indexes()
 
 def close_connection():
     """Closing mongodb connection"""
