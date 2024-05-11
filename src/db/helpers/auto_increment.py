@@ -2,8 +2,7 @@
 
 from pymongo.errors import DuplicateKeyError
 from pydantic import BaseModel
-from config import config
-from db import db
+from db import db, collections
 
 def insert_with_id(
     collection: str,
@@ -19,13 +18,9 @@ def insert_with_id(
         int: id of inserted document
     """
 
-    internal_database_collection = db.get_collection(
-        config.database.collections.internal_counters
-    )
-
     while True:
         try:
-            res = internal_database_collection.find_one_and_update(
+            res = collections.internal_counters.find_one_and_update(
                 {"_id": collection},
                 {"$inc": {"counter": 1}}, upsert=True, return_document=True
             )
