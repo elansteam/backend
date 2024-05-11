@@ -1,7 +1,7 @@
 """Group member reprentation in databas"""
 
 from pydantic import BaseModel, Field
-from db.annotations import IntIdAnnotation
+from db.annotations import IntIdAnnotation, RoleCodeAnnotation
 
 
 class GroupMember(BaseModel):
@@ -9,5 +9,5 @@ class GroupMember(BaseModel):
 
     id: IntIdAnnotation = Field(alias="_id")
     group_id: IntIdAnnotation
-    custom_permissions: IntIdAnnotation
+    custom_permissions: RoleCodeAnnotation
     roles: list[IntIdAnnotation]
