@@ -21,9 +21,7 @@ __all__ = ["models", "annotations", "methods", "schemas", "collections"]
 # connection to database
 logger.info("Connecting to database")
 
-client: MongoClient = MongoClient(
-    connect=config.database.connect_url.get_secret_value()
-)
+client: MongoClient = MongoClient(config.database.connect_url.get_secret_value())
 
 db: database.Database = client.get_database(config.database.name)
 
