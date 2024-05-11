@@ -5,7 +5,7 @@ from db.annotations import IntIdAnnotation
 
 
 class GroupMember(BaseModel):
-    """https://app.clickup.com/9015604104/v/dc/8cnycw8-115"""
+    """https://app.clickup.com/9015604104/v/dc/8cnycw8-115/8cnycw8-415"""
 
     id: IntIdAnnotation = Field(alias="_id")
     group_id: IntIdAnnotation
