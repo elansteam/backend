@@ -1,4 +1,4 @@
-"""All collections got by already configuring names."""
+"""All collections got by already configuring names. And create mongo indexes"""
 
 from db import db as _db
 from config import config as _config  # to improve type hints
@@ -21,3 +21,19 @@ __all__ = [
     "group_members",
     "internal_counters"
 ]
+
+
+# Creating mongo indexes
+
+# users
+users.create_index(
+    {"email": 1},
+    partialFilterExpression={"email": {"$ne": None}}
+)
+# contests
+contests.create_index(
+    {
+        "group_id": 1,
+        "local_domain": 1
+    }
+)
