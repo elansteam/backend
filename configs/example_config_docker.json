@@ -23,5 +23,6 @@
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },
-    "app_title": "ELANTS API"
+    "app_title": "ELANTS API",
+    "show_config": true
 }

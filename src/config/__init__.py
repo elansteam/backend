@@ -53,4 +53,5 @@ logger.info(f"Loading configuration from file {_config_path}")
 config = _load_config()
 
 logger.info(f"Successfully loaded configuration from file {_config_path}")
-logger.info(f"Current configuration: {config.model_dump_json(indent=4)}")
+if config.show_config:
+    logger.info(f"Current configuration: {config.model_dump_json(indent=4)}")

@@ -38,3 +38,4 @@ class Config(BaseModel):
     rabbitmq: RabbitMQConfig
     auth: AuthConfig
     app_title: str
+    show_config: bool
