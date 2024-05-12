@@ -10,10 +10,10 @@ from config import config
 
 __all__ = [
     "models",
-    "annotations",
     "methods",
     "schemas",
-    "collections"
+    "collections",
+    "annotations"
 ]
 
 # connection to database

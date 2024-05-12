@@ -37,5 +37,3 @@ contests.create_index(
         "local_domain": 1
     }
 )
-
-print("Creating indexes")
