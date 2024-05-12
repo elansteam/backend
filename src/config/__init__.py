@@ -2,6 +2,7 @@
 import os
 import sys
 from loguru import logger
+from pydantic import ValidationError
 
 from . import config_model
 
@@ -39,8 +40,14 @@ if not _check_json_file(_config_path):  # check_json_file
 
 def _load_config() -> config_model.Config:
     """parse && validate config file"""
-    with open(_config_path, "r", encoding="utf-8") as config_file:
-        return config_model.Config.model_validate_json(config_file.read())
+    try:
+        with open(_config_path, "r", encoding="utf-8") as config_file:
+            return config_model.Config.model_validate_json(config_file.read())
+    except ValidationError as exception:
+        logger.error(
+            f"Failed to load configuration from file {_config_path}: {exception}"
+        )
+        sys.exit(1)
 
 logger.info(f"Loading configuration from file {_config_path}")
 config = _load_config()
