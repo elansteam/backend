@@ -28,7 +28,7 @@ __all__ = [
 # users
 users.create_index(
     {"email": 1},
-    partialFilterExpression={"email": {"$ne": None}}
+    partialFilterExpression={"email": {"$type": "string"}}
 )
 # contests
 contests.create_index(
@@ -37,3 +37,5 @@ contests.create_index(
         "local_domain": 1
     }
 )
+
+print("Creating indexes")
