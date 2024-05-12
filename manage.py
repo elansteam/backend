@@ -33,9 +33,9 @@ def main():  # pylint: disable=missing-function-docstring
     match args.command:
         case "run":
             # Run the FastAPI app using uvicorn
-            if args.config.endswith("example_config.json"):
+            if args.config.split("/")[-1].startswith("example"):
                 logger.error((
-                    "You are using the example config 'example_config.json' instead of "
+                    f"You are using the example config {args.config} instead of "
                     "your own one. Example config is not meant to be used "
                     "in production for security and other concerns. Please "
                     "create your own config file and run the app using "
@@ -44,7 +44,7 @@ def main():  # pylint: disable=missing-function-docstring
                 sys.exit(1)
             # set path to config to env variable
             os.environ["ELANTS_CONFIG_FILE_PATH"] = args.config
-            
+
             uvicorn.run("src.main:app", host="0.0.0.0", port=8080, reload=True, reload_dirs="./src")
         case "lint":  # run linting
             logger.info("Running pylint...")

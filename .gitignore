@@ -176,6 +176,7 @@ fastapi-async-mongodb
 run.sh
 test.sh
 ./data/*
-configs/main_config.json
+configs/main_config_docker.json
+configs/main_config_no_docker.json
 mongodb_data
 docker-compose.yml
