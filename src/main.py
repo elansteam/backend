@@ -1,18 +1,14 @@
 """Main project file"""
 
 from contextlib import asynccontextmanager
+from loguru import logger
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from auth.utils import AuthException
 from utils.handlers import auth_exception_handler
+from auth.utils import AuthException
 from config import config
-import routers.auth_router
-from db.mongo_manager import MongoManager
-import routers.contests_router
-import routers.problems_router
-import routers.submissions_router
-
+import routers
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -24,14 +20,11 @@ async def lifespan(_app: FastAPI):
     """
 
     # on startup
-    MongoManager.connect(
-        config.database.connect_url.get_secret_value(),
-        config.database.name
-    )
+    logger.info("Starting application")
 
     yield
     # on shutdown
-    MongoManager.disconnect()
+    logger.info("Shutting down application")
 
 
 app = FastAPI(title=config.app_title, debug=True, lifespan=lifespan)
@@ -52,13 +45,13 @@ app.add_middleware(
 )
 
 # routers
-app.include_router(routers.users_router.router, prefix="/api/users")
-app.include_router(routers.auth_router.router, prefix="/api/auth")
-app.include_router(routers.roles_router.router, prefix="/api/roles")
-app.include_router(routers.groups_router.router, prefix="/api/groups")
-app.include_router(routers.contests_router.router, prefix="/api/contests")
-app.include_router(routers.problems_router.router, prefix="/api/problems")
-app.include_router(routers.submissions_router.router, prefix="/api/submissions")
+app.include_router(routers.users.router, prefix="/api/users")
+app.include_router(routers.auth.router, prefix="/api/auth")
+app.include_router(routers.roles.router, prefix="/api/roles")
+app.include_router(routers.groups.router, prefix="/api/groups")
+app.include_router(routers.contests.router, prefix="/api/contests")
+app.include_router(routers.problems.router, prefix="/api/problems")
+app.include_router(routers.submissions.router, prefix="/api/submissions")
 
 # exception handlers
 app.add_exception_handler(AuthException, auth_exception_handler)
