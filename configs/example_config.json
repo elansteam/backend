@@ -1,6 +1,6 @@
 {
     "database": {
-        "connect_url": null,
+        "connect_url": "mongodb://backend_db:27017",
         "name": "ELANDB",
         "collections": {
             "users": "Users",

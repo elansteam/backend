@@ -177,5 +177,5 @@ run.sh
 test.sh
 ./data/*
 configs/main_config.json
-mongo_data
+mongodb_data
 docker-compose.yml

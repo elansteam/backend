@@ -1,13 +1,22 @@
 version: "3"
 
 services:
+  backend_db:
+    container_name: elants_backend_db
+    image: mongo
+    volumes:
+      - ./mongodb_data:/data/db
+    ports:
+      - "27017:27017"
   backend:
     container_name: elants_backend
     build: 
       dockerfile: Dockerfile
       args:
       - ELANTS_CONFIG_FILE_PATH=./configs/example_config.json
-  testing:
+    depends_on:
+      - backend_db
+  testing: # not implemented now
     container_name: elants_backend_testing
     build:
       context: .
