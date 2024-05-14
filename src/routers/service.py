@@ -9,4 +9,5 @@ router = APIRouter()
 @router.get("/ping")
 async def ping():
     """Ping - pong method"""
-    return {"message": "pong"}
+
+    return {"ok": True}

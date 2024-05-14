@@ -1,0 +1,4 @@
+"""Response error codes"""
+
+INTERNAL_SERVER_ERROR = 1
+UNPROCESSABLE_ENTITY = 2

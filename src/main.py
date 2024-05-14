@@ -3,9 +3,12 @@
 from contextlib import asynccontextmanager
 from loguru import logger
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
-from utils.handlers import auth_exception_handler
+import utils.handlers
+import utils.middlewares
 from auth.utils import AuthException
 from config import config
 import routers
@@ -36,13 +39,24 @@ origins = [
     "http://localhost:3000",
 ]
 
+
+# middlewares
 app.add_middleware(
+    BaseHTTPMiddleware,
+    dispatch=utils.middlewares.catch_internal_server_error
+)
+app.add_middleware(
+    BaseHTTPMiddleware,
+    dispatch=utils.middlewares.format_successful_json_response
+)
+app.add_middleware(  # cors
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # routers
 app.include_router(routers.users.router, prefix="/api/users")
@@ -55,4 +69,11 @@ app.include_router(routers.submissions.router, prefix="/api/submissions")
 app.include_router(routers.service.router, prefix="/api/service")
 
 # exception handlers
-app.add_exception_handler(AuthException, auth_exception_handler)
+app.add_exception_handler(
+    AuthException,
+    utils.handlers.auth_exception_handler
+)
+app.add_exception_handler(
+    RequestValidationError,
+    utils.handlers.request_validation_exception_handler
+)

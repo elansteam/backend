@@ -1,5 +1,13 @@
-"""Helpers for the project"""
+"""Project utils and additional files"""
+from . import handlers
+from . import error_codes
+from . import middlewares
 from . import response_utils
-from . import singleton
 
-__all__ = ["response_utils", "singleton"]
+
+__all__ = [
+    "error_codes",
+    "handlers",
+    "middlewares",
+    "response_utils"
+]
