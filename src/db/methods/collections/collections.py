@@ -4,7 +4,7 @@ Moreover this module create indexes
 """
 from pymongo.collection import Collection
 
-from db import db
+from db.client import db
 from config import config
 
 
