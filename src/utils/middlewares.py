@@ -40,7 +40,7 @@ async def catch_internal_server_error(request: Request, call_next):
                 "ok": False,
                 "error": {
                     "code": error_codes.INTERNAL_SERVER_ERROR,
-                    "error": "Internal server error"
+                    "message": "Internal Server Error"
                 }
             }
         )
