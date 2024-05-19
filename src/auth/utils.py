@@ -163,11 +163,13 @@ def auth_user(*permissions: Permissions):
         Function that auth user by given permissions and auth header
     """
 
-    def wrapper(authorization: str = Header()):
+    def wrapper(authorization: str = Header()) -> User:
         """
         Authorization user by given permissions and auth header.
         Args:
             authorization: Authorization header in format: Bearer <auth_token>
+        Returns:
+            Authorized user object
         Raises:
             ResponseWithErrorCode: validation error or access denied
         """
@@ -215,5 +217,7 @@ def auth_user(*permissions: Permissions):
                 http_status_code=http_status.HTTP_403_FORBIDDEN,
                 message=f"Missing permissions: {' '.join(required_permissions)}"
             )
+        
+        return user
 
     return wrapper
