@@ -1,4 +1,10 @@
 """Methods for communicate with database"""
-from . import user
 
-__all__ = ["user"]
+from . import users
+from . import roles
+
+
+__all__ = [
+    "users",
+    "roles"
+]

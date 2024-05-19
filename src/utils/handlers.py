@@ -4,20 +4,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from auth.utils import AuthException
 from . import response_utils
 
-
-async def auth_exception_handler(
-    _request: Request,
-    exc: AuthException
-):
-    """Authentication exception handler for make response consistent"""
-    return response_utils.get_error_response(
-        status=exc.status,
-        status_code=exc.status_code,
-        data=exc.response
-    )
 
 async def request_validation_exception_handler(
     _request: Request,

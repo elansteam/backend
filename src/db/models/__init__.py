@@ -1,26 +1,26 @@
 """
 The set of database modles, that represents data, containing in Database
 """
-from . import role
-from . import user
-from . import group
-from . import entity
-from . import contest
-from . import problem
-from . import group_role
-from . import submission
-from . import group_member
-from . import contest_member
+from .role import Role
+from .user import User
+from .group import Group
+from .entity import Entity
+from .contest import Contest
+from .problem import Problem
+from .group_role import GroupRole
+from .submission import Submission
+from .group_member import GroupMember
+from .contest_member import ContestMember
 
 __all__ = [
-    "user",
-    "group",
-    "role",
-    "entity",
-    "problem",
-    "contest",
-    "submission",
-    "group_role",
-    "group_member",
-    "contest_member"
+    "User",
+    "Group",
+    "Role",
+    "Entity",
+    "Problem",
+    "Contest",
+    "Submission",
+    "GroupRole",
+    "GroupMember",
+    "ContestMember"
 ]

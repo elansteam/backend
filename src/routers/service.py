@@ -1,8 +1,8 @@
 """Service API methods"""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from utils.response_utils import ResponseWithErrorCode, ResponseErrorCodes
-
+from auth import auth_user, Permissions
 
 router = APIRouter()
 
@@ -22,3 +22,9 @@ async def test_422(_data: int):
 async def test_500():
     """Returns error status"""
     raise ValueError("This is ok")
+
+@router.get("/test/headers")
+async def test_headers(current_user = Depends(auth_user(
+    Permissions.CHANGE_USER_ROLES
+))):
+    """Returns error status"""

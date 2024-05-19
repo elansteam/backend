@@ -9,7 +9,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 import utils.handlers
 import utils.middlewares
-from auth.utils import AuthException
 from config import config
 import routers
 
@@ -70,10 +69,6 @@ app.include_router(routers.service.router, prefix="/api/service")
 
 # exception handlers
 app.add_exception_handler(
-    AuthException,
-    utils.handlers.auth_exception_handler
-)
-app.add_exception_handler(
     RequestValidationError,
     utils.handlers.request_validation_exception_handler
 )
@@ -81,4 +76,3 @@ app.add_exception_handler(
     utils.response_utils.ResponseWithErrorCode,
     utils.handlers.response_with_error_code_handler
 )
-

@@ -2,9 +2,11 @@
 Helpers for auth stuff
 """
 
-import datetime
+from loguru import logger
 from passlib.context import CryptContext
 from starlette import status as http_status
+from fastapi import Header
+import datetime
 import jose
 
 from db import methods
@@ -18,7 +20,7 @@ from config import config
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def check_role_code_for_permissions(
+def has_role_permissions(
     role_code: RoleCodeAnnotation,
     *permissions: Permissions
 ) -> bool:
@@ -136,29 +138,82 @@ def get_user_by_access_jwt(jwt: str) -> User:
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
-    user = methods.user.get(int(token_sub))
+    user = methods.users.get(int(token_sub))
 
     if user is None:
         raise response_utils.ResponseWithErrorCode(
             code=response_utils.ResponseErrorCodes.COULD_NOT_FIND_USER_BY_TOKEN,
             message="Could not find user by this token",
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
-        ) from exc
+        )
 
     return user
 
 
 def auth_user(*permissions: Permissions):
     """
-    Decorator
-    Use:
+    Dependency, that authorize user with given permissions by jwt token in 
+    Authorization header.
+    
+    Usage example:
     >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
-    Auth user by permissions.
     Args:
         *permissions: Permissions, which must contain user roles
     Returns:
-        function, which auth user
-    Raises:
-        AuthException: Raise 403 error user hasn`t permissions
+        Function that auth user by given permissions and auth header
     """
-    ...
+
+    def wrapper(authorization: str = Header()):
+        """
+        Authorization user by given permissions and auth header.
+        Args:
+            authorization: Authorization header in format: Bearer <auth_token>
+        Raises:
+            ResponseWithErrorCode: validation error or access denied
+        """
+        # validate authorization header
+        credentials = authorization.split()
+        if len(credentials) != 2:
+            raise response_utils.ResponseWithErrorCode(
+                code=response_utils.ResponseErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
+                http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+                message="Incorrect authorization header format. Format: Bearer <auth>"
+            )
+
+        bearer, token, *_ = *credentials, None
+
+        if bearer != "Bearer" or token is None:
+            raise response_utils.ResponseWithErrorCode(
+                code=response_utils.ResponseErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
+                http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+                message="Incorrect authorization header format. Format: Bearer <auth>"
+            )
+
+        user = get_user_by_access_jwt(token)
+
+        permissions_mask = 0
+
+        for role_name in user.roles:
+            role = methods.roles.get(role_name)
+            if role is None:
+                logger.error(f"Role with name <{role_name}> not found")
+                continue
+            permissions_mask |= role.role_code
+
+        if not has_role_permissions(
+            permissions_mask,
+            *permissions
+        ):
+            required_permissions = []
+
+            for permission in permissions:
+                if not has_role_permissions(permissions_mask, permission):
+                    required_permissions.append(permission.name)
+
+            raise response_utils.ResponseWithErrorCode(
+                code=response_utils.ResponseErrorCodes.ACCESS_DENIED,
+                http_status_code=http_status.HTTP_403_FORBIDDEN,
+                message=f"Missing permissions: {' '.join(required_permissions)}"
+            )
+
+    return wrapper
