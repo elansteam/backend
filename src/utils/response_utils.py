@@ -102,7 +102,9 @@ class ResponseErrorCodes(Enum):
     """
     INTERNAL_SERVER_ERROR = 1
     UNPROCESSABLE_ENTITY = 2
-
+    TOKEN_EXPIRED = 3
+    TOKEN_VALIDATION_FAILED = 4
+    COULD_NOT_FIND_USER_BY_TOKEN = 5
 
 class ResponseWithErrorCode(Exception):
     """Response with custom error code"""

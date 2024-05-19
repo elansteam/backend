@@ -12,7 +12,7 @@ from . import submission
 
 __all__ = [
     "user",
-    "auth",
+    "auth"
     "group",
     "contest",
     "submission",
