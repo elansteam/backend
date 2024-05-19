@@ -2,7 +2,7 @@
 Helpers for auth stuff
 """
 
-from datetime import datetime
+import datetime
 from passlib.context import CryptContext
 from starlette import status as http_status
 import jose
@@ -89,7 +89,7 @@ def create_jwt(
         JWT as string
     """
 
-    expiration_time = datetime.utcnow() + datetime.timedelta(
+    expiration_time = datetime.datetime.utcnow() + datetime.timedelta(
         minutes=expiration_time_minutes
     )
 
