@@ -11,9 +11,9 @@ class Contest(BaseModel):
 
     id: IntIdAnnotation = Field(alias='_id')
     name: NameAnnotation
-    domain: DomainAnnotation | None = Field(None)
-    local_domain: DomainAnnotation | None = Field(None)
-    description: DescriptionAnnotation = Field("")
+    domain: DomainAnnotation | None = None
+    local_domain: DomainAnnotation | None = None
+    description: DescriptionAnnotation = ""
     submissions: list[IntIdAnnotation]
     members: list[IntIdAnnotation]
     creators: list[IntIdAnnotation]

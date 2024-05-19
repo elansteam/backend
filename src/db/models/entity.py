@@ -10,4 +10,4 @@ class Entity(BaseModel):
 
     id: DomainAnnotation = Field(alias='_id')
     entity_type: Literal["user", "group", "contest", "reserve"]
-    entity_id: IntIdAnnotation | None = Field(None)
+    entity_id: IntIdAnnotation | None = None

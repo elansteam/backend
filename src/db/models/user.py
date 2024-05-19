@@ -14,6 +14,6 @@ class User(BaseModel):
     first_name: str
     last_name: str
     mid_name: str | None = Field(None)
-    groups: list[IntIdAnnotation] = Field([])
-    roles: list[StrIdAnnotation] = Field([])
+    groups: list[IntIdAnnotation] = []
+    roles: list[StrIdAnnotation] = []
     email: EmailAnnotation | None

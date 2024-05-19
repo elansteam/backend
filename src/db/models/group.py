@@ -10,8 +10,8 @@ class Group(BaseModel):
 
     id: IntIdAnnotation = Field(alias='_id')
     name: NameAnnotation
-    domain: DomainAnnotation | None = Field(None)
+    domain: DomainAnnotation | None = None
     description: DescriptionAnnotation
-    members: list[IntIdAnnotation] = Field([])
+    members: list[IntIdAnnotation] = []
     owner: IntIdAnnotation
-    roles: list[StrIdAnnotation] = Field([])
+    roles: list[StrIdAnnotation] = []

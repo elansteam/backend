@@ -217,7 +217,7 @@ def auth_user(*permissions: Permissions):
                 http_status_code=http_status.HTTP_403_FORBIDDEN,
                 message=f"Missing permissions: {' '.join(required_permissions)}"
             )
-        
+
         return user
 
     return wrapper
