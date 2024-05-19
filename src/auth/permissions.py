@@ -1,11 +1,11 @@
 """Global permissions enum"""
-import enum
+from enum import Enum
 
 ALL_PERMISSIONS_ROLE_CODE: int = 2 ** 31 - 1
 """Number that contains all bits of permissions"""
 
 
-class Permissions(enum.Enum):
+class Permissions(Enum):
     """Global Permissions enum"""
     # ADMIN = 0
     CREATE_GROUP = 1

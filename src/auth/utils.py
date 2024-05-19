@@ -4,43 +4,31 @@ Helpers for auth stuff
 
 from passlib.context import CryptContext
 from db.models.user import User
+from db.annotations import RoleCodeAnnotation
 from auth.permissions import Permissions
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-class AuthException(Exception):
-    """Custom exception for auth errors"""
-    status: str
-    status_code: int
-    response: dict
-
-    def __init__(self, status: str, status_code: int, response: dict | None = None):
-        self.status = status
-        self.status_code = status_code
-        if response is None:
-            self.response = {}
-        else:
-            self.response = response
-
-
-def has_role_permissions(role_staff: int, *permissions: Permissions) -> bool:
-    """Check what role contains permissions
+def check_role_code_for_permissions(
+    role_code: RoleCodeAnnotation,
+    *permissions: Permissions
+) -> bool:
+    """Checking if this role has permissions
     Args:
-        role_staff: representation permissions through converted to bits int32 number
+        role_code: representation permissions through converted to bits int32 number
 
     Returns:
         True - if role has permission, else False
     """
 
     for perm in permissions:
-        if (role_staff >> perm.value) % 2 == 0:
+        if (role_code >> perm.value) % 2 == 0:
             return False
-
     return True
 
 
-def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
+def generate_role_code(*permissions: Permissions) -> RoleCodeAnnotation:
     """
     Generate role code by permissions
     Args:
@@ -55,7 +43,7 @@ def gen_code_staff_by_permissions(*permissions: Permissions) -> int:
     return role_code
 
 
-def get_hashed_password(password: str) -> str:
+def hash_password(password: str) -> str:
     """
     Hashing password
     Args:
@@ -80,7 +68,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
     return password_context.verify(password, hashed_password)
 
 
-def create_token(
+def create_JWT(
         subject: str, is_access=True, expires_delta: int | None = None
 ) -> str:
     ...
@@ -90,7 +78,6 @@ async def get_current_user(token: str) -> User:
     """Get current user by access token or raise HTTPException
     Args:
         token (str): access token
-
     Raises:
         AuthException: Raise 401 error if access token is invalid
     Returns:
