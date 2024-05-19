@@ -1,13 +1,9 @@
 """Methods for interact with users in database"""
-from loguru import logger
 
-from db.client import db
-from . import collections
+from db.annotations import IntIdAnnotation
+from db.models import User
 
 
-def test():
-    """Test method"""
-
-    logger.info(db)
-    logger.info(collections.users)
-    logger.info(collections.internal_counters)
+def get(user_id: IntIdAnnotation) -> User | None:    
+    """Returns user by id"""
+    return None  # FIXME
