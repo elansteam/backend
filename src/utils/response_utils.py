@@ -1,12 +1,14 @@
 """Some useful stuff"""
 
+
+from enum import Enum
 from typing import Literal
 from typing import Any, Type
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
 
-def get_error_schema(description: str):
+def get_error_schema(description: str):  # deprecated
     """
     Args:
         description: error description
@@ -29,7 +31,7 @@ def get_error_schema(description: str):
 
 
 def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = None,
-                       status_code: int = 400) -> JSONResponse:
+                       status_code: int = 400) -> JSONResponse: # deprecated
     """
     Args:
         status: error status
@@ -55,7 +57,7 @@ def get_error_response(status: str, data: dict[str, Any] | BaseModel | None = No
 
 
 def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
-                       dict[str, Any]) -> Type[BaseModel]:
+                       dict[str, Any]) -> Type[BaseModel]: # deprecated
     """
     Return a pydantic custom model for response model.
     Use without argument to make response empty.
@@ -74,7 +76,7 @@ def get_response_model(model: Type[BaseModel] | Type[dict[str, Any]] =
     return response_model
 
 
-def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONResponse:
+def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONResponse: # deprecated
     """
     Returns an object that should return API method
     Args:
@@ -91,3 +93,34 @@ def get_response(model: BaseModel | dict[str, Any] | None = None) -> JSONRespons
         "status": "OK",
         "response": model
     })
+
+
+class ResponseErrorCodes(Enum):
+    """
+    Enum of response error codes.
+    For description see documentation TODO: set documentation url
+    """
+    INTERNAL_SERVER_ERROR = 1
+    UNPROCESSABLE_ENTITY = 2
+
+
+class ResponseWithErrorCode(Exception):
+    """Response with custom error code"""
+
+    code: ResponseErrorCodes
+    message: str | None
+    http_status_code: int
+    auto_message: bool  # experemental
+    """If main message is None, it makes message be error code representation"""
+
+    def __init__(
+        self,
+        code: ResponseErrorCodes,
+        message: str | None = None,
+        http_status_code: int = 400,
+        auto_message: bool = False
+    ):
+        self.code = code
+        self.message = message
+        self.http_status_code = http_status_code
+        self.auto_message = auto_message

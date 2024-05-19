@@ -77,3 +77,8 @@ app.add_exception_handler(
     RequestValidationError,
     utils.handlers.request_validation_exception_handler
 )
+app.add_exception_handler(
+    utils.response_utils.ResponseWithErrorCode,
+    utils.handlers.response_with_error_code_handler
+)
+

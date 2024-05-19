@@ -5,18 +5,24 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 from auth.utils import AuthException
-from utils import error_codes
-from utils.response_utils import get_error_response
+from . import response_utils
 
-async def auth_exception_handler(_request: Request, exc: AuthException):
+
+async def auth_exception_handler(
+    _request: Request,
+    exc: AuthException
+):
     """Authentication exception handler for make response consistent"""
-    return get_error_response(
+    return response_utils.get_error_response(
         status=exc.status,
         status_code=exc.status_code,
         data=exc.response
     )
 
-async def request_validation_exception_handler(_request: Request, exc: RequestValidationError):
+async def request_validation_exception_handler(
+    _request: Request,
+    exc: RequestValidationError
+):
     """Unprocessable entity exception handler for make response consistent"""
 
     def detail_part_to_string(part: dict[str, str]):
@@ -35,9 +41,32 @@ async def request_validation_exception_handler(_request: Request, exc: RequestVa
         content={
             "ok": False,
             "error": {
-                "code": error_codes.UNPROCESSABLE_ENTITY,
+                "code": response_utils.ResponseErrorCodes.UNPROCESSABLE_ENTITY.value,
                 "message": errors
             }
         },
         status_code=422
+    )
+
+async def response_with_error_code_handler(
+    _request: Request,
+    exc: response_utils.ResponseWithErrorCode
+) -> JSONResponse:
+    """Handle response with error code"""
+
+    content: dict = {
+        "ok": False,
+        "error": {
+            "code": exc.code.value,
+        }
+    }
+
+    if exc.message is not None:
+        content["error"]["message"] = exc.message
+    elif exc.auto_message:
+        content["error"]["message"] = exc.code.name
+
+    return JSONResponse(
+        content=content,
+        status_code=exc.http_status_code
     )

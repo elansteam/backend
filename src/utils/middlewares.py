@@ -6,7 +6,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import _StreamingResponse
 
-from utils import error_codes
+from . import response_utils
+
 
 async def format_successful_json_response(request: Request, call_next):
     """Middleware that format a successful JSON response"""
@@ -39,7 +40,7 @@ async def catch_internal_server_error(request: Request, call_next):
             content={
                 "ok": False,
                 "error": {
-                    "code": error_codes.INTERNAL_SERVER_ERROR,
+                    "code": response_utils.ResponseErrorCodes.INTERNAL_SERVER_ERROR.value,
                     "message": "Internal Server Error"
                 }
             }
