@@ -7,7 +7,9 @@ from .collections import roles
 
 def get(role_name: NameAnnotation) -> Role | None:
     """Returns role by name"""
-    role = roles.find_one(role_name)
+    role = roles.find_one({
+        "_id": role_name
+    })
     if role is None:
         return None
     return Role(**role)
