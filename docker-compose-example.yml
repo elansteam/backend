@@ -1,23 +1,49 @@
 version: "3"
 
 services:
-  backend_db:
+  main_database:
     container_name: elants_backend_db
     image: mongo
     volumes:
       - ./mongodb_data:/data/db
     ports:
       - "27017:27017"
-  backend:
+  main_backend:
     container_name: elants_backend
     build: 
       dockerfile: Dockerfile
       args:
       - ELANTS_CONFIG_FILE_PATH=./configs/example_config.json
+    ports:
+      - "8080:8080"
     depends_on:
-      - backend_db
-  testing: # not implemented now
-    container_name: elants_backend_testing
-    build:
-      context: .
-      dockerfile: ./testing/Dockerfile
+      - main_database
+
+  integration_test_database:
+    container_name: elants_integration_test_db
+    image: mongo
+    networks:
+      - integration_test_network
+  integration_test_backend:
+    container_name: elants_backend_integtation_testing
+    build: 
+      dockerfile: Dockerfile
+      args:
+        - ELANTS_CONFIG_FILE_PATH=./testing/integration/backend_config.json
+    depends_on:
+      - integration_test_database
+    networks:
+      - integration_test_network
+    tty: true
+  integration_test:
+    container_name: elants_integration_test
+    build: 
+      context: ./testing/integration
+    depends_on:
+      - integration_test_backend
+    networks:
+      - integration_test_network
+    tty: true
+    
+networks:
+  integration_test_network:

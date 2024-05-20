@@ -181,3 +181,4 @@ configs/main_config_no_docker.json
 mongodb_data
 docker-compose.yml
 testing/debug_integration_tests/
+testing/integration/node_modules

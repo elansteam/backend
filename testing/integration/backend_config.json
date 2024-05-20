@@ -1,20 +1,20 @@
 {
     "database": {
-        "connect_url": "mongodb://main_database:27017",
+        "connect_url": "mongodb://integration_test_database:27017",
         "name": "ELANDB",
         "collections": {
             "users": "Users",
-            "groups": "Groups",
-            "contests": "Contests",
             "roles": "Roles",
+            "groups": "Groups",
             "domains": "Domains",
+            "contests": "Contests",
             "group_roles": "GroupRoles",
-            "internal_counters": "InternalCounters",
-            "group_members": "GroupMembers"
+            "group_members": "GroupMembers",
+            "internal_counters": "InternalCounters"
         }
     },
     "rabbitmq": {
-        "connect_url": null
+        "connect_url": "null://localhost"
     },
     "auth": {
         "algorithm": "HS256",
@@ -24,5 +24,5 @@
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },
     "app_title": "ELANTS API",
-    "show_config": true
+    "show_config": false
 }
