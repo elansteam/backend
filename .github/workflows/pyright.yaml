@@ -3,7 +3,7 @@ name: Pyright python check
 on:
   push:
     branches:
-      - total-fix-authorization
+      - master
 
 jobs:
   pyright:

@@ -3,7 +3,7 @@ name: Pylint python check
 on:
   push:
     branches:
-      - total-fix-authorization  # Замените "main" на вашу основную ветку
+      - master  # Замените "main" на вашу основную ветку
 
 jobs:
   pylint:
