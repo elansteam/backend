@@ -9,4 +9,4 @@ class Role(BaseModel):
     id: StringId = Field(alias='_id')
     name: ObjectName
     description: ObjectDescription
-    role_code: RoleCode
+    code: RoleCode

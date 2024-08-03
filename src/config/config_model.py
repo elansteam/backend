@@ -18,7 +18,6 @@ class DatabaseConfig(BaseModel):
     collections: MongoDBCollections = MongoDBCollections()
 
 class AuthConfig(BaseModel):
-    algorithm: str = "HS256"
     access_token_expire_minutes: int = 10
     refresh_token_expire_minutes: int = 10080
     jwt_access_secret_key: SecretStr

@@ -1,199 +1,167 @@
-# TODO: REFACTOR
-# """
-# Helpers for auth stuff
-# """
+import datetime
+from typing import Literal
+import jose.jwt
+from passlib.context import CryptContext
+from fastapi import Header
+from starlette import status as http_status
 
-# import datetime
-# import jose.jwt
-# from loguru import logger
-# from passlib.context import CryptContext
-# from fastapi import Header
-# from starlette import status as http_status
-
-# from db import methods
-# from db.types.user import User
-# from db.types.common import RoleCode
-# from utils import response
-# from config import config
-# from .permissions import Permissions
+from db import methods
+from db.types.user import User
+from db.types.common import RoleCode
+from utils import response
+from config import config
+from .permissions import Permissions
 
 
-# password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-# def has_role_permissions(
-#     role_code: RoleCode,
-#     *permissions: Permissions
-# ) -> bool:
-#     """Checking if this role has permissions
-#     Args:
-#         role_code: representation permissions through converted to bits int32 number
+def get_auth_header_credentials(
+    header: str,
+    prefix: Literal["Bearer", "Service"]
+) -> str:
+    credentials = header.split()
 
-#     Returns:
-#         True - if role has permission, else False
-#     """
-#     for perm in permissions:
-#         if (role_code >> perm.value) % 2 == 0:
-#             return False
-#     return True
+    error_message = f"Incorrect authorization header format. Format: {prefix} <auth>"
 
-# def generate_role_code(*permissions: Permissions) -> RoleCode:
-#     """
-#     Generate role code by permissions
-#     Args:
-#         *permissions: permissions, which should be contained in role code
-#     Returns:
-#         role code
-#     """
-#     role_code = 0
-#     for perm in permissions:
-#         role_code += 1 << perm.value
+    if len(credentials) != 2:
+        raise response.ErrorResponse(
+            code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
+            http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            message=error_message
+        )
 
-#     return role_code
+    current_prefix, token = credentials[0], credentials[1]
 
-# def hash_password(password: str) -> str:
-#     return password_context.hash(password)
+    if current_prefix != type:
+        raise response.ErrorResponse(
+            code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
+            http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            message=error_message
+        )
 
-# def verify_password(password: str, hashed_password: str) -> bool:
-#     return password_context.verify(password, hashed_password)
+    return token
 
-# def create_jwt(
-#         subject: str,
-#         expiration_time_minutes: int
-# ) -> str:
-#     """Create a JWT from a subject with expiration time in minutes
+def convert_role_code_to_permissions(role_code: RoleCode) -> list[int]:
+    permissions = []
+    i = 0
+    while 1 << i <= role_code:
+        if role_code >> i & 1 == 1:
+            permissions.append(i)
+        i += 1
+    return permissions
 
-#     Args:
-#         subject: Data to encode
-#         expiration_time_minutes: Token expiration time
+def convert_permissions_to_role_code(permissions: list[int]) -> RoleCode:
+    role_code = 0
+    for permission in permissions:
+        role_code += 1 << permission
+    return role_code
 
-#     Returns:
-#         JWT as string
-#     """
+def hash_password(password: str) -> str:
+    return password_context.hash(password)
 
-#     expiration_time = datetime.datetime.utcnow() + datetime.timedelta(
-#         minutes=expiration_time_minutes
-#     )
+def verify_password(password: str, hashed_password: str) -> bool:
+    return password_context.verify(password, hashed_password)
 
-#     # ! it is neccessary to name field like "exp" and "sub"
-#     to_encode = {
-#         "exp": expiration_time,
-#         "sub": subject
-#     }
+def create_jwt(
+    subject: str,
+    expiration_time_minutes: int,
+    secret_key: str
+) -> str:
+    expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        minutes=expiration_time_minutes
+    )
 
-#     created_jwt = jose.jwt.encode(
-#         to_encode,
-#         config.auth.jwt_access_secret_key.get_secret_value(),
-#         algorithm=config.auth.algorithm
-#     )
-#     return created_jwt
+    data_to_encode = {
+        "exp": expiration_time,
+        "subject": subject
+    }
 
-# def get_user_by_access_jwt(jwt: str) -> User:
-#     """Get current user by access token or raise ErrorResponse
-#     Args:
-#         jwt: access token
-#     Raises:
-#         ErrorResponse: Raise 401 error if access token is invalid
-#     Returns:
-#         User: user object
-#     """
-#     try:
-#         payload = jose.jwt.decode(
-#             jwt,
-#             config.auth.jwt_access_secret_key.get_secret_value(),
-#             algorithms=[config.auth.algorithm]
-#         )
-#         token_sub = payload["sub"]
+    jwt = jose.jwt.encode(
+        data_to_encode,
+        secret_key
+    )
+    return jwt
 
-#     except jose.ExpiredSignatureError as exc:
-#         raise response.ErrorResponse(
-#             code=response.ErrorCodes.TOKEN_EXPIRED,
-#             message="Token signature expired",
-#             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
-#         ) from exc
-#     except Exception as exc:
-#         raise response.ErrorResponse(
-#             code=response.ErrorCodes.TOKEN_VALIDATION_FAILED,
-#             message="Token validation failed",
-#             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
-#         ) from exc
+def decode_jwt(
+    jwt: str,
+    secret_key: str
+) -> dict[Literal["subject"], str]:
+    """
+    ### Raises:
+        - `ValueError`: If there is no subject field in decoded jwt
+        - `response.ErrorResponse`: *TOKEN_EXPIRED*
+        - `response.ErrorResponse`: *TOKEN_VALIDATION_FAILED*
+    """
+    try:
+        payload = jose.jwt.decode(
+            jwt,
+            secret_key,
+            # ! algorithms=["HS256"]
+        )
 
-#     user = methods.users.get(int(token_sub))
+        subject = payload.get("subject", None)
+        if subject is None:
+            raise ValueError("There is no <subject> field in jwt")
 
-#     if user is None:
-#         raise response.ErrorResponse(
-#             code=response.ErrorCodes.COULD_NOT_FIND_USER_BY_TOKEN,
-#             message="Could not find user by this token",
-#             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
-#         )
+        return {
+            "subject": subject
+        }
+    except jose.ExpiredSignatureError as exc:
+        raise response.ErrorResponse(
+            code=response.ErrorCodes.TOKEN_EXPIRED,
+            message="Token signature expired",
+            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
+        ) from exc
+    except Exception as exc:
+        raise response.ErrorResponse(
+            code=response.ErrorCodes.TOKEN_VALIDATION_FAILED,
+            message="Token validation failed",
+            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
+        ) from exc
 
-#     return user
+def auth_user(*permissions: Permissions):
+    """
+    Dependency, that authorize user with given permissions by jwt token in
+    Authorization header.
 
-# def auth_user(*permissions: Permissions):
-#     """
-#     Dependency, that authorize user with given permissions by jwt token in
-#     Authorization header.
+    Usage example:
+    >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
+    Args:
+        permissions: Permissions, which must contain user roles
+    Returns:
+        Function that auth user by given permissions and auth header
+    """
 
-#     Usage example:
-#     >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
-#     Args:
-#         *permissions: Permissions, which must contain user roles
-#     Returns:
-#         Function that auth user by given permissions and auth header
-#     """
+    def wrapper(authorization: str = Header()) -> User:
+        token = get_auth_header_credentials(authorization, "Bearer")
 
-#     def wrapper(authorization: str = Header()) -> User:
-#         """
-#         Authorization user by given permissions and auth header.
-#         Args:
-#             authorization: Authorization header in format: Bearer <auth_token>
-#         Returns:
-#             Authorized user object
-#         Raises:
-#             ErrorResponse: validation error or access denied
-#         """
-#         credentials = authorization.split()
-#         if len(credentials) != 2:
-#             raise response.ErrorResponse(
-#                 code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
-#                 http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                 message="Incorrect authorization header format. Format: Bearer <auth>"
-#             )
+        subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
 
-#         bearer, token, *_ = *credentials, None
+        if subject.isnumeric():
+            user_id = int(subject)
 
-#         if bearer != "Bearer" or token is None:
-#             raise response.ErrorResponse(
-#                 code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
-#                 http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                 message="Incorrect authorization header format. Format: Bearer <auth>"
-#             )
+            user = methods.users.get(user_id)
 
-#         user = get_user_by_access_jwt(token)
+            if user is not None:
+                general_role_code = 0
+                for role_name in user.roles:
+                    role = methods.roles.get(role_name)
+                    if role is None:
+                        continue
+                    general_role_code |= role.code
 
-#         permissions_mask = 0
+                user_permissions = convert_role_code_to_permissions(general_role_code)
 
-#         for role_name in user.roles:
-#             role = methods.roles.get(role_name)
-#             if role is None:
-#                 logger.error(f"Role with name <{role_name}> not found")
-#                 continue
-#             permissions_mask |= role.role_code
+                for permission in permissions:
+                    if permission.value not in user_permissions:
+                        raise response.ErrorResponse(
+                            code=response.ErrorCodes.ACCESS_DENIED,
+                            http_status_code=http_status.HTTP_403_FORBIDDEN
+                        )
 
-#         if not has_role_permissions(
-#             permissions_mask,
-#             *permissions
-#         ):
-#             required_permissions = []
-
-#             for permission in permissions:
-#                 if not has_role_permissions(permissions_mask, permission):
-#                     required_permissions.append(permission.name)
-
-#             raise response.ErrorResponse(
-#                 code=response.ErrorCodes.ACCESS_DENIED,
-#                 http_status_code=http_status.HTTP_403_FORBIDDEN,
-#                 message=f"Missing permissions: {' '.join(required_permissions)}"
-#             )
-#         return user
-#     return wrapper
+        raise response.ErrorResponse(
+            code=response.ErrorCodes.COULD_NOT_FIND_USER_BY_TOKEN,
+            http_status_code=http_status.HTTP_403_FORBIDDEN
+        )
+    return wrapper
