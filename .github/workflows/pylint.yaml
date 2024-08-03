@@ -1,4 +1,4 @@
-name: Python Pylint Check
+name: Pylint python check
 
 on:
   push:
