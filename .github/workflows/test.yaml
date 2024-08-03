@@ -33,4 +33,4 @@ jobs:
         fi
 
     - name: Show test logs
-      run: cat test_logs.txt
+      run: docker-compose logs --no-log-prefix test
