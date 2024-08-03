@@ -24,7 +24,6 @@ jobs:
 
     - name: Run pylint
       run: |
-        echo -e '"""Temp file for Github Action"""' > __init__.py
         pylint ${PWD}/src/** > pylint_output.txt
       continue-on-error: true
 
