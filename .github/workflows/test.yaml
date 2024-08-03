@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Docker Compose
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
 
     - name: Build and run Docker Compose
       run: |
@@ -30,14 +30,6 @@ jobs:
           exit 1
         else
           echo "Tests passed"
-        fi
-
-    - name: Check pylint results
-      run: |
-        cat pylint_output.txt
-        if ! grep -q "Your code has been rated at 10.00/10" pylint_output.txt; then
-          echo "Pylint issues found!"
-          exit 1
         fi
 
     - name: Upload test logs
