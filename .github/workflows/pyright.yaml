@@ -6,7 +6,7 @@ on:
       - total-fix-authorization
 
 jobs:
-  mypy:
+  pyright:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,13 +18,14 @@ jobs:
       with:
         python-version: 3.11
 
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
     - name: Install dependencies
-      run: |
-        pip3 install pyright
+      run: poetry install
 
     - name: Run Pyright
-      run: |
-        pyright > pyright_output.txt
+      run: poetry run pyright > pyright_output.txt
       continue-on-error: true
 
     - name: Check Pyright results
