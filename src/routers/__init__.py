@@ -4,7 +4,7 @@ from . import auth
 from . import users
 from . import roles
 from . import groups
-from . import tests
+from . import service
 from . import problems
 from . import contests
 from . import submissions
@@ -15,7 +15,7 @@ __all__ = [
     "users",
     "roles",
     "groups",
-    "tests",
+    "service",
     "problems",
     "contests",
     "submissions"

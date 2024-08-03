@@ -30,7 +30,7 @@ app.include_router(routers.groups.router, prefix="/api/groups")
 app.include_router(routers.contests.router, prefix="/api/contests")
 app.include_router(routers.problems.router, prefix="/api/problems")
 app.include_router(routers.submissions.router, prefix="/api/submissions")
-app.include_router(routers.tests.router, prefix="/api/tests")
+app.include_router(routers.service.router, prefix="/api/service")
 
 
 app.add_middleware(

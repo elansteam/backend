@@ -1,12 +1,12 @@
 {
     "database": {
-        "connect_url": "mongodb://main_database:27017",
+        "connect_url": "mongodb://bulo4ka:ZOVSVO@db_test",
         "name": "ELANDB"
     },
     "auth": {
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },
-    "app_title": "ELANTS API",
-    "show_config": true
+    "show_config": true,
+    "debug": true
 }

@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.1-alpine3.19
 
 ARG CONFIG_PATH
 
