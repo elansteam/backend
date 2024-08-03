@@ -1,5 +1,3 @@
-"""Groups endpoints"""
-
 from fastapi import APIRouter
 
 

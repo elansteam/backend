@@ -4,14 +4,17 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from . import response_utils
+from . import response
 
 
 async def request_validation_exception_handler(
     _request: Request,
-    exc: RequestValidationError
+    exc: Exception
 ):
     """Unprocessable entity exception handler for make response consistent"""
+
+    if not isinstance(exc, RequestValidationError):
+        raise ValueError("Unexpected error: get wrong exception type")
 
     def detail_part_to_string(part: dict[str, str]):
         return (
@@ -29,7 +32,7 @@ async def request_validation_exception_handler(
         content={
             "ok": False,
             "error": {
-                "code": response_utils.ResponseErrorCodes.UNPROCESSABLE_ENTITY.value,
+                "code": response.ErrorCodes.UNPROCESSABLE_ENTITY.value,
                 "message": errors
             }
         },
@@ -38,9 +41,12 @@ async def request_validation_exception_handler(
 
 async def response_with_error_code_handler(
     _request: Request,
-    exc: response_utils.ResponseWithErrorCode
+    exc: Exception
 ) -> JSONResponse:
     """Handle response with error code"""
+
+    if not isinstance(exc, response.ErrorResponse):
+        raise ValueError("Unexpected error: get wrong exception type")
 
     content: dict = {
         "ok": False,

@@ -1,25 +1,9 @@
 {
     "database": {
         "connect_url": "mongodb://main_database:27017",
-        "name": "ELANDB",
-        "collections": {
-            "users": "Users",
-            "groups": "Groups",
-            "contests": "Contests",
-            "roles": "Roles",
-            "domains": "Domains",
-            "group_roles": "GroupRoles",
-            "internal_counters": "InternalCounters",
-            "group_members": "GroupMembers"
-        }
-    },
-    "rabbitmq": {
-        "connect_url": null
+        "name": "ELANDB"
     },
     "auth": {
-        "algorithm": "HS256",
-        "access_token_expire_minutes": 30,
-        "refresh_token_expire_minutes": 10080,
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },

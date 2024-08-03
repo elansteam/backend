@@ -1,1 +1,0 @@
-"""Contest related schemas"""

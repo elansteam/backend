@@ -14,7 +14,6 @@ client: MongoClient = MongoClient(config.database.connect_url.get_secret_value()
 
 db: database.Database = client.get_database(config.database.name)
 
-# checking connection
 try:
     client.server_info()
 except ServerSelectionTimeoutError:

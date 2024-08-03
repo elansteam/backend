@@ -1,1 +1,0 @@
-"""Submission related schemas"""

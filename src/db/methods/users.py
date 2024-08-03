@@ -1,12 +1,9 @@
-"""Methods for interact with users in database"""
-
-from db.annotations import IntIdAnnotation
-from db.models import User
+from db.types.common import IntegerId
+from db.types import User
 from .collections import users
 
 
-def get(user_id: IntIdAnnotation) -> User | None:
-    """Returns user by id"""
+def get(user_id: IntegerId) -> User | None:
     user = users.find_one({
         "_id": user_id
     })

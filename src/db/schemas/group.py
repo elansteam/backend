@@ -1,1 +1,0 @@
-"""Group related schemas"""

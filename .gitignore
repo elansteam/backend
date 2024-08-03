@@ -160,8 +160,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-frontend/
-
 ./src_cache
 ./data_cache
 ./future
@@ -172,13 +170,7 @@ src_cache
 fastapi-async-mongodb
 
 .vscode
-.ruff_cache
-run.sh
-test.sh
 ./data/*
-configs/main_config_docker.json
-configs/main_config_no_docker.json
-mongodb_data
-docker-compose.yml
-testing/debug_integration_tests/
-testing/integration/node_modules
+configs/main.json
+mongodb_data/
+tests/node_modules

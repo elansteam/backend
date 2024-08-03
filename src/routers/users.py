@@ -1,5 +1,3 @@
-"""Users endpoints"""
-
 from fastapi import APIRouter
 
 

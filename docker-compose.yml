@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  db:
+    container_name: elan_db
+    image: mongo
+    volumes:
+      - ./mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bulo4ka
+      - MONGO_INITDB_ROOT_PASSWORD=ZOVSVO
+    networks:
+      - main_network
+  api:
+    container_name: elan_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+      - CONFIG_PATH=./configs/main.json
+    ports:
+      - "4242:4242"
+    depends_on:
+      - db
+    networks:
+      - main_network
+
+networks:
+  main_network:

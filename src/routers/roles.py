@@ -1,5 +1,3 @@
-"""Roles endpoints"""
-
 from fastapi import APIRouter
 
 
