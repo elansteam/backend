@@ -32,8 +32,5 @@ jobs:
           echo "Tests passed"
         fi
 
-    - name: Upload test logs
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-logs
-        path: test_logs.txt
+    - name: Show test logs
+      run: cat test_logs.txt
