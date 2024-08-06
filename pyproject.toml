@@ -28,7 +28,6 @@ build-backend = "poetry.core.masonry.api"
 disable="fixme,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
 enable="wildcard-import"
 
-
 [tool.pylint."FORMAT"]
 max-line-length=120
 indent-string="    "
