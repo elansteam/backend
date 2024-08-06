@@ -18,7 +18,9 @@ def insert_with_auto_increment_id(
             collection.insert_one(document)
             return result_id
         except DuplicateKeyError as e:
-            if not e.details or \
-               not (key_pattern := e.details.get("keyPattern")) or \
-               not key_pattern.get("_id"):
+            if (
+                e.details is None  or
+                (key_pattern := e.details.get("keyPattern")) is None or
+                key_pattern.get("_id") is None
+            ):
                 raise e
