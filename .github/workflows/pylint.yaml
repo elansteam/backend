@@ -1,13 +1,13 @@
-name: Pylint python check
+name: Python Linting
 
 on:
   push:
     branches:
-      - master  # Замените "main" на вашу основную ветку
+      - master
 
 jobs:
   pylint:
-    name: Run Pylint
+    name: Pylint
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: 3.12
 
     - name: Install dependencies
       run: pip3 install pylint
@@ -32,5 +32,35 @@ jobs:
         cat pylint_output.txt
         if ! grep -q "Your code has been rated at 10.00/10" pylint_output.txt; then
           echo "Pylint issues found!"
+          exit 1
+        fi
+  pyright:
+    name: Pyright
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run Pyright
+      run: poetry run pyright > pyright_output.txt
+      continue-on-error: true
+
+    - name: Check Pyright results
+      run: |
+        cat pyright_output.txt
+        if ! grep -q "0 errors, 0 warnings" pyright_output.txt; then
+          echo "Pyright issues found!"
           exit 1
         fi
