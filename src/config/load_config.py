@@ -30,6 +30,6 @@ def load_config() -> Config:
             return Config.model_validate_json(config_file.read())
     except ValidationError as exception:
         logger.error(
-            f"Failed to load configuration from file {config_path}: {exception}"
+            f"Failed to load configuration with errors: {exception.errors()}"
         )
         sys.exit(1)

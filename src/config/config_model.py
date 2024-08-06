@@ -32,5 +32,4 @@ class Config(BaseModel):
     super_user: SuperUser = SuperUser()
     auth: AuthConfig
     debug: bool = False
-    show_config: bool = False
     allow_origins: list[str] = []
