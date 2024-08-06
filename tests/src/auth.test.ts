@@ -1,7 +1,7 @@
 import pactum from "pactum";
 import {describe, test, expect} from "@jest/globals";
 import { GlobalCounter } from "./helpers/scripts";
-import ErrorCodes from "./helpers/error_codes";
+import {ErrorCodes, SuperUser as SuperUserCredentials} from "./helpers/constants";
 
 pactum.request.setBaseUrl("http://api_test:4242");
 
@@ -105,4 +105,12 @@ describe("Basic auth", () => {
       })
       .expectJsonLike({ok: false});
   });
-})
+
+  test("Super user", async () => {
+    const access_token = await pactum.spec()
+      .post("/api/auth/signin")
+      .withBody(SuperUserCredentials)
+      .expectJsonLike({ok: true})
+      .returns(ctx => ctx.res.body.access);
+  });
+});

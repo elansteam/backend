@@ -22,7 +22,7 @@ async def signup(
 
     password_hash = utils.auth.hash_password(user_signup.password)
 
-    inserted_user_id = methods.users.insert_user_document({
+    inserted_user_id = methods.users.insert_user_document_with_id({
         "email": user_signup.email,
         "domain": user_signup.domain,
         "hashed_password": password_hash

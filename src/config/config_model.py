@@ -1,6 +1,6 @@
 """Entire project configuration model"""
 from pydantic import BaseModel, SecretStr
-
+from db.types.common import Email
 
 class MongoDBCollections(BaseModel):
     users: str = "Users"
@@ -23,8 +23,13 @@ class AuthConfig(BaseModel):
     jwt_access_secret_key: SecretStr
     jwt_refresh_secret_key: SecretStr
 
+class SuperUser(BaseModel):
+    email: Email = "root@gmail.com"
+    password: SecretStr = SecretStr("root")
+
 class Config(BaseModel):
     database: DatabaseConfig
+    super_user: SuperUser = SuperUser()
     auth: AuthConfig
     debug: bool = False
     app_title: str = "ELAN MAIN API"

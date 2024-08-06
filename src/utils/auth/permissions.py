@@ -1,7 +1,7 @@
 """Global Permissions"""
 from enum import Enum
 
-ALL_PERMISSIONS_ROLE_CODE: int = 2 ** 64 - 1
+ALL_PERMISSIONS_ROLE_CODE: int = 2 ** 63 - 1
 
 
 class Permissions(Enum):
