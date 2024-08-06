@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   pylint:
@@ -20,8 +22,8 @@ jobs:
         python-version: 3.12
 
     - name: Install dependencies
-      run: pip3 install pylint
-
+      run: |
+        pip3 install pylint
     - name: Run pylint
       run: |
         pylint ${PWD}/src/** > pylint_output.txt
