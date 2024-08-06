@@ -3,10 +3,11 @@ FROM python:3.12.1-alpine3.19
 ARG CONFIG_PATH
 
 COPY ./pyproject.toml ./pyproject.toml
+COPY ./poetry.lock ./poetry.lock
 
 
 RUN pip3 install poetry
-RUN poetry install --no-root
+RUN poetry install
 
 COPY ./src ./src
 COPY $CONFIG_PATH /config.json

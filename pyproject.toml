@@ -3,6 +3,7 @@ name = "elansbackend"
 version = "0.1.0"
 description = ""
 authors = ["Mark Fomin <mark@difhel.dev>", "Andrew Cherkashin <andrey.a.cherkashin@gmail.com>"]
+package-mode = false
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -26,9 +27,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.pylint."MESSAGES CONTROL"]
 disable="fixme,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
 enable="wildcard-import"
-
-[tool.pylint."BASIC"]
-docstring-min-length=-1
 
 [tool.pylint."MASTER"]
 init-hook='import sys; sys.path.append("./src/")'
