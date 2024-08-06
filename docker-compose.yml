@@ -13,7 +13,6 @@ services:
   api:
     build:
       context: ./
-      dockerfile: Dockerfile
       args:
       - CONFIG_PATH=./configs/main.json
     ports:
@@ -35,7 +34,6 @@ services:
   api_test:
     build:
       context: ./
-      dockerfile: Dockerfile
       args:
       - CONFIG_PATH=./configs/test.json
     depends_on:
@@ -50,7 +48,6 @@ services:
   test:
     build:
       context: ./tests
-      dockerfile: ./Dockerfile
     networks:
       - test_network
     depends_on:
