@@ -7,6 +7,5 @@
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
     },
-    "show_config": true,
-    "debug": true
+    "show_config": true
 }

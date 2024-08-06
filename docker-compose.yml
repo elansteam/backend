@@ -33,6 +33,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=ZOVSVO
     networks:
       - test_network
+    ports:
+      - "27017:27017"
   api_test:
     container_name: elan_api_test
     build:
@@ -46,7 +48,7 @@ services:
       - test_network
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://api_test:4242/api/service/ping || exit 1
-      interval: 5s
+      interval: 10s
       timeout: 10m
       retries: 3
   test:

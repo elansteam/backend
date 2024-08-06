@@ -3,14 +3,14 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-
+from loguru import logger
 from . import response
 
 
 async def request_validation_exception_handler(
     _request: Request,
     exc: Exception
-):
+) -> JSONResponse:
     """Unprocessable entity exception handler for make response consistent"""
 
     if not isinstance(exc, RequestValidationError):
@@ -18,15 +18,14 @@ async def request_validation_exception_handler(
 
     def detail_part_to_string(part: dict[str, str]):
         return (
-            f"Type: {part['type']}\n"
-            f"Location: {', '.join(part['loc'])}\n"
-            f"Message: {part['msg']}\n"
-            f"Input: {part['input']}\n"
-            f"Url: {part['url']}\n"
+            f"Type: {part.get('type', 'none')}; "
+            f"Location: {', '.join(part.get('loc', 'none'))}; "
+            f"Message: {part.get('msg', 'none')}; "
+            f"Input: {part.get('input', 'none')}"
         )
 
-    errors = "Unprocessable entity exception. Errors:\n" + \
-        '\n'.join([detail_part_to_string(error) for error in exc.errors()])
+    errors = "Unprocessable entity exception. Errors: " + \
+        '; '.join([detail_part_to_string(error) for error in exc.errors()])
 
     return JSONResponse(
         content={
@@ -39,7 +38,7 @@ async def request_validation_exception_handler(
         status_code=422
     )
 
-async def response_with_error_code_handler(
+async def error_response_handler(
     _request: Request,
     exc: Exception
 ) -> JSONResponse:
@@ -64,3 +63,13 @@ async def response_with_error_code_handler(
         content=content,
         status_code=exc.http_status_code
     )
+
+async def internal_exception_handler(_request: Request, exc: Exception):
+    logger.exception(exc)
+    return JSONResponse(status_code=500, content={
+        "ok": False,
+        "error": {
+            "code": response.ErrorCodes.INTERNAL_SERVER_ERROR.value,
+            "message": "Internal Server Error"
+        }
+    })

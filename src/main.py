@@ -3,11 +3,10 @@ from loguru import logger
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 
 import db
 import utils.handlers
-import utils.middlewares
+import utils.response
 from config import config
 import routers
 
@@ -21,8 +20,7 @@ async def lifespan(_app: FastAPI):
     logger.info("Shutting down application")
 
 
-app = FastAPI(title=config.app_title, debug=True, lifespan=lifespan)
-
+app = FastAPI(title=config.app_title, debug=config.debug, lifespan=lifespan)
 app.include_router(routers.users.router, prefix="/api/users")
 app.include_router(routers.auth.router, prefix="/api/auth")
 app.include_router(routers.roles.router, prefix="/api/roles")
@@ -41,11 +39,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_middleware(
-    BaseHTTPMiddleware,
-    dispatch=utils.middlewares.catch_internal_server_error
-)
-
 app.add_exception_handler(
     RequestValidationError,
     utils.handlers.request_validation_exception_handler
@@ -53,5 +46,10 @@ app.add_exception_handler(
 
 app.add_exception_handler(
     utils.response.ErrorResponse,
-    utils.handlers.response_with_error_code_handler
+    utils.handlers.error_response_handler
+)
+
+app.add_exception_handler(
+    500,
+    utils.handlers.internal_exception_handler
 )

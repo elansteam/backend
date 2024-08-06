@@ -6,8 +6,9 @@ from fastapi import Header
 from starlette import status as http_status
 
 from db import methods
+from db.types.auth import JWTPair
 from db.types.user import User
-from db.types.common import RoleCode
+from db.types.common import IntegerId, RoleCode
 from utils import response
 from config import config
 from .permissions import Permissions
@@ -33,7 +34,7 @@ def get_auth_header_credentials(
 
     current_prefix, token = credentials[0], credentials[1]
 
-    if current_prefix != type:
+    if current_prefix != prefix:
         raise response.ErrorResponse(
             code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
             http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -120,9 +121,23 @@ def decode_jwt(
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
+def create_jwt_pair_by_user_id(user_id: IntegerId) -> JWTPair:
+    return JWTPair(
+        access=create_jwt(
+            str(user_id),
+            expiration_time_minutes=config.auth.access_token_expire_minutes,
+            secret_key=config.auth.jwt_access_secret_key.get_secret_value()
+        ),
+        refresh=create_jwt(
+            str(user_id),
+            expiration_time_minutes=config.auth.refresh_token_expire_minutes,
+            secret_key=config.auth.jwt_refresh_secret_key.get_secret_value()
+        )
+    )
+
 def auth_user(*permissions: Permissions):
     """
-    Dependency, that authorize user with given permissions by jwt token in
+    Dependency, that authorize user with given permissions by **access** jwt token in
     Authorization header.
 
     Usage example:
@@ -159,9 +174,11 @@ def auth_user(*permissions: Permissions):
                             code=response.ErrorCodes.ACCESS_DENIED,
                             http_status_code=http_status.HTTP_403_FORBIDDEN
                         )
+                return user
 
         raise response.ErrorResponse(
-            code=response.ErrorCodes.COULD_NOT_FIND_USER_BY_TOKEN,
-            http_status_code=http_status.HTTP_403_FORBIDDEN
+            code=response.ErrorCodes.ENTITY_NOT_FOUND,
+            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
+            message="Could not found user by token"
         )
     return wrapper

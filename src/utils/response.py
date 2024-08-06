@@ -14,9 +14,10 @@ class ErrorCodes(Enum):
     UNPROCESSABLE_ENTITY = 2
     TOKEN_EXPIRED = 3
     TOKEN_VALIDATION_FAILED = 4
-    COULD_NOT_FIND_USER_BY_TOKEN = 5
+    ENTITY_NOT_FOUND = 5
     INCORRECT_AUTH_HEADER_FOMAT = 6
     ACCESS_DENIED = 7
+    NAME_ALREADY_TAKEN = 8
 
 class ErrorResponse(Exception):
     """Response with custom error code"""
@@ -40,9 +41,9 @@ class ErrorResponse(Exception):
         self.auto_message = auto_message
 
 
-T = TypeVar("T", bound=BaseModel)
+T = TypeVar("T", bound=BaseModel | None)
 
-class SuccessfullResponse(BaseModel, Generic[T]):
+class SuccessfulResponse(BaseModel, Generic[T]):
     @model_validator(mode="before")
     @classmethod
     def before_validation(cls, data) -> dict[str, Any]:
@@ -50,6 +51,10 @@ class SuccessfullResponse(BaseModel, Generic[T]):
 
     @model_serializer
     def serialize_model(self) -> dict[str, Any]:
+        if self.proxy is None:
+            return {
+                "ok": self.ok
+            }
         return {
             "ok": self.ok,
             **self.proxy.model_dump()

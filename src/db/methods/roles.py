@@ -1,4 +1,4 @@
-from db.types import Role
+from db.types.role import Role
 from .collections import roles
 
 def get(role_name: str) -> Role | None:

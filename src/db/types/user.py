@@ -8,10 +8,16 @@ class User(BaseModel):
 
     id: IntegerId = Field(alias='_id')
     domain: DomainName | None = Field(None)
-    password_hash: str
-    first_name: str
-    last_name: str
+    first_name: str | None = Field(None)
+    last_name: str | None = Field(None)
     mid_name: str | None = Field(None)
     groups: list[IntegerId] = []
     roles: list[StringId] = []
-    email: Email | None
+    hashed_password: str
+    email: Email
+
+
+class UserSignup(BaseModel):
+    domain: DomainName | None = Field(None)
+    email: Email
+    password: str

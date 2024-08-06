@@ -24,16 +24,20 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pylint."MESSAGES CONTROL"]
-disable="import-error,fixme,no-name-in-module,no-self-argument,unreachable,broad-exception-raised,missing-class-docstring,invalid-name,too-few-public-methods,missing-function-docstring,missing-module-docstring"
+disable="fixme,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
+enable="wildcard-import"
 
 [tool.pylint."BASIC"]
 docstring-min-length=-1
 
+[tool.pylint."MASTER"]
+init-hook='import sys; sys.path.append("./src/")'
+
 [tool.pylint."FORMAT"]
 max-line-length=100
-indent-string='    '
+indent-string="    "
 indent-after-paren=4
-expected-line-ending-format=''
+expected-line-ending-format=""
 
 [tool.pyright]
 include = ["./src/**"]

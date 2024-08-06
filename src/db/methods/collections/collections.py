@@ -17,14 +17,5 @@ group_members = db.get_collection(config.database.collections.group_members)
 internal_counters = db.get_collection(config.database.collections.internal_counters)
 
 
-users.create_index(
-    {"email": 1},
-    partialFilterExpression={"email": {"$type": "string"}}
-)
-
-contests.create_index(
-    {
-        "group_id": 1,
-        "local_domain": 1
-    }
-)
+users.create_index([("email", 1)], unique=True, name="email")
+domains.create_index([("target_id", 1)], unique=True, name="target_id")
