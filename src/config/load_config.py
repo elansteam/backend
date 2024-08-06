@@ -5,13 +5,12 @@ from pydantic import ValidationError
 
 from .config_model import Config
 
-CONFIG_PATH_ENV_VARIABLE_NAME = "CONFIG_PATH"
 
 def load_config() -> Config:
-    config_path = os.getenv(CONFIG_PATH_ENV_VARIABLE_NAME)
+    config_path = os.getenv("CONFIG_PATH")
 
     if config_path is None:
-        logger.error("Environment variable {_CONFIG_PATH_ENV_VARIABLE_NAME} is not set")
+        logger.error("Environment variable CONFIG_PATH is not set")
         sys.exit(1)
 
     file_exists = False
