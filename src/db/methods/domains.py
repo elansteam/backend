@@ -1,11 +1,10 @@
 from pymongo.errors import DuplicateKeyError
 
 from db import types
-from db.types.common import IntegerId, DomainName
 from .collections import domains
 
 
-def reserve_entity(domain: DomainName) -> bool:
+def reserve_entity(domain: str) -> bool:
     """Creates entity with type None for domain
     Returns:
         True if ok, else False (domain already used)
@@ -19,8 +18,8 @@ def reserve_entity(domain: DomainName) -> bool:
     return True
 
 def attach_to_entity(
-    domain: DomainName,
-    target_id: IntegerId,
+    domain: str,
+    target_id: int,
     target_type: types.domain.TargetType
 ) -> None:
     domains.find_one_and_update(
@@ -33,9 +32,9 @@ def attach_to_entity(
     )
 
 def resolve_id(
-    domain: DomainName,
+    domain: str,
     target_type: types.domain.TargetType
-) -> IntegerId | None:
+) -> int | None:
     entity = domains.find_one({"_id": domain, "target_type": target_type})
 
     if entity is None:

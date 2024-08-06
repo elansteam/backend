@@ -8,7 +8,6 @@ from starlette import status as http_status
 from db import methods
 from db.types.auth import JWTPair
 from db.types.user import User
-from db.types.common import IntegerId, RoleCode
 from utils import response
 from config import config
 from .permissions import Permissions
@@ -43,7 +42,7 @@ def get_auth_header_credentials(
 
     return token
 
-def convert_role_code_to_permissions(role_code: RoleCode) -> list[int]:
+def convert_role_code_to_permissions(role_code: int) -> list[int]:
     permissions = []
     i = 0
     while 1 << i <= role_code:
@@ -52,7 +51,7 @@ def convert_role_code_to_permissions(role_code: RoleCode) -> list[int]:
         i += 1
     return permissions
 
-def convert_permissions_to_role_code(permissions: list[int]) -> RoleCode:
+def convert_permissions_to_role_code(permissions: list[int]) -> int:
     role_code = 0
     for permission in permissions:
         role_code += 1 << permission
@@ -121,7 +120,7 @@ def decode_jwt(
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
-def create_jwt_pair_by_user_id(user_id: IntegerId) -> JWTPair:
+def create_jwt_pair_by_user_id(user_id: int) -> JWTPair:
     return JWTPair(
         access=create_jwt(
             str(user_id),

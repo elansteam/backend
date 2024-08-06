@@ -1,13 +1,12 @@
 from typing import Any
 from pymongo.errors import DuplicateKeyError
 
-from db.types.common import IntegerId, Email
 from db.types.user import User
 from .collections import users
 from .helpers import insert_with_auto_increment_id
 
 
-def get(user_id: IntegerId) -> User | None:
+def get(user_id: int) -> User | None:
     user = users.find_one({
         "_id": user_id
     })
@@ -15,7 +14,7 @@ def get(user_id: IntegerId) -> User | None:
         return None
     return User(**user)
 
-def get_by_email(email: Email):
+def get_by_email(email: str):
     user = users.find_one({
         "email": email
     })
@@ -23,7 +22,7 @@ def get_by_email(email: Email):
         return None
     return User(**user)
 
-def insert_user_document_with_id(user_document: dict[str, Any]) -> IntegerId | None:
+def insert_user_document_with_id(user_document: dict[str, Any]) -> int | None:
     """
     Returns: None if DuplicateKeyError. Else - inserted_user_id
     """
