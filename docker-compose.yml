@@ -2,7 +2,6 @@ version: "3"
 
 services:
   db:
-    container_name: elan_db
     image: mongo
     volumes:
       - ./mongodb_data:/data/db
@@ -12,7 +11,6 @@ services:
     networks:
       - main_network
   api:
-    container_name: elan_api
     build:
       context: ./
       dockerfile: Dockerfile
@@ -26,7 +24,6 @@ services:
       - main_network
 
   db_test:
-    container_name: elan_db_test
     image: mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
@@ -36,7 +33,6 @@ services:
     ports:
       - "27017:27017"
   api_test:
-    container_name: elan_api_test
     build:
       context: ./
       dockerfile: Dockerfile
@@ -52,7 +48,6 @@ services:
       timeout: 10m
       retries: 3
   test:
-    container_name: integration_test
     build:
       context: ./tests
       dockerfile: ./Dockerfile
