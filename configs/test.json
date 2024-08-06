@@ -1,6 +1,6 @@
 {
     "database": {
-        "connect_url": "mongodb://bulo4ka:ZOVSVO@db_test",
+        "connect_url": "mongodb://admin:admin@db_test",
         "name": "ELANDB"
     },
     "auth": {
