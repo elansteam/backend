@@ -1,4 +1,4 @@
-name: Python Pylint Check
+name: Pylint python check
 
 on:
   push:
@@ -12,10 +12,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: 3.11
 
@@ -24,8 +24,7 @@ jobs:
 
     - name: Run pylint
       run: |
-        echo -e '"""Temp file for Github Action"""' > __init__.py
-        pylint ${PWD} > pylint_output.txt
+        pylint ${PWD}/src/** > pylint_output.txt
       continue-on-error: true
 
     - name: Check pylint results

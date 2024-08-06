@@ -1,64 +1,59 @@
-"""Main project file"""
-
 from contextlib import asynccontextmanager
+from loguru import logger
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
 
-from auth.utils import AuthException
-from utils.handlers import auth_exception_handler
+import db
+import utils.handlers
+import utils.response
+import utils.auth
+import utils.misc
 from config import config
-import routers.auth_router
-from db.mongo_manager import MongoManager
-import routers.contests_router
-import routers.problems_router
-import routers.submissions_router
+import routers
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    """Application lifespan (see https://fastapi.tiangolo.com/advanced/events/)
-    In the application lifespan we need to connect and close connection to
-    the database.
-    Args:
-        _app (FastAPI): application object. It is not using right now
-    """
+    logger.info("Starting application")
 
-    # on startup
-    MongoManager.connect(
-        config.database.connect_url.get_secret_value(),
-        config.database.name
-    )
+    utils.misc.create_super_user()
 
     yield
-    # on shutdown
-    MongoManager.disconnect()
+    db.close_connection()
+    logger.info("Shutting down application")
 
 
-app = FastAPI(title=config.app_title, debug=True, lifespan=lifespan)
+app = FastAPI(title=config.app_title, debug=config.debug, lifespan=lifespan)
+app.include_router(routers.users.router, prefix="/api/users")
+app.include_router(routers.auth.router, prefix="/api/auth")
+app.include_router(routers.roles.router, prefix="/api/roles")
+app.include_router(routers.groups.router, prefix="/api/groups")
+app.include_router(routers.contests.router, prefix="/api/contests")
+app.include_router(routers.problems.router, prefix="/api/problems")
+app.include_router(routers.submissions.router, prefix="/api/submissions")
+app.include_router(routers.service.router, prefix="/api/service")
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:5173",
-    "http://localhost:3000",
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=config.allow_origins,
+    allow_credentials=config.debug,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# routers
-app.include_router(routers.users_router.router, prefix="/api/users")
-app.include_router(routers.auth_router.router, prefix="/api/auth")
-app.include_router(routers.roles_router.router, prefix="/api/roles")
-app.include_router(routers.groups_router.router, prefix="/api/groups")
-app.include_router(routers.contests_router.router, prefix="/api/contests")
-app.include_router(routers.problems_router.router, prefix="/api/problems")
-app.include_router(routers.submissions_router.router, prefix="/api/submissions")
+app.add_exception_handler(
+    RequestValidationError,
+    utils.handlers.request_validation_exception_handler
+)
 
-# exception handlers
-app.add_exception_handler(AuthException, auth_exception_handler)
+app.add_exception_handler(
+    utils.response.ErrorResponse,
+    utils.handlers.error_response_handler
+)
+
+app.add_exception_handler(
+    500,
+    utils.handlers.internal_exception_handler
+)

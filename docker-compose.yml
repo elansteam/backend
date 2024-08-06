@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+  db:
+    container_name: elan_db
+    image: mongo
+    volumes:
+      - ./mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bulo4ka
+      - MONGO_INITDB_ROOT_PASSWORD=ZOVSVO
+    networks:
+      - main_network
+  api:
+    container_name: elan_api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+      - CONFIG_PATH=./configs/main.json
+    ports:
+      - "4242:4242"
+    depends_on:
+      - db
+    networks:
+      - main_network
+
+  db_test:
+    container_name: elan_db_test
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bulo4ka
+      - MONGO_INITDB_ROOT_PASSWORD=ZOVSVO
+    networks:
+      - test_network
+    ports:
+      - "27017:27017"
+  api_test:
+    container_name: elan_api_test
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+      - CONFIG_PATH=./configs/test.json
+    depends_on:
+      - db_test
+    networks:
+      - test_network
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://api_test:4242/api/service/ping || exit 1
+      interval: 10s
+      timeout: 10m
+      retries: 3
+  test:
+    container_name: integration_test
+    build:
+      context: ./tests
+      dockerfile: ./Dockerfile
+    networks:
+      - test_network
+    depends_on:
+      api_test:
+        condition: service_healthy
+    tty: true
+
+
+networks:
+  main_network:
+  test_network:

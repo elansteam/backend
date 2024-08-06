@@ -1,37 +1,37 @@
-"""Define configuration class"""
+"""Entire project configuration model"""
 from pydantic import BaseModel, SecretStr
-
+from db.types.common import Email
 
 class MongoDBCollections(BaseModel):
-    """List of all collections in database"""
-    users: str
-    domains: str
-    groups: str
-    group_roles: str
-    roles: str
+    users: str = "Users"
+    domains: str = "Domains"
+    groups: str = "Groups"
+    group_roles: str = "GroupRoles"
+    roles: str = "Roles"
+    internal_counters: str = "InternalCounters"
+    group_members: str = "GroupMembers"
+    contests: str = "Contests"
 
 class DatabaseConfig(BaseModel):
-    """Database configuration"""
     connect_url: SecretStr
     name: str
-    collections: MongoDBCollections
+    collections: MongoDBCollections = MongoDBCollections()
 
 class AuthConfig(BaseModel):
-    """Auth configuration"""
-    algorithm: str
-    access_token_expire_minutes: int
-    refresh_token_expire_minutes: int
+    access_token_expire_minutes: int = 10
+    refresh_token_expire_minutes: int = 10080
     jwt_access_secret_key: SecretStr
     jwt_refresh_secret_key: SecretStr
 
-class RabbitMQConfig(BaseModel):
-    """Config for RabbitMQ"""
-    connect_url: SecretStr
-    # TODO: insert other necessary fields later
+class SuperUser(BaseModel):
+    email: Email = "root@gmail.com"
+    password: SecretStr = SecretStr("root")
 
 class Config(BaseModel):
-    """Entire project configuration"""
     database: DatabaseConfig
-    rabbitmq: RabbitMQConfig
+    super_user: SuperUser = SuperUser()
     auth: AuthConfig
-    app_title: str
+    debug: bool = False
+    app_title: str = "ELAN MAIN API"
+    show_config: bool = False
+    allow_origins: list[str] = ["*"]

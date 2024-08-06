@@ -1,0 +1,11 @@
+{
+    "database": {
+        "connect_url": "mongodb://bulo4ka:ZOVSVO@db_test",
+        "name": "ELANDB"
+    },
+    "auth": {
+        "jwt_access_secret_key": "jwt_access_secret_key",
+        "jwt_refresh_secret_key": "jwt_refresh_secret_key"
+    },
+    "show_config": true
+}
