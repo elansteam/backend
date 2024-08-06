@@ -7,7 +7,6 @@ from loguru import logger
 
 from config import config
 
-# connection to database
 logger.info("Connecting to database")
 
 client: MongoClient = MongoClient(config.database.connect_url.get_secret_value())
@@ -21,12 +20,4 @@ except ServerSelectionTimeoutError:
     sys.exit(1)
 
 def close_connection():
-    """Closing mongodb connection"""
     client.close()
-
-
-__all__= [
-    "db",
-    "client",
-    "close_connection"
-]

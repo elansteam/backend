@@ -1,6 +1,8 @@
-from . import users
-from . import roles
-from . import domains
+from . import (
+    users,
+    roles,
+    domains
+)
 
 __all__ = [
     "users",
