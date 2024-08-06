@@ -3,7 +3,7 @@ name: Test API
 on:
   push:
     branches:
-      - master  # Замените "main" на вашу основную ветку
+      - master
 
 jobs:
   test:
