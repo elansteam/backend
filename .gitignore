@@ -170,7 +170,6 @@ src_cache
 fastapi-async-mongodb
 
 .vscode
-./data/*
 configs/main.json
 mongodb_data/
 tests/node_modules/
