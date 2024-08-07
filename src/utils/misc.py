@@ -15,11 +15,11 @@ def create_super_user():
     if db.methods.roles.insert(admin_role):
         logger.info("Created admin role")
 
-    result = db.methods.users.insert_user_document_with_id({
-        "email": config.super_user.email,
-        "hashed_password": utils.auth.hash_password(config.super_user.password.get_secret_value()),
-        "roles": ["admin"]
-    })
+    result = db.methods.users.insert_user_with_id(
+        config.super_user.email,
+        utils.auth.hash_password(config.super_user.password.get_secret_value()),
+        roles=["admin"]
+    )
     if result is not None:
         logger.info("Created a new super user")
 

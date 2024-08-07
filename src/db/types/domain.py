@@ -10,5 +10,5 @@ class Entity(BaseModel):
     """https://app.clickup.com/9015604104/v/dc/8cnycw8-115/8cnycw8-395"""
 
     id: DomainName = Field(alias='_id')
-    target_type: TargetType | None = None
-    target_id: IntegerId | None = None
+    target_type: TargetType
+    target_id: IntegerId

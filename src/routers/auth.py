@@ -14,32 +14,17 @@ router = APIRouter()
 async def signup(
     user_signup: types.user.UserSignup
 ):
-    if user_signup.domain is not None:
-        if not methods.domains.reserve_entity(user_signup.domain):
-            raise ErrorResponse(
-                code=ErrorCodes.NAME_ALREADY_TAKEN,
-                message="Domain already taken"
-            )
+    hashed_password = utils.auth.hash_password(user_signup.password)
 
-    password_hash = utils.auth.hash_password(user_signup.password)
-
-    inserted_user_id = methods.users.insert_user_document_with_id({
-        "email": user_signup.email,
-        "domain": user_signup.domain,
-        "hashed_password": password_hash
-    })
+    inserted_user_id = methods.users.insert_user_with_id(
+        user_signup.email,
+        hashed_password
+    )
 
     if inserted_user_id is None:
         raise ErrorResponse(
             code=ErrorCodes.NAME_ALREADY_TAKEN,
             message="There is user with identical email"
-        )
-
-    if user_signup.domain is not None:
-        methods.domains.attach_to_entity(
-            user_signup.domain,
-            inserted_user_id,
-            "user"
         )
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)

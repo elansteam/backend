@@ -1,4 +1,3 @@
-from typing import Any
 from pymongo.errors import DuplicateKeyError
 
 from db.types.user import User
@@ -16,7 +15,11 @@ def get_by_email(email: str):
         return None
     return User(**user)
 
-def insert_user_document_with_id(user_document: dict[str, Any]) -> int | None:
+def insert_user_with_id(
+    email: str,
+    hashed_password: str,
+    roles: list[str] | None = None
+) -> int | None:
     """
     Returns:
         Inserted user id or None, if error occurred
@@ -24,7 +27,11 @@ def insert_user_document_with_id(user_document: dict[str, Any]) -> int | None:
     try:
         return insert_with_auto_increment_id(
             users,
-            user_document
+            {
+                "email": email,
+                "hashed_password": hashed_password,
+                "roles": roles or []
+            }
         )
     except DuplicateKeyError:
         return None

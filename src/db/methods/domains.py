@@ -1,21 +1,6 @@
-from pymongo.errors import DuplicateKeyError
-
 from db import types
 from .collections import domains
 
-
-def reserve_entity(domain: str) -> bool:
-    """
-    Returns:
-        True if ok, else False (domain already used)
-    """
-    try:
-        domains.insert_one({
-            "_id": domain,
-        })
-    except DuplicateKeyError:
-        return False
-    return True
 
 def attach_to_entity(
     domain: str,

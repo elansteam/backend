@@ -18,6 +18,5 @@ class User(BaseModel):
 
 
 class UserSignup(BaseModel):
-    domain: DomainName | None = Field(None)
     email: Email
     password: str

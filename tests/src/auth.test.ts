@@ -44,24 +44,9 @@ describe("Basic auth", () => {
       .post("/api/auth/signup")
       .withBody({
         email: third_email,
-        domain: third_domain,
         password: "1234"
       })
       .expectStatus(200)
-
-    await pactum.spec()
-      .post("/api/auth/signup")
-      .withBody({
-        email: GlobalCounter.getNextEmail(),
-        domain: third_domain,
-        password: "1234"
-      })
-      .expectJsonLike({
-        ok: false,
-        error: {
-          code: ErrorCodes.NAME_ALREADY_TAKEN
-        }
-      });
   });
 
   test("Auth", async () => {
@@ -85,25 +70,6 @@ describe("Basic auth", () => {
           code: ErrorCodes.ACCESS_DENIED
         }
       });
-
-    const access_token = await pactum.spec()
-      .post("/api/auth/signin")
-      .withBody({
-        domain: third_domain,
-        password: "1234"
-      })
-      .expectJsonLike({ok: true})
-      .returns((ctx) => {
-        return ctx.res.body.access
-      });
-
-    await pactum.spec()
-      .post("/api/auth/signin")
-      .withBody({
-        domain: third_domain,
-        password: "incorrect_password"
-      })
-      .expectJsonLike({ok: false});
   });
 
   test("Super user", async () => {
