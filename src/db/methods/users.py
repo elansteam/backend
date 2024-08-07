@@ -7,18 +7,12 @@ from .helpers import insert_with_auto_increment_id
 
 
 def get(user_id: int) -> User | None:
-    user = users.find_one({
-        "_id": user_id
-    })
-    if user is None:
+    if (user := users.find_one({"_id": user_id})) is None:
         return None
     return User(**user)
 
 def get_by_email(email: str):
-    user = users.find_one({
-        "email": email
-    })
-    if user is None:
+    if (user := users.find_one({"email": email})) is None:
         return None
     return User(**user)
 

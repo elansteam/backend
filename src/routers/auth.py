@@ -52,8 +52,8 @@ async def signin(
     if siginin_input.id:
         user = methods.users.get(siginin_input.id)
     elif siginin_input.domain:
-        user_id = methods.domains.resolve_id(siginin_input.domain, "user")
-        if user_id:
+        user_id, target_type = methods.domains.resolve_id(siginin_input.domain)
+        if user_id and target_type == "user":
             user = methods.users.get(user_id)
     elif siginin_input.email:
         user = methods.users.get_by_email(siginin_input.email)
