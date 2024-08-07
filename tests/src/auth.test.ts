@@ -71,12 +71,4 @@ describe("Basic auth", () => {
         }
       });
   });
-
-  test("Super user", async () => {
-    const access_token = await pactum.spec()
-      .post("/api/auth/signin")
-      .withBody(SuperUserCredentials)
-      .expectJsonLike({ok: true})
-      .returns(ctx => ctx.res.body.access);
-  });
 });

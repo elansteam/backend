@@ -8,7 +8,6 @@ import db
 import utils.handlers
 import utils.response
 import utils.auth
-import utils.misc
 from config import config
 import routers
 
@@ -17,9 +16,8 @@ import routers
 async def lifespan(_app: FastAPI):
     logger.info("Starting application")
 
-    utils.misc.create_super_user()
-
     yield
+
     db.close_connection()
     logger.info("Shutting down application")
 
