@@ -11,13 +11,6 @@ def _is_email(email: str) -> str:
 Email = Annotated[str, AfterValidator(_is_email)]
 
 def _is_positive_number(number: int) -> int:
-    """Check if given integer is positive
-    Args:
-        number: number to check
-    Returns:
-        number
-    """
-
     assert number > 0, f"Number {number} must be a positive number"
     return number
 IntegerId = Annotated[int, AfterValidator(_is_positive_number)]
