@@ -33,4 +33,4 @@ jobs:
         fi
 
     - name: Show test logs
-      run: docker-compose logs --no-log-prefix test
+      run: docker compose logs --no-log-prefix test
