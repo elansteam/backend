@@ -17,9 +17,9 @@ class SignInInput(BaseModel):
     @model_validator(mode="after")
     def check_only_one_field(self):
         error_message = "You must provide exactly one of the fields: email, domain, user_id"
-        assert sum([x is not None for x in (
+        assert sum(x is not None for x in (
             self.id,
             self.domain,
             self.email
-        )]) == 1, error_message
+        )) == 1, error_message
         return self
