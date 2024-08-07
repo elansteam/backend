@@ -10,9 +10,6 @@ def get(role_name: str) -> Role | None:
     return Role(**role)
 
 def insert(role: Role) -> bool:
-    """
-    Returns: False - if DuplicateKeyError, else - True
-    """
     try:
         roles.insert_one(role.model_dump())
     except DuplicateKeyError:

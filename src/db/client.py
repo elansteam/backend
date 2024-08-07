@@ -1,5 +1,3 @@
-"""A module that creates a database connection and exports it"""
-
 import sys
 from pymongo import MongoClient, database
 from pymongo.errors import ServerSelectionTimeoutError

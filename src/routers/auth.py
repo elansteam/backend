@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from starlette import status as http_status
 
 import utils.auth
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
@@ -60,14 +61,14 @@ async def signin(
     if user is None:
         raise ErrorResponse(
             code=ErrorCodes.ENTITY_NOT_FOUND,
-            http_status_code=404,
+            http_status_code=http_status.HTTP_404_NOT_FOUND,
             message="User not found"
         )
 
     if not utils.auth.verify_password(siginin_input.password, user.hashed_password):
         raise ErrorResponse(
             code=ErrorCodes.ACCESS_DENIED,
-            http_status_code=403,
+            http_status_code=http_status.HTTP_403_FORBIDDEN,
             message="Incorrect password"
         )
 

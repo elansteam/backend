@@ -8,6 +8,7 @@ from .common import IntegerId
 
 class Submission(BaseModel):
     """https://app.clickup.com/9015604104/v/dc/8cnycw8-115/8cnycw8-475"""
+
     id: IntegerId = Field(alias="_id")
     problem_id: IntegerId
     contest_id: IntegerId

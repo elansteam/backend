@@ -1,8 +1,10 @@
-from . import auth
-from . import user
-from . import common
-from . import domain
-from . import role
+from . import (
+    auth,
+    user,
+    common,
+    domain,
+    role
+)
 
 __all__ = [
     "auth",

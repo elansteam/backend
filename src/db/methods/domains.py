@@ -5,7 +5,7 @@ from .collections import domains
 
 
 def reserve_entity(domain: str) -> bool:
-    """Creates entity with type None for domain
+    """
     Returns:
         True if ok, else False (domain already used)
     """

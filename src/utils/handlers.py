@@ -42,8 +42,6 @@ async def error_response_handler(
     _request: Request,
     exc: Exception
 ) -> JSONResponse:
-    """Handle response with error code"""
-
     if not isinstance(exc, response.ErrorResponse):
         raise ValueError("Unexpected error: get wrong exception type")
 

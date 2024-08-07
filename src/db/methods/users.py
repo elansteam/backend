@@ -24,7 +24,8 @@ def get_by_email(email: str):
 
 def insert_user_document_with_id(user_document: dict[str, Any]) -> int | None:
     """
-    Returns: None if DuplicateKeyError. Else - inserted_user_id
+    Returns:
+        Inserted user id or None, if error occurred
     """
     try:
         return insert_with_auto_increment_id(
