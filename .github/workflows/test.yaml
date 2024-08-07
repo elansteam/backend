@@ -17,13 +17,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Docker Compose
-      run: sudo apt install docker-compose
-
     - name: Build and run Docker Compose
       run: |
-        sudo docker-compose up --build -d test
-        sudo docker-compose logs -f test > test_logs.txt
+        sudo docker compose up --build -d test
+        sudo docker compose logs -f test > test_logs.txt
       continue-on-error: true
 
     - name: Check test results
