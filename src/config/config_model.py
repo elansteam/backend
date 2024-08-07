@@ -1,6 +1,5 @@
 """Entire project configuration model"""
 from pydantic import BaseModel, SecretStr
-from db.types.common import Email
 
 class MongoDBCollections(BaseModel):
     users: str = "Users"
