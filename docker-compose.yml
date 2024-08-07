@@ -4,7 +4,7 @@ services:
   db:
     image: mongo
     volumes:
-      - ./mongodb_data:/data/db
+      - /var/lib/elan/mongodb_data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
