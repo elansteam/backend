@@ -21,5 +21,5 @@ class SignInInput(BaseModel):
             self.id,
             self.domain,
             self.email
-        )]) == 1
+        )]) == 1, error_message
         return self
