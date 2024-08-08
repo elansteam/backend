@@ -16,10 +16,9 @@ def attach_to_entity(
         upsert=True
     )
 
-def resolve_id(
+def resolve_entity(
     domain: str
-) -> tuple[int | None, types.domain.TargetType | None]:
+) -> types.domain.Entity | None:
     if (entity := domains.find_one({"_id": domain})) is None:
-        return None, None
-    entity = types.domain.Entity(**entity)
-    return entity.target_id, entity.target_type
+        return None
+    return types.domain.Entity(**entity)
