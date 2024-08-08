@@ -45,8 +45,8 @@ def get_auth_header_credentials(
 def convert_role_code_to_permissions(role_code: int) -> list[int]:
     permissions = []
     i = 0
-    while 1 << i <= role_code:
-        if role_code >> i & 1 == 1:
+    while (1 << i) <= role_code:
+        if (role_code >> i) & 1:
             permissions.append(i)
         i += 1
     return permissions
@@ -96,8 +96,7 @@ def decode_jwt(
     try:
         payload = jose.jwt.decode(
             jwt,
-            secret_key,
-            # ! algorithms=["HS256"]
+            secret_key
         )
 
         subject = payload.get("subject", None)
