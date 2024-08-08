@@ -6,6 +6,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - "27017:27017"
   api:
     build:
       context: ./
@@ -23,7 +25,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
-      - "27017:27017"
+      - "42042:42042"
   api_test:
     build:
       context: ./

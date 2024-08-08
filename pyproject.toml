@@ -26,6 +26,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pylint."MASTER"]
 jobs=4
+persistent="no"
 
 [tool.pylint."MESSAGES CONTROL"]
 disable="fixme,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
