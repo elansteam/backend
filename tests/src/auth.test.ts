@@ -9,7 +9,6 @@ pactum.request.setBaseUrl("http://api_test:4242");
 describe("Basic auth", () => {
   const first_email = GlobalCounter.getNextEmail();
   const second_email = GlobalCounter.getNextEmail();
-  const third_domain = GlobalCounter.getNextString();
   const third_email = GlobalCounter.getNextEmail();
   test("Registration", async () => {
     await pactum.spec()
