@@ -1,6 +1,6 @@
-from .load_config import load_config
+from .config_model import Config
 
-config = load_config()
+config = Config.load()
 
 __all__ = [
     "config"
