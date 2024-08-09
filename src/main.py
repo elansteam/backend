@@ -2,9 +2,10 @@ from contextlib import asynccontextmanager
 from loguru import logger
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 import db
+import routers.service
 import utils.handlers
 import utils.response
 import utils.auth
@@ -23,13 +24,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(debug=config.debug, lifespan=lifespan)
-app.include_router(routers.users.router, prefix="/api/users")
 app.include_router(routers.auth.router, prefix="/api/auth")
-app.include_router(routers.roles.router, prefix="/api/roles")
-app.include_router(routers.groups.router, prefix="/api/groups")
-app.include_router(routers.contests.router, prefix="/api/contests")
-app.include_router(routers.problems.router, prefix="/api/problems")
-app.include_router(routers.submissions.router, prefix="/api/submissions")
 app.include_router(routers.service.router, prefix="/api/service")
 
 

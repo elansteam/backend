@@ -3,11 +3,10 @@ from typing import Literal
 import jose.jwt
 from passlib.context import CryptContext
 from fastapi import Header
-from starlette import status as http_status
+from fastapi import status as http_status
 
+from db import types
 from db import methods
-from db.types.auth import JWTPair
-from db.types.user import User
 from utils import response
 from config import config
 from .permissions import Permissions
@@ -119,14 +118,14 @@ def decode_jwt(
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
-def create_jwt_pair_by_user_id(user_id: int) -> JWTPair:
-    return JWTPair(
-        access=create_jwt(
+def create_jwt_pair_by_user_id(user_id: int) ->types.auth.JWTPair:
+    return types.auth.JWTPair(
+        access_token=create_jwt(
             str(user_id),
             expiration_time_minutes=config.auth.access_token_expire_minutes,
             secret_key=config.auth.jwt_access_secret_key.get_secret_value()
         ),
-        refresh=create_jwt(
+        refresh_token=create_jwt(
             str(user_id),
             expiration_time_minutes=config.auth.refresh_token_expire_minutes,
             secret_key=config.auth.jwt_refresh_secret_key.get_secret_value()
@@ -146,7 +145,7 @@ def auth_user(*permissions: Permissions):
         Function that auth user by given permissions and auth header
     """
 
-    def wrapper(authorization: str = Header()) -> User:
+    def wrapper(authorization: str = Header()) -> types.user.User:
         token = get_auth_header_credentials(authorization, "Bearer")
 
         subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]

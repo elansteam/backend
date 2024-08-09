@@ -1,5 +1,3 @@
-"""This module for working with collections"""
-
 from .collections import (
     users,
     roles,

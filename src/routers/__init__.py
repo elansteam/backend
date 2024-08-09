@@ -1,22 +1,10 @@
 from . import (
     auth,
-    users,
-    roles,
-    groups,
-    service,
-    problems,
-    contests,
-    submissions
+    service
 )
 
 
 __all__ = [
     "auth",
-    "users",
-    "roles",
-    "groups",
-    "service",
-    "problems",
-    "contests",
-    "submissions"
+    "service"
 ]

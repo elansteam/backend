@@ -1,7 +1,4 @@
-"""
-The module that receives all collections by the configured name and exports them
-Moreover this module create indexes
-"""
+"""Here collection and indexes are defined"""
 
 from db.client import db
 from config import config

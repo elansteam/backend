@@ -1,24 +1,22 @@
 from pymongo.errors import DuplicateKeyError
 
-from db.types.user import User
+from db import types
 from .collections import users
 from .helpers import insert_with_auto_increment_id
 
 
-def get(user_id: int) -> User | None:
+def get(user_id: int) -> types.user.User | None:
     if (user := users.find_one({"_id": user_id})) is None:
         return None
-    return User(**user)
+    return types.user.User(**user)
 
 def get_by_email(email: str):
     if (user := users.find_one({"email": email})) is None:
         return None
-    return User(**user)
+    return types.user.User(**user)
 
 def insert_user_with_id(
-    email: str,
-    hashed_password: str,
-    roles: list[str] | None = None
+    user: types.user.UserWithoutID
 ) -> int | None:
     """
     Returns:
@@ -27,11 +25,7 @@ def insert_user_with_id(
     try:
         return insert_with_auto_increment_id(
             users,
-            {
-                "email": email,
-                "hashed_password": hashed_password,
-                "roles": roles or []
-            }
+            user.model_dump()
         )
     except DuplicateKeyError:
         return None

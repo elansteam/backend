@@ -7,6 +7,7 @@ from .auth import (
 )
 from . import permissions
 
+
 __all__ = [
     "auth_user",
     "create_jwt",

@@ -14,6 +14,7 @@ describe("Basic auth", () => {
     await pactum.spec()
       .post("/api/auth/signup")
       .withBody({
+        first_name: "Test",
         email: first_email,
         password: "1234"
       })
@@ -21,6 +22,7 @@ describe("Basic auth", () => {
     await pactum.spec()
       .post("/api/auth/signup")
       .withBody({
+        first_name: "Test",
         email: second_email,
         password: "1234"
       })
@@ -29,6 +31,7 @@ describe("Basic auth", () => {
     await pactum.spec()
       .post("/api/auth/signup")
       .withBody({
+        first_name: "Test",
         email: second_email,
         password: "1234"
       })
@@ -42,6 +45,7 @@ describe("Basic auth", () => {
     await pactum.spec()
       .post("/api/auth/signup")
       .withBody({
+        first_name: "Test",
         email: third_email,
         password: "1234"
       })
@@ -61,13 +65,18 @@ describe("Basic auth", () => {
       .post("/api/auth/signin")
       .withBody({
         email: first_email,
+        domain: "test",
+        password: "1234"
+      })
+      .expectJsonLike({ok: false, error: {code: ErrorCodes.UNPROCESSABLE_ENTITY}});
+
+
+    await pactum.spec()
+      .post("/api/auth/signin")
+      .withBody({
+        email: first_email,
         password: "incorrect_password"
       })
-      .expectJsonLike({
-        ok: false,
-        error: {
-          code: ErrorCodes.ACCESS_DENIED
-        }
-      });
+      .expectJsonLike({ok: false, error: {code: ErrorCodes.ACCESS_DENIED}});
   });
 });
