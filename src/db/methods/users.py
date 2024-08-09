@@ -15,17 +15,14 @@ def get_by_email(email: str):
         return None
     return types.user.User(**user)
 
-def insert_user_with_id(
-    user: types.user.UserWithoutID
-) -> int | None:
+def insert_user_with_id(user: types.user.UserWithoutID) -> int | None:
     """
     Returns:
         Inserted user id or None, if error occurred
     """
     try:
         return insert_with_auto_increment_id(
-            users,
-            user.model_dump()
+            users, user.model_dump()
         )
     except DuplicateKeyError:
         return None

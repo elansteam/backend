@@ -16,9 +16,7 @@ def attach_to_entity(
         upsert=True
     )
 
-def resolve_entity(
-    domain: str
-) -> types.domain.Entity | None:
+def resolve_entity(domain: str) -> types.domain.Entity | None:
     if (entity := domains.find_one({"_id": domain})) is None:
         return None
     return types.domain.Entity(**entity)
