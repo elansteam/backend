@@ -1,13 +1,12 @@
 services:
   db:
     image: mongo
-    volumes:
-      - /var/lib/elan/mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
       - "27017:27017"
+    env_file: "mongo_entrypoint/.env"
+    volumes:
+      - ./mongo_entrypoint:/docker-entrypoint-initdb.d
+      - /var/lib/elan/mongodb_data:/data/db
   api:
     build:
       context: ./
@@ -22,10 +21,12 @@ services:
   db_test:
     image: mongo
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_ELANDB_USERNAME=test
+      - MONGO_ELANDB_PASSWORD=test
     ports:
       - "42042:42042"
+    volumes:
+      - ./mongo_entrypoint:/docker-entrypoint-initdb.d
   api_test:
     build:
       context: ./
