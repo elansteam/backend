@@ -23,6 +23,7 @@ jobs:
       run: |
         docker compose up -d test
         docker compose logs -f test > test_logs.txt
+        docker compose down -v
       continue-on-error: true
 
     - name: Check test results
