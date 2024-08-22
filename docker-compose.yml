@@ -30,7 +30,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
-      - "42042:42042"
+      - "42042:27017"
     volumes:
       - ./mongo_entrypoint:/docker-entrypoint-initdb.d
   api_test:
