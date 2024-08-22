@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import db
 import routers
-import routers.service
 import utils.handlers
 import utils.response
 import utils.auth
