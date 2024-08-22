@@ -1,6 +1,7 @@
 from typing import Any
 from pymongo.collection import Collection
 from pymongo.errors import DuplicateKeyError
+
 from .collections import internal_counters
 
 
