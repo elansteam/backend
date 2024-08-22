@@ -5,6 +5,7 @@ from loguru import logger
 
 from config import config
 
+
 logger.info("Connecting to database")
 
 client: MongoClient = MongoClient(config.database.connect_url.get_secret_value())
