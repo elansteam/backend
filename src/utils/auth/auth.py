@@ -25,8 +25,8 @@ def get_auth_header_credentials(
 
     if len(credentials) != 2:
         raise response.ErrorResponse(
-            code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
-            http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            code=response.ErrorCodes.TOKEN_VALIDATION_FAILED,
+            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
             message=error_message
         )
 
@@ -34,8 +34,8 @@ def get_auth_header_credentials(
 
     if current_prefix != prefix:
         raise response.ErrorResponse(
-            code=response.ErrorCodes.INCORRECT_AUTH_HEADER_FOMAT,
-            http_status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
+            code=response.ErrorCodes.TOKEN_VALIDATION_FAILED,
+            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
             message=error_message
         )
 

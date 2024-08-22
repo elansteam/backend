@@ -12,9 +12,7 @@ router = APIRouter()
 
 
 @router.post("/signup", response_model=SuccessfulResponse[RS.AuthSignup])
-async def signup(
-    request: RQ.AuthSignup
-):
+async def signup(request: RQ.AuthSignup):
     hashed_password = utils.auth.hash_password(request.password)
 
     inserted_user_id = methods.users.insert_user_with_id(
@@ -34,9 +32,7 @@ async def signup(
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
 
 @router.post("/signin", response_model=SuccessfulResponse[RS.AuthSignin])
-async def signin(
-    siginin_input: RQ.AuthSignin
-):
+async def signin(siginin_input: RQ.AuthSignin):
     user: types.user.User | None = None
     if siginin_input.id:
         user = methods.users.get(siginin_input.id)

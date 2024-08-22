@@ -40,9 +40,7 @@ class ErrorResponse(Exception):
         self.auto_message = auto_message
 
 
-T = TypeVar("T", bound=BaseModel | None)
-
-class SuccessfulResponse(BaseModel, Generic[T]):
+class SuccessfulResponse[T: BaseModel | None](BaseModel):
     @model_validator(mode="before")
     @classmethod
     def before_validation(cls, data) -> dict[str, Any]:

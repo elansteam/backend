@@ -15,4 +15,4 @@ internal_counters = db.get_collection(config.database.collections.internal_count
 
 
 users.create_index([("email", 1)], unique=True, name="email")
-domains.create_index([("target_id", 1)], unique=True, name="target_id")
+# domains.create_index([("target_id", 1)], unique=True, name="target_id")
