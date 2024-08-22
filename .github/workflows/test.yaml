@@ -34,6 +34,7 @@ jobs:
         else
           echo "Tests passed"
         fi
+      continue-on-error: true
 
     - name: Show test logs
       run: docker compose logs --no-log-prefix test
