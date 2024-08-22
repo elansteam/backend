@@ -32,16 +32,16 @@ async def signup(request: RQ.AuthSignup):
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
 
 @router.post("/signin", response_model=SuccessfulResponse[RS.AuthSignin])
-async def signin(siginin_input: RQ.AuthSignin):
+async def signin(request: RQ.AuthSignin):
     user: types.user.User | None = None
-    if siginin_input.id:
-        user = methods.users.get(siginin_input.id)
-    elif siginin_input.domain:
-        entity = methods.domains.resolve_entity(siginin_input.domain)
+    if request.id:
+        user = methods.users.get(request.id)
+    elif request.domain:
+        entity = methods.domains.resolve_entity(request.domain)
         if entity and entity.target_type == "user":
             user = methods.users.get(entity.target_id)
-    elif siginin_input.email:
-        user = methods.users.get_by_email(siginin_input.email)
+    elif request.email:
+        user = methods.users.get_by_email(request.email)
 
     if user is None:
         raise ErrorResponse(
@@ -50,7 +50,7 @@ async def signin(siginin_input: RQ.AuthSignin):
             message="User not found"
         )
 
-    if not utils.auth.verify_password(siginin_input.password, user.hashed_password):
+    if not utils.auth.verify_password(request.password, user.hashed_password):
         raise ErrorResponse(
             code=ErrorCodes.ACCESS_DENIED,
             http_status_code=http_status.HTTP_403_FORBIDDEN,
