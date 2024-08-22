@@ -1,7 +1,7 @@
 from typing import Annotated
-from pydantic import model_validator
-from utils.schemas import BaseModel
+from pydantic import model_validator, Field
 
+from utils.schemas import BaseModel
 from .common import is_email
 
 
@@ -20,6 +20,6 @@ class AuthSignin(BaseModel):
         return self
 
 class AuthSignup(BaseModel):
-    first_name: str  # TODO: set validation here
+    first_name: str = Field(..., max_length=30)
     email: Annotated[str, is_email]
     password: str

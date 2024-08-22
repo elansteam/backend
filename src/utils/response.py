@@ -8,7 +8,6 @@ class ErrorCodes(Enum):
     """
     Enum of response error codes.
     For description see documentation
-    TODO: set documentation url
     """
     INTERNAL_SERVER_ERROR = 1
     UNPROCESSABLE_ENTITY = 2
