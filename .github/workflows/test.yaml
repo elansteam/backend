@@ -21,8 +21,8 @@ jobs:
 
     - name: Build and run Docker Compose
       run: |
-        sudo docker compose up -d test
-        sudo docker compose logs -f test > test_logs.txt
+        docker compose up -d test
+        docker compose logs -f test > test_logs.txt
       continue-on-error: true
 
     - name: Check test results
