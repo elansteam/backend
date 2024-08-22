@@ -7,11 +7,13 @@ on:
   pull_request:
     branches:
       - "*"
+  workflow_dispatch:
 
 jobs:
   pylint:
     name: Pylint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: Checkout code
@@ -40,6 +42,7 @@ jobs:
   pyright:
     name: Pyright
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: Check out code
