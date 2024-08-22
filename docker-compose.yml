@@ -6,6 +6,8 @@ services:
     environment:
       - MONGO_ELANDB_USERNAME=
       - MONGO_ELANDB_PASSWORD=
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
     volumes:
       - ./mongo_entrypoint:/docker-entrypoint-initdb.d
       - /var/lib/elan/mongodb_data:/data/db
@@ -25,6 +27,8 @@ services:
     environment:
       - MONGO_ELANDB_USERNAME=test
       - MONGO_ELANDB_PASSWORD=test
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
       - "42042:42042"
     volumes:
