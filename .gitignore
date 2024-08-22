@@ -162,5 +162,4 @@ cython_debug/
 
 .vscode
 configs/main.json
-mongo_entrypoint/.env
 tests/node_modules/

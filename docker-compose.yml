@@ -3,7 +3,9 @@ services:
     image: mongo
     ports:
       - "27017:27017"
-    env_file: "mongo_entrypoint/.env"
+    environment:
+      - MONGO_ELANDB_USERNAME=
+      - MONGO_ELANDB_PASSWORD=
     volumes:
       - ./mongo_entrypoint:/docker-entrypoint-initdb.d
       - /var/lib/elan/mongodb_data:/data/db
