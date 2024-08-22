@@ -1,7 +1,7 @@
 import pactum from "pactum";
 import {describe, test, expect} from "@jest/globals";
 import { GlobalCounter } from "./helpers/scripts";
-import {ErrorCodes, SuperUser as SuperUserCredentials} from "./helpers/constants";
+import {ErrorCodes} from "./helpers/constants";
 
 pactum.request.setBaseUrl("http://api_test:4242");
 

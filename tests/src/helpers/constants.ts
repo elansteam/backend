@@ -9,9 +9,4 @@ const ErrorCodes = {
     NAME_ALREADY_TAKEN: 8
 }
 
-const SuperUser = {
-    email: "root@gmail.com",
-    password: "root"
-}
-
-export {SuperUser, ErrorCodes};
+export {ErrorCodes};
