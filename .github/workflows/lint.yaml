@@ -1,0 +1,72 @@
+name: Python Linting
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  pylint:
+    name: Pylint
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install dependencies
+      run: |
+        pip3 install pylint
+    - name: Run pylint
+      run: |
+        pylint ${PWD}/src/** > pylint_output.txt
+      continue-on-error: true
+
+    - name: Check pylint results
+      run: |
+        cat pylint_output.txt
+        if ! grep -q "Your code has been rated at 10.00/10" pylint_output.txt; then
+          echo "Pylint issues found!"
+          exit 1
+        fi
+  pyright:
+    name: Pyright
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run Pyright
+      run: poetry run pyright > pyright_output.txt
+      continue-on-error: true
+
+    - name: Check Pyright results
+      run: |
+        cat pyright_output.txt
+        if ! grep -q "0 errors, 0 warnings" pyright_output.txt; then
+          echo "Pyright issues found!"
+          exit 1
+        fi

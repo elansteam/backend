@@ -1,41 +1,51 @@
-"""Main project file"""
-
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, Any
-
+from loguru import logger
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 
-from auth.utils import AuthException
-from utils.handlers import auth_exception_handler
-from config import Config
-import routers.auth_router
-from db.mongo_manager import MongoManager
+import db
+import routers
+import utils.handlers
+import utils.response
+import utils.auth
+from config import config
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
-    """Application lifespan (see https://fastapi.tiangolo.com/advanced/events/)
-    In the application lifespan we need to connect and close connection to
-    the database.
-    Args:
-        _app (FastAPI): application object. It is not using right now
-    """
-
-    # on startup
-    MongoManager.connect(Config.db_connect_url, Config.db_name)
+async def lifespan(_app: FastAPI):
+    logger.info("Starting application")
 
     yield
-    # on shutdown
-    MongoManager.disconnect()
+
+    db.close_connection()
+    logger.info("Shutting down application")
 
 
-app = FastAPI(title=Config.app_title, debug=True, lifespan=lifespan)
+app = FastAPI(debug=config.debug, lifespan=lifespan)
+app.include_router(routers.auth.router, prefix="/api/auth")
+app.include_router(routers.service.router, prefix="/api/service")
 
-# routers
-app.include_router(routers.users_router.router, prefix="/api/users")
-app.include_router(routers.auth_router.router, prefix="/api/auth")
-app.include_router(routers.roles_router.router, prefix="/api/roles")
-app.include_router(routers.groups_router.router, prefix="/api/groups")
 
-# exception handlers
-app.add_exception_handler(AuthException, auth_exception_handler)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.allow_origins,
+    allow_credentials=config.debug,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+app.add_exception_handler(
+    RequestValidationError,
+    utils.handlers.request_validation_exception_handler
+)
+
+app.add_exception_handler(
+    utils.response.ErrorResponse,
+    utils.handlers.error_response_handler
+)
+
+app.add_exception_handler(
+    500,
+    utils.handlers.internal_exception_handler
+)

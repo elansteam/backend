@@ -160,19 +160,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-frontend/
-
-./src_cache
-./data_cache
-./future
-
-future
-data_cache
-src_cache
-fastapi-async-mongodb
-
 .vscode
-main_config.env
-.ruff_cache
-run.sh
-test.sh
+configs/main.json
+tests/node_modules/

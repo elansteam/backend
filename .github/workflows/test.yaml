@@ -1,0 +1,42 @@
+name: Test API
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build and run Docker Compose
+      run: |
+        docker compose up -d test
+        docker compose logs -f test > test_logs.txt
+      continue-on-error: true
+
+    - name: Check test results
+      run: |
+        if grep -q "Test Suites: .* failed" test_logs.txt; then
+          echo "Tests failed"
+          exit 1
+        else
+          echo "Tests passed"
+        fi
+      continue-on-error: true
+
+    - name: Show test logs
+      run: docker compose logs --no-log-prefix test
+
+    - name: Cleanup
+      run: docker compose down -v
