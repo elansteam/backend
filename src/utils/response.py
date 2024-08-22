@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Any, Literal
+from pydantic import model_validator, model_serializer
 
-from pydantic import BaseModel, model_validator, model_serializer
-
+from utils.schemas import BaseModel
 
 class ErrorCodes(Enum):
     """
