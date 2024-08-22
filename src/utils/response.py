@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Generic, Literal, TypeVar
+from typing import Any, Literal
 
 from pydantic import BaseModel, model_validator, model_serializer
 
