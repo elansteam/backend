@@ -1,10 +1,12 @@
 from . import (
     auth,
-    service
+    service,
+    test
 )
 
 
 __all__ = [
     "auth",
-    "service"
+    "service",
+    "test"
 ]

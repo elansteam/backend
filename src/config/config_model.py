@@ -31,6 +31,7 @@ class Config(BaseModel):
     database: DatabaseConfig
     auth: AuthConfig
     debug: bool = False
+    test: bool = False
     allow_origins: list[str] = []
 
     @classmethod

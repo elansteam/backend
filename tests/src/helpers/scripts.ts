@@ -1,15 +1,6 @@
-export class GlobalCounter {
-    static counter: number = 0;
+import api from "./api";
 
-    static getNextNumber(): number {
-        return ++GlobalCounter.counter;
-    }
 
-    static getNextEmail(): string {
-        return GlobalCounter.getNextNumber() + '.email@gmail.com';
-    }
-
-    static getNextString(): string {
-        return GlobalCounter.getNextNumber().toString();
-    }
+export const cleanup = async () => {
+  await api.test.cleanup().expectJsonLike({ok: true});
 }
