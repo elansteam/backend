@@ -26,6 +26,7 @@ app = FastAPI(debug=config.debug, lifespan=lifespan)
 app.include_router(routers.auth.router, prefix="/api/auth")
 app.include_router(routers.service.router, prefix="/api/service")
 if config.test:
+    logger.warning("YOU ARE IN TEST MODE! DANGEROUS FUNCTIONS ARE AVAILABLE")
     app.include_router(routers.test.router, prefix="/api/test")
 
 

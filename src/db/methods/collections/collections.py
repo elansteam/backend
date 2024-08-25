@@ -1,5 +1,6 @@
 """Here collection and indexes are defined"""
 
+from loguru import logger
 from db.client import db
 from config import config
 
@@ -15,4 +16,5 @@ internal_counters = db.get_collection(config.database.collections.internal_count
 
 
 users.create_index([("email", 1)], unique=True, name="email")
+logger.info("created email index")
 # domains.create_index([("target_id", 1)], unique=True, name="target_id")
