@@ -14,9 +14,8 @@ class ErrorCodes(Enum):
     TOKEN_EXPIRED = 3
     TOKEN_VALIDATION_FAILED = 4
     ENTITY_NOT_FOUND = 5
-    INCORRECT_AUTH_HEADER_FOMAT = 6
-    ACCESS_DENIED = 7
-    NAME_ALREADY_TAKEN = 8
+    ACCESS_DENIED = 6
+    NAME_ALREADY_TAKEN = 7
 
 class ErrorResponse(Exception):
     """Response with custom error code"""
