@@ -1,4 +1,5 @@
 from .auth import (
+    service_auth,
     get_current_user,
     hash_password,
     verify_password,
@@ -8,6 +9,7 @@ from .auth import (
 
 
 __all__ = [
+    "service_auth",
     "get_current_user",
     "create_jwt",
     "verify_password",

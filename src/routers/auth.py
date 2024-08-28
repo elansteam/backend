@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi import status as http_status
 
 import utils.auth
+from utils.auth import service_auth
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
 from db import types
@@ -12,7 +13,7 @@ router = APIRouter()
 
 
 @router.post("/signup", response_model=SuccessfulResponse[RS.AuthSignup])
-async def signup(request: RQ.AuthSignup):
+async def signup(request: RQ.AuthSignup, _=service_auth()):
     hashed_password = utils.auth.hash_password(request.password)
 
     inserted_user_id = methods.users.insert_user_with_id(
