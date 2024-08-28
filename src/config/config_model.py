@@ -25,6 +25,7 @@ class AuthConfig(BaseModel):
     refresh_token_expire_minutes: int = 7 * 24 * 60
     jwt_access_secret_key: SecretStr
     jwt_refresh_secret_key: SecretStr
+    service_token: SecretStr
 
 class Config(BaseModel):
     database: DatabaseConfig
