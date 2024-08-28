@@ -1,6 +1,7 @@
 import { JWTPair } from "./types";
 import api from "./api";
 import { CaptureContext } from "pactum/src/exports/handler";
+import RS from "./responses";
 
 
 export const makeResponse = (ctx: CaptureContext) => {
@@ -59,9 +60,9 @@ export class User {
     login: string,
     password: string
   ): Promise<User> {
-    // TODO: create `get current user` method on backend
+    // TODO: create `get current user` method on backend #55
     throw new Error("Not implemented")
-    const tokens: AuthSignin = await api.auth.signin()
+    const tokens: RS.AuthSignin = await api.auth.signin()
       .withBody({login, password})
       .expectJsonLike({ok: true})
       .returns(ctx => ctx.res.body);
@@ -73,7 +74,7 @@ export class User {
     email: string,
     password: string
   ): Promise<User> {
-    const tokens: AuthSignup = await api.auth.signup()
+    const tokens: RS.AuthSignup = await api.auth.signup()
       .withBody({first_name, password, email})
       .expectJsonLike({ok: true})
       .returns(ctx => ctx.res.body);

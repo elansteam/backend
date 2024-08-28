@@ -2,18 +2,16 @@ import {describe, test} from "@jest/globals";
 import { cleanup } from "./helpers/scripts";
 import api from "./helpers/api";
 import { ErrorCodes } from "./helpers/constants";
-import { makeResponse } from "./helpers/helpers";
 
 
 describe("Auth", () => {
   cleanup();
 
   test("Signup", async () => {
-    await api.auth.signup().withBody({
-      first_name: "first", email: "first@gmail.com", password: "first"})
-    .expectJsonLike({ok: true});
+    await api.auth.signup().withBody({first_name: "first", email: "first@gmail.com", password: "first"})
+      .expectJsonLike({ok: true})
     await api.auth.signup().withBody({first_name: "second", email: "second@gmail.com", password: "second"})
-      .expectJsonLike({ok: true});
+      .expectJsonLike({ok: true})
     await api.auth.signup()
       .withBody({first_name: "second", email: "second@gmail.com", password: "password"})
       .expectJsonLike({ok: false, error: {code: ErrorCodes.EMAIL_ALREADY_TAKEN}});
