@@ -1,4 +1,3 @@
-import os
 from contextlib import asynccontextmanager
 from loguru import logger
 from fastapi import FastAPI
