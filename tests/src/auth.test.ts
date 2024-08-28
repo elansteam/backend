@@ -2,6 +2,7 @@ import {describe, test} from "@jest/globals";
 import { cleanup } from "./helpers/scripts";
 import api from "./helpers/api";
 import { ErrorCodes } from "./helpers/constants";
+import { makeResponse } from "./helpers/helpers";
 
 
 describe("Auth", () => {
@@ -15,7 +16,7 @@ describe("Auth", () => {
       .expectJsonLike({ok: true});
     await api.auth.signup()
       .withBody({first_name: "second", email: "second@gmail.com", password: "password"})
-      .expectJsonLike({ok: false, error: {code: ErrorCodes.NAME_ALREADY_TAKEN}});
+      .expectJsonLike({ok: false, error: {code: ErrorCodes.EMAIL_ALREADY_TAKEN}});
   });
 
   test("Signin", async () => {

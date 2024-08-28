@@ -1,6 +1,36 @@
 import { JWTPair } from "./types";
 import api from "./api";
+import { CaptureContext } from "pactum/src/exports/handler";
 
+
+export const makeResponse = (ctx: CaptureContext) => {
+  const fromSnaketoCamelCase = (str: string) => {
+    let result = '';
+    for (let i = 0; i < str.length; ++i) {
+      if (str[i] == '_' && i != str.length - 1) {
+        ++i;
+        result += str[i].toUpperCase();
+      } else {
+        result += str[i];
+      }
+    }
+    return result;
+  }
+  const replaceKeys = (source: any) => {
+    for (let prop in source) {
+      const upper = fromSnaketoCamelCase(prop);
+      if (prop !== upper) {
+        source[upper] = source[prop];
+        delete source[prop];
+      }
+      if ('object' === typeof source[upper]) {
+        replaceKeys(source[upper]);
+      }
+    }
+  }
+  replaceKeys(ctx.res.body);
+  return ctx.res.body;
+}
 
 export class GlobalCounter {
   static counter: number = 0;
