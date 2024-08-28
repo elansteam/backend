@@ -16,5 +16,5 @@ async def cleanup():
     db = client.get_database(config.database.name)
     for collection_name in db.list_collection_names():
         db.get_collection(collection_name).delete_many({})
-    logger.warning("CLEAR ALL COLLECTIONS")
+    logger.warning("CLEARED ALL COLLECTIONS")
     return
