@@ -9,7 +9,6 @@ from db import types
 from db import methods
 from utils import response
 from config import config
-from .permissions import Permissions
 
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -132,50 +131,16 @@ def create_jwt_pair_by_user_id(user_id: int) ->types.auth.JWTPair:
         )
     )
 
-def auth_user(*permissions: Permissions):
-    """
-    Dependency, that authorize user with given permissions by **access** jwt token in
-    Authorization header.
+def get_current_user(authorization: str = Header()):
+    token = get_auth_header_credentials(authorization, "Bearer")
 
-    Usage example:
-    >>> def endpoint(user: User = Depends(auth_user(Permissions.CREATE_ROLE)))
-    Args:
-        permissions: Permissions, which must contain user roles
-    Returns:
-        Function that auth user by given permissions and auth header
-    """
+    subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
 
-    def wrapper(authorization: str = Header()) -> types.user.User:
-        token = get_auth_header_credentials(authorization, "Bearer")
+    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
+        return user
 
-        subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
-
-        if subject.isnumeric():
-            user_id = int(subject)
-
-            user = methods.users.get(user_id)
-
-            if user is not None:
-                general_role_code = 0
-                for role_name in user.roles:
-                    role = methods.roles.get(role_name)
-                    if role is None:
-                        continue
-                    general_role_code |= role.code
-
-                user_permissions = convert_role_code_to_permissions(general_role_code)
-
-                for permission in permissions:
-                    if permission.value not in user_permissions:
-                        raise response.ErrorResponse(
-                            code=response.ErrorCodes.ACCESS_DENIED,
-                            http_status_code=http_status.HTTP_403_FORBIDDEN
-                        )
-                return user
-
-        raise response.ErrorResponse(
-            code=response.ErrorCodes.ENTITY_NOT_FOUND,
-            http_status_code=http_status.HTTP_401_UNAUTHORIZED,
-            message="Could not found user by token"
-        )
-    return wrapper
+    raise response.ErrorResponse(
+        code=response.ErrorCodes.ENTITY_NOT_FOUND,
+        http_status_code=http_status.HTTP_401_UNAUTHORIZED,
+        message="Could not found user by token"
+    )
