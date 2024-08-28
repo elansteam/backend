@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 from loguru import logger
 from fastapi import FastAPI
@@ -25,7 +26,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(debug=config.debug, lifespan=lifespan)
 app.include_router(routers.auth.router, prefix="/api/auth")
 app.include_router(routers.service.router, prefix="/api/service")
-if config.test:
+if config.environment == "test":
     logger.warning("YOU ARE IN TEST MODE! DANGEROUS FUNCTIONS ARE AVAILABLE")
     app.include_router(routers.test.router, prefix="/api/test")
 
