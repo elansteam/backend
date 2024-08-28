@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import status as http_status
 
 import utils.auth
-from utils.auth import service_auth
+from utils.auth import service_auth, get_current_user
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
 from db import types
@@ -59,3 +59,11 @@ async def signin(request: RQ.AuthSignin):
         )
 
     return utils.auth.create_jwt_pair_by_user_id(user.id)
+
+@router.get("/current", response_model=SuccessfulResponse[RS.AuthCurrent])
+async def current(current_user = get_current_user()):
+    return RS.AuthCurrent(
+        id=current_user.id,
+        first_name=current_user.first_name,
+        email=current_user.email
+    )
