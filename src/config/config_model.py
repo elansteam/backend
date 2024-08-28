@@ -11,7 +11,6 @@ class MongoDBCollections(BaseModel):
     domains: str = "Domains"
     groups: str = "Groups"
     group_roles: str = "GroupRoles"
-    roles: str = "Roles"
     internal_counters: str = "InternalCounters"
     group_members: str = "GroupMembers"
     contests: str = "Contests"
