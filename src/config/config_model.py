@@ -1,6 +1,7 @@
 """Entire project configuration model"""
 import os
 import sys
+from typing import Literal
 from pydantic import BaseModel, SecretStr
 from pydantic import ValidationError
 from loguru import logger
@@ -30,6 +31,7 @@ class AuthConfig(BaseModel):
 class Config(BaseModel):
     database: DatabaseConfig
     auth: AuthConfig
+    environment: Literal["test", "production"] = "production"
     debug: bool = False
     allow_origins: list[str] = []
 

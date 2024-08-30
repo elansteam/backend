@@ -6,5 +6,6 @@
     "auth": {
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key"
-    }
+    },
+    "environment": "test"
 }
