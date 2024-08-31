@@ -26,8 +26,7 @@ async def signup(request: RQ.AuthSignup, _=service_auth()):
 
     if inserted_user_id is None:
         raise ErrorResponse(
-            code=ErrorCodes.NAME_ALREADY_TAKEN,
-            message="There is user with identical email"
+            code=ErrorCodes.EMAIL_ALREADY_TAKEN,
         )
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)

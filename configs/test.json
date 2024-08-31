@@ -7,5 +7,6 @@
         "jwt_access_secret_key": "jwt_access_secret_key",
         "jwt_refresh_secret_key": "jwt_refresh_secret_key",
         "service_token": "test_service_token"
-    }
+    },
+    "environment": "test"
 }
