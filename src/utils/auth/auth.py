@@ -145,6 +145,20 @@ def get_current_user(authorization: str = Header()) -> types.user.User:
         message="Could not found user by token"
     )
 
+def get_current_user_by_refresh_token(authorization: str = Header()) -> types.user.User:
+    token = get_auth_header_credentials(authorization, "Bearer")
+
+    subject = decode_jwt(token, config.auth.jwt_refresh_secret_key.get_secret_value())["subject"]
+
+    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
+        return user
+
+    raise response.ErrorResponse(
+        code=response.ErrorCodes.ACCESS_DENIED,
+        http_status_code=http_status.HTTP_401_UNAUTHORIZED,
+        message="Could not found user by token"
+    )
+
 def service_auth(authorization: str = Header()) -> None:
     if get_auth_header_credentials(authorization, "Service") != config.auth.service_token.get_secret_value():
         raise response.ErrorResponse(

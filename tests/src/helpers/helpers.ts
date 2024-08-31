@@ -53,20 +53,22 @@ export class User {
   private constructor(
     public first_name: string,
     public email: string,
+    public id: number,
     public tokens: JWTPair
   ) {}
 
   static async signin(
-    login: string,
+    email: string,
     password: string
   ): Promise<User> {
-    // TODO: create `get current user` method on backend #55
-    throw new Error("Not implemented")
     const tokens: RS.AuthSignin = await api.auth.signin()
-      .withBody({login, password})
+      .withBody({email, password})
       .expectJsonLike({ok: true})
-      .returns(ctx => ctx.res.body);
-    return new User("no_username", "no_email", tokens);
+      .returns(makeResponse);
+    const current_user: RS.AuthCurrent = await api.auth.current()
+      .withBearerToken(tokens.accessToken)
+      .returns(makeResponse);
+    return new User(current_user.first_name, current_user.email, current_user.id, tokens);
   }
 
   static async signup(
@@ -78,6 +80,9 @@ export class User {
       .withBody({first_name, password, email})
       .expectJsonLike({ok: true})
       .returns(ctx => ctx.res.body);
-    return new User(first_name, email, tokens)
+    const current_user: RS.AuthCurrent = await api.auth.current()
+      .withBearerToken(tokens.accessToken)
+      .returns(makeResponse);
+    return new User(current_user.first_name, current_user.email, current_user.id, tokens);
   }
 }
