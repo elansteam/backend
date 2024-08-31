@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import status as http_status
 
 import utils.auth
@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.post("/signup", response_model=SuccessfulResponse[RS.AuthSignup])
-async def signup(request: RQ.AuthSignup, _=service_auth()):
+async def signup(request: RQ.AuthSignup, _=Depends(service_auth)):
     hashed_password = utils.auth.hash_password(request.password)
 
     inserted_user_id = methods.users.insert_user_with_id(
@@ -60,7 +60,7 @@ async def signin(request: RQ.AuthSignin):
     return utils.auth.create_jwt_pair_by_user_id(user.id)
 
 @router.get("/current", response_model=SuccessfulResponse[RS.AuthCurrent])
-async def current(current_user = get_current_user()):
+async def current(current_user = Depends(get_current_user)):
     return RS.AuthCurrent(
         id=current_user.id,
         first_name=current_user.first_name,

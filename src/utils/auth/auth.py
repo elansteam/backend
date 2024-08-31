@@ -131,7 +131,7 @@ def create_jwt_pair_by_user_id(user_id: int) ->types.auth.JWTPair:
         )
     )
 
-def get_current_user(authorization: str = Header()):
+def get_current_user(authorization: str = Header()) -> types.user.User:
     token = get_auth_header_credentials(authorization, "Bearer")
 
     subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
