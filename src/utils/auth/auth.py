@@ -140,7 +140,7 @@ def get_current_user(authorization: str = Header()) -> types.user.User:
         return user
 
     raise response.ErrorResponse(
-        code=response.ErrorCodes.ENTITY_NOT_FOUND,
+        code=response.ErrorCodes.ACCESS_DENIED,
         http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         message="Could not found user by token"
     )
