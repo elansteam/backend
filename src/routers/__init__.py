@@ -1,6 +1,7 @@
 from . import (
     auth,
     service,
+    users,
     test
 )
 
@@ -8,5 +9,6 @@ from . import (
 __all__ = [
     "auth",
     "service",
+    "users",
     "test"
 ]

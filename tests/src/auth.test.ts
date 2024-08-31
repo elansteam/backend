@@ -46,13 +46,13 @@ describe("Auth", () => {
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    const first_user: RS.AuthCurrent = await api.auth.current()
+    const first_user: RS.UserCurrent = await api.users.current()
       .withBearerToken(tokens.accessToken)
       .expectJsonLike({ok: true})
       .returns(makeResponse);
     expect(first_user.email).toBe("first@gmail.com");
 
-    await api.auth.current()
+    await api.users.current()
       .withBearerToken("invalid_token")
       .expectJsonLike({ok: false, error: {code: ErrorCodes.TOKEN_VALIDATION_FAILED}});
   });
@@ -63,13 +63,13 @@ describe("Auth", () => {
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    await api.auth.current().withBearerToken(old_tokens.accessToken).expectJsonLike({ok: true});
+    await api.users.current().withBearerToken(old_tokens.accessToken).expectJsonLike({ok: true});
     const new_tokens: RS.AuthRefresh = await api.auth.refresh()
       .withBearerToken(old_tokens.refreshToken)
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    await api.auth.current().withBearerToken(old_tokens.accessToken).expectJsonLike({ok: true});
-    await api.auth.current().withBearerToken(new_tokens.accessToken).expectJsonLike({ok: true});
+    await api.users.current().withBearerToken(old_tokens.accessToken).expectJsonLike({ok: true});
+    await api.users.current().withBearerToken(new_tokens.accessToken).expectJsonLike({ok: true});
   });
 });

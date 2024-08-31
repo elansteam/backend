@@ -9,15 +9,15 @@ namespace RS {
     refreshToken: string;
   }
 
-  export interface AuthCurrent {
-    id: number;
-    first_name: string;
-    email: string
-  }
-
   export interface AuthRefresh {
     accessToken: string;
     refreshToken: string;
+  }
+
+  export interface UserCurrent {
+    id: number;
+    first_name: string;
+    email: string
   }
 }
 

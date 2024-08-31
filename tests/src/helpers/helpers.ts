@@ -65,7 +65,7 @@ export class User {
       .withBody({email, password})
       .expectJsonLike({ok: true})
       .returns(makeResponse);
-    const current_user: RS.AuthCurrent = await api.auth.current()
+    const current_user: RS.UserCurrent = await api.users.current()
       .withBearerToken(tokens.accessToken)
       .returns(makeResponse);
     return new User(current_user.first_name, current_user.email, current_user.id, tokens);
@@ -80,7 +80,7 @@ export class User {
       .withBody({first_name, password, email})
       .expectJsonLike({ok: true})
       .returns(ctx => ctx.res.body);
-    const current_user: RS.AuthCurrent = await api.auth.current()
+    const current_user: RS.UserCurrent = await api.users.current()
       .withBearerToken(tokens.accessToken)
       .returns(makeResponse);
     return new User(current_user.first_name, current_user.email, current_user.id, tokens);
