@@ -1,18 +1,9 @@
-from . import (
-    auth,
-    common,
-    user,
-    domain,
-    requests,
-    responses
-)
-
+from . import types
+from .requests import RQ
+from .responses import RS
 
 __all__ = [
-    "auth",
-    "user",
-    "domain",
-    "common",
-    "requests",
-    "responses"
+    "types",
+    "RQ",
+    "RS"
 ]

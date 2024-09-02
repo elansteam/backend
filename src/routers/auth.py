@@ -5,17 +5,15 @@ import utils.auth
 from utils.auth import get_current_user_by_refresh_token
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
-from db import types
-from db.types import requests as RQ, responses as RS
-from db.types.requests import RQ
-from db.types.responses import RS
+from db.types import types, RS, RQ
 
 
 router = APIRouter()
 
+
 @router.post("/signin", response_model=SuccessfulResponse[RS.auth.signin])
 async def signin(request: RQ.auth.signin):
-    user: types.user.User | None = None
+    user: types.User | None = None
     if request.id:
         user = methods.users.get(request.id)
     elif request.domain:
@@ -42,5 +40,5 @@ async def signin(request: RQ.auth.signin):
     return utils.auth.create_jwt_pair_by_user_id(user.id)
 
 @router.get("/refresh", response_model=SuccessfulResponse[RS.auth.refresh])
-async def refresh(current_user: types.user.User = Depends(get_current_user_by_refresh_token)):
+async def refresh(current_user: types.User = Depends(get_current_user_by_refresh_token)):
     return utils.auth.create_jwt_pair_by_user_id(current_user.id)
