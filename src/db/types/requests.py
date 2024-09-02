@@ -4,7 +4,7 @@ from typing import Annotated
 from pydantic import model_validator, Field
 
 from utils.schemas import BaseModel
-from .common import is_email
+from .validators import is_email
 
 
 class RQ:

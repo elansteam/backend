@@ -5,8 +5,8 @@ from passlib.context import CryptContext
 from fastapi import Header
 from fastapi import status as http_status
 
-from db import types
 from db import methods
+from db.types import types
 from utils import response
 from config import config
 
@@ -117,8 +117,8 @@ def decode_jwt(
             http_status_code=http_status.HTTP_401_UNAUTHORIZED,
         ) from exc
 
-def create_jwt_pair_by_user_id(user_id: int) ->types.auth.JWTPair:
-    return types.auth.JWTPair(
+def create_jwt_pair_by_user_id(user_id: int) -> types.JWTPair:
+    return types.JWTPair(
         access_token=create_jwt(
             str(user_id),
             expiration_time_minutes=config.auth.access_token_expire_minutes,
@@ -131,7 +131,7 @@ def create_jwt_pair_by_user_id(user_id: int) ->types.auth.JWTPair:
         )
     )
 
-def get_current_user(authorization: str = Header()) -> types.user.User:
+def get_current_user(authorization: str = Header()) -> types.User:
     token = get_auth_header_credentials(authorization, "Bearer")
 
     subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
@@ -145,7 +145,7 @@ def get_current_user(authorization: str = Header()) -> types.user.User:
         message="Could not found user by token"
     )
 
-def get_current_user_by_refresh_token(authorization: str = Header()) -> types.user.User:
+def get_current_user_by_refresh_token(authorization: str = Header()) -> types.User:
     token = get_auth_header_credentials(authorization, "Bearer")
 
     subject = decode_jwt(token, config.auth.jwt_refresh_secret_key.get_secret_value())["subject"]

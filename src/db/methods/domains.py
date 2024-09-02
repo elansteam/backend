@@ -1,11 +1,11 @@
-from db import types
+from db.types import types
 from .collections import domains
 
 
 def attach_to_entity(
     domain: str,
     target_id: int,
-    target_type: types.domain.TargetType
+    target_type: types.EntityTargetType
 ) -> None:
     domains.find_one_and_update(
         {"_id": domain},
@@ -16,7 +16,7 @@ def attach_to_entity(
         upsert=True
     )
 
-def resolve_entity(domain: str) -> types.domain.Entity | None:
+def resolve_entity(domain: str) -> types.Entity | None:
     if (entity := domains.find_one({"_id": domain})) is None:
         return None
-    return types.domain.Entity(**entity)
+    return types.Entity(**entity)
