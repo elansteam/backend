@@ -1,19 +1,21 @@
+# pylint: disable=invalid-name
+from __future__ import annotations
 from utils.schemas import BaseModel
 
 
-class AuthSignin(BaseModel):
-    access_token: str
-    refresh_token: str
-
-class AuthSignup(BaseModel):
-    access_token: str
-    refresh_token: str
-
-class AuthRefresh(BaseModel):
-    access_token: str
-    refresh_token: str
-
-class UsersCurrent(BaseModel):
-    id: int
-    first_name: str
-    email: str
+class RS:
+    class auth:
+        class signin(BaseModel):
+            access_token: str
+            refresh_token: str
+        class signup(BaseModel):
+            access_token: str
+            refresh_token: str
+        class refresh(BaseModel):
+            access_token: str
+            refresh_token: str
+    class users:
+        class current(BaseModel):
+            id: int
+            first_name: str
+            email: str

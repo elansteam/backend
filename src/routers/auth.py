@@ -10,13 +10,15 @@ from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
 from db import types
 from db.types import requests as RQ, responses as RS
+from db.types.requests import RQ
+from db.types.responses import RS
 
 
 router = APIRouter()
 
 
-@router.post("/signup", response_model=SuccessfulResponse[RS.AuthSignup])
-async def signup(request: RQ.AuthSignup, _=Depends(service_auth)):
+@router.post("/signup", response_model=SuccessfulResponse[RS.auth.signup])
+async def signup(request: RQ.auth.signup, _=Depends(service_auth)):
     hashed_password = utils.auth.hash_password(request.password)
 
     inserted_user_id = methods.users.insert_user_with_id(
@@ -34,8 +36,8 @@ async def signup(request: RQ.AuthSignup, _=Depends(service_auth)):
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
 
-@router.post("/signin", response_model=SuccessfulResponse[RS.AuthSignin])
-async def signin(request: RQ.AuthSignin):
+@router.post("/signin", response_model=SuccessfulResponse[RS.auth.signin])
+async def signin(request: RQ.auth.signin):
     user: types.user.User | None = None
     if request.id:
         user = methods.users.get(request.id)
@@ -62,6 +64,6 @@ async def signin(request: RQ.AuthSignin):
 
     return utils.auth.create_jwt_pair_by_user_id(user.id)
 
-@router.get("/refresh", response_model=SuccessfulResponse[RS.AuthRefresh])
+@router.get("/refresh", response_model=SuccessfulResponse[RS.auth.refresh])
 async def refresh(current_user: types.user.User = Depends(get_current_user_by_refresh_token)):
     return utils.auth.create_jwt_pair_by_user_id(current_user.id)

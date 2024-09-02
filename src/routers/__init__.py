@@ -8,7 +8,7 @@ from . import (
 
 __all__ = [
     "auth",
-    "service",
     "users",
+    "service",
     "test"
 ]
