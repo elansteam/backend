@@ -10,6 +10,7 @@ from db import client, methods
 from db.types import types, RS, RQ
 
 
+
 router = APIRouter()
 
 
