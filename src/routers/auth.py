@@ -2,10 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi import status as http_status
 
 import utils.auth
-from utils.auth import (
-    service_auth,
-    get_current_user_by_refresh_token
-)
+from utils.auth import get_current_user_by_refresh_token
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
 from db import types
