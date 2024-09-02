@@ -8,3 +8,5 @@ export enum ErrorCodes {
   DOMAIN_ALREADY_TAKEN,
   EMAIL_ALREADY_TAKEN
 }
+
+export const SERVICE_TOKEN = "Service test_service_token";

@@ -4,7 +4,6 @@ from db.client import db
 from config import config
 
 
-roles = db.get_collection(config.database.collections.roles)
 users = db.get_collection(config.database.collections.users)
 groups = db.get_collection(config.database.collections.groups)
 domains = db.get_collection(config.database.collections.domains)

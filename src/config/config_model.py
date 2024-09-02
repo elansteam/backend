@@ -12,7 +12,6 @@ class MongoDBCollections(BaseModel):
     domains: str = "Domains"
     groups: str = "Groups"
     group_roles: str = "GroupRoles"
-    roles: str = "Roles"
     internal_counters: str = "InternalCounters"
     group_members: str = "GroupMembers"
     contests: str = "Contests"
@@ -27,6 +26,7 @@ class AuthConfig(BaseModel):
     refresh_token_expire_minutes: int = 7 * 24 * 60
     jwt_access_secret_key: SecretStr
     jwt_refresh_secret_key: SecretStr
+    service_token: SecretStr
 
 class Config(BaseModel):
     database: DatabaseConfig

@@ -1,6 +1,5 @@
 from .collections import (
     users,
-    roles,
     domains,
     contests,
     group_roles,
@@ -11,7 +10,6 @@ from .collections import (
 
 __all__ = [
     "users",
-    "roles",
     "domains",
     "contests",
     "group_roles",

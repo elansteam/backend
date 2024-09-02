@@ -8,7 +8,6 @@ class _UserBase(BaseModel):
     first_name: str
     last_name: str | None = None
     groups: list[int] = []
-    roles: list[str] = []
     hashed_password: str
     email: str
 
