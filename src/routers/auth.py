@@ -16,26 +16,6 @@ from db.types.responses import RS
 
 router = APIRouter()
 
-
-@router.post("/signup", response_model=SuccessfulResponse[RS.auth.signup])
-async def signup(request: RQ.auth.signup, _=Depends(service_auth)):
-    hashed_password = utils.auth.hash_password(request.password)
-
-    inserted_user_id = methods.users.insert_user_with_id(
-        types.user.UserWithoutID(
-            email=request.email,
-            hashed_password=hashed_password,
-            first_name=request.first_name
-        )
-    )
-
-    if inserted_user_id is None:
-        raise ErrorResponse(
-            code=ErrorCodes.EMAIL_ALREADY_TAKEN,
-        )
-
-    return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
-
 @router.post("/signin", response_model=SuccessfulResponse[RS.auth.signin])
 async def signin(request: RQ.auth.signin):
     user: types.user.User | None = None

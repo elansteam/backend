@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name
+from __future__ import annotations
 from typing import Annotated
 from pydantic import model_validator, Field
 
@@ -21,6 +22,7 @@ class RQ:
                     self.id, self.domain, self.email
                 )) == 1, error_message
                 return self
+    class test:
         class signup(BaseModel):
             first_name: str = Field(..., max_length=30)
             email: Annotated[str, is_email]
