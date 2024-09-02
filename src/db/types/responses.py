@@ -18,8 +18,5 @@ class RS:
             email: str
     class test:
         class signup(BaseModel):
-            class _User(BaseModel):
-                id: str
-                name: int
             access_token: str
             refresh_token: str
