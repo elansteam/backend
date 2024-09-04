@@ -20,6 +20,8 @@ class RS:
             email: str
         class get_orgs(BaseModel):
             organizations: list[types.Organization]
+    class orgs:
+        get = types.Organization
     class test:
         class signup(BaseModel):
             access_token: str

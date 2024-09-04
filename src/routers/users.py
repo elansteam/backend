@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from utils.response import SuccessfulResponse
 from utils.auth import get_current_user
-from db.types import types, RS
+from db.types import types, RS, RQ
 
 
 router = APIRouter()
@@ -15,3 +15,7 @@ async def current(current_user: types.User = Depends(get_current_user)):
         email=current_user.email,
         first_name=current_user.first_name
     )
+
+@router.get("/get_orgs")
+async def get_organizations(request: RQ.users.get_orgs = Depends(), _current_user: types.User = Depends(get_current_user)):
+    ...

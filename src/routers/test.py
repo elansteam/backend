@@ -1,6 +1,6 @@
 """Routers that can be accessed only in test mode"""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from loguru import logger
 
 import utils.auth
@@ -40,3 +40,15 @@ async def signup(request: RQ.test.signup):
         )
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
+
+@router.post("/orgs/create", response_model=SuccessfulResponse[RS.test.orgs.create])
+async def create_organization(
+    request: RQ.test.orgs.create, _current_user: types.User = Depends(utils.auth.get_current_user)
+):
+    ...
+
+@router.post("/orgs/invite", response_model=SuccessfulResponse[None])
+async def invite_user_to_organization(
+    request: RQ.test.orgs.invite, _current_user: types.User = Depends(utils.auth.get_current_user)
+):
+    ...
