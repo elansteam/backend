@@ -28,3 +28,8 @@ class UserWithoutID(_UserBase):
 
 class User(_UserBase):
     id: int = Field(alias='_id')
+
+class Organization(BaseModel):
+    id: int = Field(alias='_id')
+    name: str
+    members: list[int]
