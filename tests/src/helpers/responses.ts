@@ -21,6 +21,9 @@ namespace RS {
       organizations: Organization[];
     }
   }
+  export namespace orgs {
+    export interface get extends Organization {};
+  }
   export namespace test {
     export interface signup {
       accessToken: string;
