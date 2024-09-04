@@ -22,8 +22,20 @@ class RQ:
                     self.id, self.domain, self.email
                 )) == 1, error_message
                 return self
+    class orgs:
+        class get(BaseModel):
+            id: int
+    class users:
+        class get_orgs(BaseModel):
+            id: int
     class test:
         class signup(BaseModel):
             first_name: str = Field(..., max_length=30)
             email: Annotated[str, is_email]
             password: str
+        class orgs:
+            class create(BaseModel):
+                name: str = Field(..., max_length=30)
+            class invite(BaseModel):
+                organization_id: int
+                user_id: int
