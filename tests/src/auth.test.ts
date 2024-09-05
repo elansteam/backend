@@ -9,9 +9,8 @@ import { User } from "./helpers/objects";
 
 describe("Auth", () => {
   beforeEach(async () => {
-    cleanup();
+    await cleanup();
   });
-
 
   test("Signup (test only method)", async () => {
     await api.test.signup({firstName: "first", email: "first@gmail.com", password: "first"})
@@ -31,6 +30,8 @@ describe("Auth", () => {
       .expectJsonLike({ok: true});
     await api.auth.signin({email: second_user.email, password: second_user.password})
       .expectJsonLike({ok: true});
+
+    // Try to pass incorrect password
     await api.auth.signin({email: first_user.email, password: second_user.password + "incorrect"})
       .expectJsonLike({ok: false, error: {code: ErrorCodes.ACCESS_DENIED}});
   });
@@ -49,11 +50,11 @@ describe("Auth", () => {
   test("Refresh token", async () => {
     const user = await User.signup("user@gmail.com");
 
-    await api.users.current(user.getAccessToken()).expectJsonLike({ok: true});
     const newTokens: RS.auth.refresh = await api.auth.refresh(user.getRefreshToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
+    // Check that both tokens are valid
     await api.users.current(user.getAccessToken()).expectJsonLike({ok: true});
     await api.users.current(newTokens.accessToken).expectJsonLike({ok: true});
   });

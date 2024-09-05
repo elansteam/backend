@@ -26,7 +26,7 @@ class RQ:
         class get(BaseModel):
             id: int
     class users:
-        class get_organizaions(BaseModel):
+        class get_organizations(BaseModel):
             id: int
     class test:
         class signup(BaseModel):

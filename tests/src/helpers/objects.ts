@@ -5,6 +5,7 @@ import { makeResponse } from "./helpers";
 
 export class User {
     private constructor(
+        public id: number,
         public email: string,
         public firstName: string,
         public password: string,
@@ -24,7 +25,11 @@ export class User {
             ok: true
         }).returns(makeResponse);
 
-        return new User(email, firstName, password, jwt_pair);
+        const currentUser: RS.users.current = await api.users.current(jwt_pair.accessToken)
+            .expectJsonLike({ok: true})
+            .returns(makeResponse);
+
+        return new User(currentUser.id, currentUser.email, currentUser.firstName, password, jwt_pair);
     }
 
     public getAccessToken(): string {

@@ -43,12 +43,45 @@ async def signup(request: RQ.test.signup):
 
 @router.post("/organizations/create", response_model=SuccessfulResponse[RS.test.organizations.create])
 async def create_organization(
-    request: RQ.test.organizations.create, _current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.create, current_user: types.User = Depends(utils.auth.get_current_user)
 ):
-    ...
+    inserted_id = methods.organizations.insert_organization_with_id(types.OrganizationWithoutID(
+        name=request.name,
+        members=[current_user.id]
+    ))
+
+    logger.debug(request)
+    logger.info(inserted_id)
+
+    return RS.test.organizations.create(
+        members=[current_user.id],
+        name=request.name,
+        _id=inserted_id
+    )
 
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
 async def invite_user_to_organization(
-    request: RQ.test.organizations.invite, _current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.invite, current_user: types.User = Depends(utils.auth.get_current_user)
 ):
-    ...
+    if (organization := methods.organizations.get(request.organization_id)) is None:
+        raise ErrorResponse(
+            code=ErrorCodes.ENTITY_NOT_FOUND,
+            message="Organization not found"
+        )
+
+    if (user := methods.users.get(request.user_id)) is None:
+        raise ErrorResponse(
+            code=ErrorCodes.ENTITY_NOT_FOUND,
+            message="User not found"
+        )
+
+    if current_user.id not in organization.members:
+        raise ErrorResponse(
+            code=ErrorCodes.ACCESS_DENIED,
+            message="You are not a member of this organization"
+        )
+
+    if user.id in organization.members:
+        return
+
+    methods.organizations.add_member(organization.id, user.id)

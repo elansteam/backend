@@ -28,8 +28,8 @@ namespace RQ {
                 name: string;
             }
             export interface invite {
-                organization_id: number;
-                user_id: number
+                organizationId: number;
+                userId: number
             }
         }
     }
