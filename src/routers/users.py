@@ -16,6 +16,8 @@ async def current(current_user: types.User = Depends(get_current_user)):
         first_name=current_user.first_name
     )
 
-@router.get("/get_orgs")
-async def get_organizations(request: RQ.users.get_orgs = Depends(), _current_user: types.User = Depends(get_current_user)):
+@router.get("/get_organizations")
+async def get_organizations(
+    request: RQ.users.get_organizaions = Depends(), _current_user: types.User = Depends(get_current_user)
+):
     ...

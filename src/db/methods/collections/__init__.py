@@ -4,6 +4,7 @@ from .collections import (
     contests,
     group_roles,
     group_members,
+    organizations,
     internal_counters
 )
 
@@ -14,5 +15,6 @@ __all__ = [
     "contests",
     "group_roles",
     "group_members",
+    "organizations",
     "internal_counters"
 ]

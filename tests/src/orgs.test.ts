@@ -18,13 +18,13 @@ describe("Organizations", () => {
 
   test("Create and get organization", () => {
     const org_name = "test_org";
-    const org: RS.test.orgs.create = api.test.orgs.create({name: org_name}, first_user.getAccessToken())
+    const org: RS.test.organizations.create = api.test.organizations.create({name: org_name}, first_user.getAccessToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    const orgs: RS.orgs.get = api.orgs.get({id: org.id}, first_user.getAccessToken())
+    const organizations: RS.organizations.get = api.organizations.get({id: org.id}, first_user.getAccessToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
-    expect(orgs).toContainEqual({id: org.id, name: org_name});
+    expect(organizations).toContainEqual({id: org.id, name: org_name});
   });
 });

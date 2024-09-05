@@ -7,13 +7,13 @@ namespace RQ {
             password: string;
         }
     }
-    export namespace orgs {
+    export namespace organizations {
         export interface get {
             id: number;
         }
     }
     export namespace users {
-        export interface get_orgs {
+        export interface get_organizations {
             id: number;
         }
     }
@@ -23,7 +23,7 @@ namespace RQ {
             email: string;
             password: string;
         }
-        export namespace orgs {
+        export namespace organizations {
             export interface create {
                 name: string;
             }

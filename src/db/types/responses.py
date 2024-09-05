@@ -18,14 +18,14 @@ class RS:
             id: int
             first_name: str
             email: str
-        class get_orgs(BaseModel):
+        class get_organizations(BaseModel):
             organizations: list[types.Organization]
-    class orgs:
+    class organizations:
         get = types.Organization
     class test:
         class signup(BaseModel):
             access_token: str
             refresh_token: str
-        class orgs:
+        class organizations:
             class create(BaseModel):
                 organization: types.Organization

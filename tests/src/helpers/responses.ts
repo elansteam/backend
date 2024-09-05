@@ -17,11 +17,11 @@ namespace RS {
       firstName: string;
       email: string;
     }
-    export interface get_orgs {
+    export interface get_organizations {
       organizations: Organization[];
     }
   }
-  export namespace orgs {
+  export namespace organizations {
     export interface get extends Organization {};
   }
   export namespace test {
@@ -29,7 +29,7 @@ namespace RS {
       accessToken: string;
       refreshToken: string;
     }
-    export namespace orgs {
+    export namespace organizations {
       export interface create extends Organization {}
       export interface invite {}
     }

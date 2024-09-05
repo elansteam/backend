@@ -41,14 +41,14 @@ async def signup(request: RQ.test.signup):
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
 
-@router.post("/orgs/create", response_model=SuccessfulResponse[RS.test.orgs.create])
+@router.post("/organizations/create", response_model=SuccessfulResponse[RS.test.organizations.create])
 async def create_organization(
-    request: RQ.test.orgs.create, _current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.create, _current_user: types.User = Depends(utils.auth.get_current_user)
 ):
     ...
 
-@router.post("/orgs/invite", response_model=SuccessfulResponse[None])
+@router.post("/organizations/invite", response_model=SuccessfulResponse[None])
 async def invite_user_to_organization(
-    request: RQ.test.orgs.invite, _current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.invite, _current_user: types.User = Depends(utils.auth.get_current_user)
 ):
     ...
