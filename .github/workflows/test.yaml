@@ -43,4 +43,4 @@ jobs:
       run: docker compose logs --no-log-prefix test
 
     - name: Cleanup
-      run: docker compose down --rmi all
+      run: docker compose down -v --rmi all
