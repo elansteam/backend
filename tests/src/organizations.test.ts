@@ -16,7 +16,8 @@ describe("Organizations", () => {
     second_user = await User.signup("second@gmail.com");
   });
 
-  test("Create and get organization", () => {
+  test("Create and get organization", async () => {
+    console.log("Create and get organization");
     const org_name = "test_org";
     const org: RS.test.organizations.create = api.test.organizations.create({name: org_name}, first_user.getAccessToken())
       .expectJsonLike({ok: true})

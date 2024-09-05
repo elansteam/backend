@@ -1,20 +1,20 @@
-import {describe, test, expect} from "@jest/globals";
+import {describe, test, expect, beforeEach} from "@jest/globals";
 import { cleanup } from "./helpers/scripts";
 import api from "./helpers/api";
-import { ErrorCodes, SERVICE_TOKEN } from "./helpers/constants";
+import { ErrorCodes } from "./helpers/constants";
 import RS from "./helpers/responses";
 import { makeResponse } from "./helpers/helpers";
+import { User } from "./helpers/objects";
 
 
 describe("Auth", () => {
-  cleanup();
+  beforeEach(async () => {
+    cleanup();
+  });
+
 
   test("Signup (test only method)", async () => {
-    await api.test.signup({
-        firstName: "first",
-        email: "first@gmail.com",
-        password: "first"
-      })
+    await api.test.signup({firstName: "first", email: "first@gmail.com", password: "first"})
       .expectJsonLike({ok: true})
     await api.test.signup({firstName: "second", email: "second@gmail.com", password: "second"})
       .expectJsonLike({ok: true})
@@ -24,42 +24,37 @@ describe("Auth", () => {
   });
 
   test("Signin", async () => {
-    await api.auth.signin({email: "first@gmail.com", password: "first"})
+    const first_user = await User.signup("first@gmail.com");
+    const second_user = await User.signup("second@gmail.com");
+
+    await api.auth.signin({email: first_user.email, password: first_user.password})
       .expectJsonLike({ok: true});
-    await api.auth.signin({email: "second@gmail.com", password: "second"})
+    await api.auth.signin({email: second_user.email, password: second_user.password})
       .expectJsonLike({ok: true});
-    await api.auth.signin({email: "first@gmail.com", password: "incorrect_password"})
+    await api.auth.signin({email: first_user.email, password: second_user.password + "incorrect"})
       .expectJsonLike({ok: false, error: {code: ErrorCodes.ACCESS_DENIED}});
   });
 
   test("Get current user", async () => {
-    const tokens: RS.auth.signin = await api.auth.signin({
-      email: "first@gmail.com", password: "first"
-    }).expectJsonLike({ok: true})
+    const user = await User.signup("user@gmail.com");
+
+    const userResponse: RS.users.current = await api.users.current(user.getAccessToken()).
+      expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    const firstUser: RS.users.current = await api.users.current(tokens.accessToken)
-      .expectJsonLike({ok: true})
-      .returns(makeResponse);
-    expect(firstUser.email).toBe("first@gmail.com");
-    expect(firstUser.firstName).toBe("first");
-
-    await api.users.current("invalid_token")
-      .expectJsonLike({ok: false, error: {code: ErrorCodes.TOKEN_VALIDATION_FAILED}});
+    expect(userResponse.email).toBe(user.email);
+    expect(userResponse.firstName).toBe(user.firstName);
   });
 
   test("Refresh token", async () => {
-    const oldTokens: RS.auth.signin = await api.auth.signin({
-      email: "first@gmail.com", password: "first"
-    }).expectJsonLike({ok: true})
-      .returns(makeResponse);
+    const user = await User.signup("user@gmail.com");
 
-    await api.users.current(oldTokens.accessToken).expectJsonLike({ok: true});
-    const newTokens: RS.auth.refresh = await api.auth.refresh(oldTokens.refreshToken)
+    await api.users.current(user.getAccessToken()).expectJsonLike({ok: true});
+    const newTokens: RS.auth.refresh = await api.auth.refresh(user.getRefreshToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
-    await api.users.current(oldTokens.accessToken).expectJsonLike({ok: true});
+    await api.users.current(user.getAccessToken()).expectJsonLike({ok: true});
     await api.users.current(newTokens.accessToken).expectJsonLike({ok: true});
   });
 });

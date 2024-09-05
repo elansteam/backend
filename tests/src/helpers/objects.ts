@@ -1,6 +1,7 @@
 import api from "./api";
 import { JWTPair } from "./types";
 import RS from "./responses";
+import { makeResponse } from "./helpers";
 
 export class User {
     private constructor(
@@ -21,12 +22,16 @@ export class User {
             password
         }).expectJsonLike({
             ok: true
-        });
+        }).returns(makeResponse);
 
         return new User(email, firstName, password, jwt_pair);
     }
 
     public getAccessToken(): string {
         return this.jwt_pair.accessToken;
+    }
+
+    public getRefreshToken(): string {
+        return this.jwt_pair.refreshToken;
     }
 }
