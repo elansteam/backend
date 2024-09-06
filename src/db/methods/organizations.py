@@ -17,4 +17,6 @@ def add_member(organization_id: int, member: types.Organization.Member) -> None:
     organizations.update_one({"_id": organization_id}, {"$push": {"members": member.model_dump()}})
 
 def get_organizations_by_user(user_id: int) -> list[types.Organization]:
-    return [types.Organization(**org) for org in organizations.aggregate([{"$match": {"members": {"$elemMatch": {"id": user_id}}}}])]
+    return [types.Organization(**org) for org in organizations.aggregate(
+        [{"$match": {"members": {"$elemMatch": {"id": user_id}}}}]
+    )]
