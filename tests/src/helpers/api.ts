@@ -8,10 +8,10 @@ pactum.request.setBaseUrl("http://api_test:4242");
 
 const api = {
   auth: {
-    signin: (request: RQ.auth.signin) => pactum.spec().post("/api/auth/signin")
-        .withBody(makeRequest(request)),
     refresh: (bearerToken: string) => pactum.spec().get("/api/auth/refresh")
-        .withBearerToken(bearerToken)
+      .withBearerToken(bearerToken),
+    signin: (request: RQ.auth.signin) => pactum.spec().post("/api/auth/signin")
+      .withBody(makeRequest(request))
   },
   organizations: {
     get: (request: RQ.organizations.get, bearerToken: string) => pactum.spec().get("/api/organizations/get")
@@ -21,7 +21,7 @@ const api = {
   test: {
     cleanup: () => pactum.spec().post("/api/test/cleanup"),
     signup: (request: RQ.test.signup) => pactum.spec().post("/api/test/signup")
-        .withBody(makeRequest(request)),
+      .withBody(makeRequest(request)),
     organizations: {
       create: (request: RQ.test.organizations.create, bearerToken: string) => pactum.spec().post("/api/test/organizations/create")
         .withBearerToken(bearerToken)
@@ -38,6 +38,6 @@ const api = {
       .withBearerToken(bearerToken)
       .withQueryParams(makeRequest(request))
   }
-}
+};
 
 export default api;

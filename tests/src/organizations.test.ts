@@ -5,6 +5,7 @@ import { ErrorCodes, SERVICE_TOKEN } from "./helpers/constants";
 import RS from "./helpers/responses";
 import { makeResponse } from "./helpers/helpers";
 import { User } from "./helpers/objects";
+import { Organization } from "./helpers/types";
 
 
 describe("Organizations", () => {
@@ -22,10 +23,13 @@ describe("Organizations", () => {
       .expectJsonLike({ok: true})
       .returns(makeResponse);
 
+    // Ensure that organization have only creator as a member
     const receivedOrganization: RS.organizations.get = await api.organizations.get({id: organization.id}, firstUser.getAccessToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
-    expect(receivedOrganization).toMatchObject({id: organization.id, name: organizationName, members: [firstUser.id]});
+    expect(receivedOrganization).toMatchObject({
+      id: organization.id, name: organizationName, members: [{id: firstUser.id}]
+    });
   });
 
   test("Invite user to organization", async () => {
@@ -36,10 +40,13 @@ describe("Organizations", () => {
     await api.test.organizations.invite({organizationId: organization.id, userId: secondUser.id}, firstUser.getAccessToken())
       .expectJsonLike({ok: true});
 
+    // Ensure that the organization members have been updated
     const receivedOrganization: RS.organizations.get = await api.organizations.get({id: organization.id}, firstUser.getAccessToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
-    expect(receivedOrganization).toMatchObject({id: organization.id, members: [firstUser.id, secondUser.id]});
+    expect(receivedOrganization).toMatchObject({
+      id: organization.id, members: [{id: firstUser.id}, {id: secondUser.id}]
+    });
   });
 
   test("Invite user to organization from unauthorized user", async () => {
@@ -55,7 +62,9 @@ describe("Organizations", () => {
       const receivedOrganization: RS.organizations.get = await api.organizations.get({id: organization.id}, firstUser.getAccessToken())
         .expectJsonLike({ok: true})
         .returns(makeResponse);
-      expect(receivedOrganization).toMatchObject({id: organization.id, members: [firstUser.id]});
+      expect(receivedOrganization).toMatchObject({
+        id: organization.id, members: [{id: firstUser.id}]
+      });
     });
 
   test("Invite user already in organization", async () => {
@@ -75,6 +84,53 @@ describe("Organizations", () => {
     const receivedOrganization: RS.organizations.get = await api.organizations.get({id: organization.id}, firstUser.getAccessToken())
       .expectJsonLike({ok: true})
       .returns(makeResponse);
-    expect(receivedOrganization).toMatchObject({id: organization.id, members: [firstUser.id, secondUser.id]});
+    expect(receivedOrganization).toMatchObject({
+      id: organization.id, members: [{id: firstUser.id}, {id: secondUser.id}]
     });
+  });
+  test("Get user organizations", async () => {
+    // Create two different organizations and ensure that after each creation method returns new organization
+    const firstOrganization: RS.test.organizations.create = await api.test.organizations.create({name: "first_org"}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    let firstUserOrganizations: RS.users.get_organizations = await api.users.get_organizations({id: firstUser.id}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(firstUserOrganizations.organizations).toMatchObject(
+      [{name: "first_org"}]
+    );
+
+    // Get first user organizations from the second user
+    await api.test.organizations.create({name: "second_org"}, firstUser.getAccessToken()).expectJsonLike({ok: true});
+    firstUserOrganizations = await api.users.get_organizations({id: firstUser.id}, secondUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(firstUserOrganizations.organizations).toMatchObject(
+      [{name: "first_org"}, {name: "second_org"}]
+    );
+
+    // Test that second user has no organizations
+    let secondUserOrganizations: RS.users.get_organizations = await api.users.get_organizations({id: secondUser.id}, secondUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(secondUserOrganizations.organizations.length).toBe(0);
+
+    // Create organization for the second user and ensure that the second user are it
+    await api.test.organizations.create({name: "third_org"}, secondUser.getAccessToken());
+    secondUserOrganizations = await api.users.get_organizations({id: secondUser.id}, secondUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(secondUserOrganizations.organizations).toMatchObject(
+      [{name: "third_org"}]
+    );
+
+    // invite second user to an organization and ensure that he is in the organization
+    await api.test.organizations.invite({organizationId: firstOrganization.id, userId: secondUser.id}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true});
+    secondUserOrganizations = await api.users.get_organizations({id: secondUser.id}, secondUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(secondUserOrganizations.organizations).toContainEqual(expect.objectContaining({ name: "third_org" }));
+    expect(secondUserOrganizations.organizations).toContainEqual(expect.objectContaining({ name: "first_org" }));
+  });
 });

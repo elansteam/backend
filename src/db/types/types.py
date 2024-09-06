@@ -3,6 +3,17 @@ from pydantic import Field
 
 from utils.schemas import BaseModel
 
+class _HasMembersWithRoles(BaseModel):
+    class Member(BaseModel):
+        id: int
+        roles: list[str] = []
+        custom_permissions: int = 0
+    class Role(BaseModel):
+        id: str
+        name: str
+        permissions: int
+    members: list[Member]
+    roles: list[Role] = []
 
 class JWTPair(BaseModel):
     access_token: str
@@ -29,9 +40,8 @@ class UserWithoutID(_UserBase):
 class User(_UserBase):
     id: int = Field(alias='_id')
 
-class _OrganizationBase(BaseModel):
+class _OrganizationBase(_HasMembersWithRoles):
     name: str
-    members: list[int]
 
 class Organization(_OrganizationBase):
     id: int = Field(alias='_id')

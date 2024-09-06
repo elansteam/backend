@@ -47,14 +47,11 @@ async def create_organization(
 ):
     inserted_id = methods.organizations.insert_organization_with_id(types.OrganizationWithoutID(
         name=request.name,
-        members=[current_user.id]
+        members=[types.Organization.Member(id=current_user.id)]
     ))
 
-    logger.debug(request)
-    logger.info(inserted_id)
-
     return RS.test.organizations.create(
-        members=[current_user.id],
+        members=[types.Organization.Member(id=current_user.id)],
         name=request.name,
         _id=inserted_id
     )
@@ -75,13 +72,16 @@ async def invite_user_to_organization(
             message="User not found"
         )
 
-    if current_user.id not in organization.members:
+    if not any(member.id == current_user.id for member in organization.members):
         raise ErrorResponse(
             code=ErrorCodes.ACCESS_DENIED,
-            message="You are not a member of this organization"
+            message="User is already a member of this organization"
         )
 
-    if user.id in organization.members:
+    if any(member.id == user.id for member in organization.members):
         return
 
-    methods.organizations.add_member(organization.id, user.id)
+    methods.organizations.add_member(
+        organization.id,
+        types.Organization.Member(id=request.user_id)
+    )

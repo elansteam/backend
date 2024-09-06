@@ -6,5 +6,14 @@ export interface JWTPair {
 export interface Organization {
   id: number;
   name: string;
-  members: number[];
+  members: {
+    id: number;
+    customPermissions: number;
+    roles: string[];
+  }[];
+  roles: {
+    id: number;
+    name: string;
+    permissions: number;
+  }[];
 }
