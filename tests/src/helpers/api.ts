@@ -3,7 +3,7 @@ import RQ from "./requests";
 import { makeRequest } from "./helpers";
 
 
-pactum.request.setBaseUrl("http://api_test:4242");
+pactum.request.setBaseUrl(process.env.API_ORIGIN || "http://api_test:4242");
 
 
 const api = {
