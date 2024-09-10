@@ -3,15 +3,17 @@ from pydantic import Field
 
 from utils.schemas import BaseModel
 
+class Member(BaseModel):
+    id: int
+    roles: list[str] = []
+    custom_permissions: int = 0
+
+class Role(BaseModel):
+    id: str
+    name: str
+    permissions: int
+
 class _HasMembersWithRoles(BaseModel):
-    class Member(BaseModel):
-        id: int
-        roles: list[str] = []
-        custom_permissions: int = 0
-    class Role(BaseModel):
-        id: str
-        name: str
-        permissions: int
     members: list[Member]
     roles: list[Role] = []
 

@@ -47,11 +47,11 @@ async def create_organization(
 ):
     inserted_id = methods.organizations.insert_organization_with_id(types.OrganizationWithoutID(
         name=request.name,
-        members=[types.Organization.Member(id=current_user.id)]
+        members=[types.Member(id=current_user.id)]
     ))
 
     return RS.test.organizations.create(
-        members=[types.Organization.Member(id=current_user.id)],
+        members=[types.Member(id=current_user.id)],
         name=request.name,
         _id=inserted_id
     )
@@ -83,5 +83,5 @@ async def invite_user_to_organization(
 
     methods.organizations.add_member(
         organization.id,
-        types.Organization.Member(id=request.user_id)
+        types.Member(id=request.user_id)
     )
