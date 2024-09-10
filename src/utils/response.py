@@ -54,7 +54,7 @@ class SuccessfulResponse[T: BaseModel | None](BaseModel):
             }
         return {
             "ok": self.ok,
-            **self.proxy.model_dump()
+            **self.proxy.db_dump()
         }
 
     ok: Literal[True] = True

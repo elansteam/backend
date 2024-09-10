@@ -3,9 +3,6 @@ import pydantic
 
 
 class BaseModel(pydantic.BaseModel):
-    def model_dump(self, by_alias=True, **kwargs) -> dict[str, Any]:
-        return super().model_dump(by_alias=by_alias, **kwargs)
-
-class BaseResponse(BaseModel):
-    def model_dump(self, by_alias=False, **kwargs) -> dict[str, Any]:
-        return super().model_dump(by_alias, **kwargs)
+    def db_dump(self, *args, **kwargs) -> dict[str, Any]:
+        return self.model_dump(by_alias=True, *args, **kwargs)
+    model_config = pydantic.ConfigDict(populate_by_name=True)
