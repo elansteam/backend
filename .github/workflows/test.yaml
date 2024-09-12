@@ -37,10 +37,11 @@ jobs:
         else
           echo "Tests passed"
         fi
-      continue-on-error: true
 
     - name: Show test logs
       run: docker compose logs --no-log-prefix test
+      continue-on-error: true
 
     - name: Cleanup
       run: docker compose down -v --rmi all
+      continue-on-error: true
