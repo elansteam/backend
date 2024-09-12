@@ -20,3 +20,11 @@ def get_organizations_by_user(user_id: int, session: ClientSession | None = None
     return [types.Organization(**org) for org in organizations.aggregate(
         [{"$match": {"members": {"$elemMatch": {"id": user_id}}}}], session=session
     )]
+
+def is_user_in_organization(user_id: int, organization_id: int, session: ClientSession | None = None) -> bool:
+    return organizations.count_documents({
+        "_id": organization_id, "members": {"$elemMatch": {"id": user_id}}
+    }, session=session) > 0
+
+def check_organization_exists(organization_id: int, session: ClientSession | None = None) -> bool:
+    return organizations.count_documents({"_id": organization_id}, session=session) > 0
