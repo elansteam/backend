@@ -2,6 +2,7 @@ from pymongo.client_session import ClientSession
 
 from db.types import types
 from db.methods.helpers import insert_with_auto_increment_id
+from utils.response import ErrorCodes, ErrorResponse
 from .collections import organizations
 
 
@@ -9,6 +10,9 @@ def insert_organization_with_id(organization: types.OrganizationWithoutID, sessi
     return insert_with_auto_increment_id(organizations, organization.db_dump(), session=session)
 
 def add_member(organization_id: int, member: types.Member, session: ClientSession | None = None) -> None:
+    if is_user_in_organization(member.id, organization_id):
+        raise ErrorResponse(code=ErrorCodes.USER_ALREADY_INVITED)
+
     organizations.update_one({"_id": organization_id}, {"$push": {"members": member.db_dump()}}, session=session)
 
 def get_organizations_by_user(user_id: int, session: ClientSession | None = None) -> list[types.Organization]:
