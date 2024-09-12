@@ -72,11 +72,13 @@ async def invite_user_to_organization(
     if not any(member.id == current_user.id for member in organization.members):
         raise ErrorResponse(
             code=ErrorCodes.ACCESS_DENIED,
-            message="User is already a member of this organization"
+            message="You are not a member of this organization"
         )
 
     if any(member.id == user.id for member in organization.members):
-        return
+        raise ErrorResponse(
+            code=ErrorCodes.USER_ALREADY_INVITED
+        )
 
     methods.organizations.add_member(
         organization.id,
