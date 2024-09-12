@@ -14,4 +14,4 @@ async def get(request: RQ.organizations.get = Depends(), _current_user: types.Us
     if (organization := methods.helpers.get_object_by_id(request.id, types.Organization)) is None:
         raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND)
 
-    return organization.model_dump()
+    return organization
