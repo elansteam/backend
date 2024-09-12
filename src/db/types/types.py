@@ -3,6 +3,7 @@ from pydantic import Field
 
 from utils.schemas import BaseModel
 
+
 class Member(BaseModel):
     id: int
     roles: list[str] = []
@@ -50,3 +51,6 @@ class Organization(_OrganizationBase):
 
 class OrganizationWithoutID(_OrganizationBase):
     ...
+
+DocumentWithIntId = User | Organization
+HasCollection = User | Organization | Entity

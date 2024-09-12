@@ -5,11 +5,6 @@ from db.methods.helpers import insert_with_auto_increment_id
 from .collections import organizations
 
 
-def get(organization_id: int, session: ClientSession | None = None) -> types.Organization | None:
-    if (org := organizations.find_one({"_id": organization_id}, session=session)) is None:
-        return None
-    return types.Organization(**org)
-
 def insert_organization_with_id(organization: types.OrganizationWithoutID, session: ClientSession | None = None) -> int:
     return insert_with_auto_increment_id(organizations, organization.db_dump(), session=session)
 
@@ -25,6 +20,3 @@ def is_user_in_organization(user_id: int, organization_id: int, session: ClientS
     return organizations.count_documents({
         "_id": organization_id, "members": {"$elemMatch": {"id": user_id}}
     }, session=session) > 0
-
-def check_organization_exists(organization_id: int, session: ClientSession | None = None) -> bool:
-    return organizations.count_documents({"_id": organization_id}, session=session) > 0
