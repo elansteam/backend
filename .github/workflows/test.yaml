@@ -29,15 +29,6 @@ jobs:
         docker compose logs -f test > test_logs.txt
       continue-on-error: true
 
-    - name: Check test results
-      run: |
-        if grep -q "Test Suites: .* failed" test_logs.txt; then
-          echo "Tests failed"
-          exit 1
-        else
-          echo "Tests passed"
-        fi
-
     - name: Show test logs
       run: docker compose logs --no-log-prefix test
       continue-on-error: true
@@ -45,3 +36,13 @@ jobs:
     - name: Cleanup
       run: docker compose down -v --rmi all
       continue-on-error: true
+
+    - name: Check test results
+      run: |
+        if grep -q "Test Suites: .* failed" test_logs.txt; then
+          echo "Tests failed"
+          exit 1
+        else
+          echo "Tests passed"
+        fi;
+
