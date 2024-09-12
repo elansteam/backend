@@ -16,4 +16,4 @@ async def get(request: RQ.organizations.get = Depends(), _current_user: types.Us
             code=ErrorCodes.ENTITY_NOT_FOUND
         )
 
-    return RS.organizations.get.model_validate(organization)
+    return organization.model_dump()

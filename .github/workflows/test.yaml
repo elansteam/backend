@@ -45,4 +45,3 @@ jobs:
         else
           echo "Tests passed"
         fi;
-
