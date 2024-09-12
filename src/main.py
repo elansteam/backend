@@ -18,7 +18,7 @@ async def lifespan(_app: FastAPI):
 
     yield
 
-    db.close_connection()
+    db.client.close_connection()
     logger.info("Shutting down application")
 
 

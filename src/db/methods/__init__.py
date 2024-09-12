@@ -1,12 +1,12 @@
 from . import (
     users,
     domains,
-    organizations
+    organizations,
 )
 
 
 __all__ = [
     "users",
     "domains",
-    "organizations"
+    "organizations",
 ]

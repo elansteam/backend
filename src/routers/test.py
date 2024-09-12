@@ -6,9 +6,9 @@ from loguru import logger
 import utils.auth
 from config import config
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
-from db import client, methods
+from db import methods
+from db.client import client
 from db.types import types, RS, RQ
-
 
 
 router = APIRouter()
@@ -61,10 +61,7 @@ async def invite_user_to_organization(
     request: RQ.test.organizations.invite, current_user: types.User = Depends(utils.auth.get_current_user)
 ):
     if (organization := methods.organizations.get(request.organization_id)) is None:
-        raise ErrorResponse(
-            code=ErrorCodes.ENTITY_NOT_FOUND,
-            message="Organization not found"
-        )
+        raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found")
 
     if (user := methods.users.get(request.user_id)) is None:
         raise ErrorResponse(

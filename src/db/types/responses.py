@@ -21,12 +21,12 @@ class RS:
         class get_organizations(BaseModel):
             organizations: list[types.Organization]
     class organizations:
-        class get(types.Organization, BaseModel):
+        class get(types.Organization):
             ...
     class test:
         class signup(BaseModel):
             access_token: str
             refresh_token: str
         class organizations:
-            class create(types.Organization, BaseModel):
+            class create(types.Organization):
                 ...
