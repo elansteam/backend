@@ -76,9 +76,7 @@ async def invite_user_to_organization(
         )
 
     if methods.organizations.is_user_in_organization(request.user_id, request.organization_id):
-        raise ErrorResponse(
-            code=ErrorCodes.USER_ALREADY_INVITED
-        )
+        raise ErrorResponse(code=ErrorCodes.USER_ALREADY_INVITED)
 
     methods.organizations.add_member(
         request.organization_id,
