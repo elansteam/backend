@@ -44,4 +44,4 @@ jobs:
           exit 1
         else
           echo "Tests passed"
-        fi;
+        fi
