@@ -60,10 +60,10 @@ async def create_organization(
 async def invite_user_to_organization(
     request: RQ.test.organizations.invite, current_user: types.User = Depends(utils.auth.get_current_user)
 ):
-    if methods.helpers.check_object_existence(request.organization_id, types.Organization) is None:
+    if methods.common.check_object_existence(request.organization_id, types.Organization) is None:
         raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found")
 
-    if (methods.helpers.get_object_by_id(request.user_id, types.User)) is None:
+    if (methods.common.get_object_by_id(request.user_id, types.User)) is None:
         raise ErrorResponse(
             code=ErrorCodes.ENTITY_NOT_FOUND,
             message="User not found"
