@@ -1,45 +1,29 @@
 services:
-  db:
-    image: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_ELANDB_USERNAME=
-      - MONGO_ELANDB_PASSWORD=
-      - MONGO_INITDB_ROOT_USERNAME=
-      - MONGO_INITDB_ROOT_PASSWORD=
-    volumes:
-      - ./mongo_entrypoint:/docker-entrypoint-initdb.d
-      - /var/lib/elan/mongodb_data:/data/db
-  api:
-    build:
-      context: ./
-      args:
-      - CONFIG_PATH=./configs/main.json
-    ports:
-      - "4242:4242"
-    depends_on:
-      - db
-    tty: true
-
   db_test:
-    image: mongo
+    build:
+      context: ./mongodb
+    hostname: db_test
     environment:
-      - MONGO_ELANDB_USERNAME=test
-      - MONGO_ELANDB_PASSWORD=test
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
-    ports:
-      - "42042:27017"
-    volumes:
-      - ./mongo_entrypoint:/docker-entrypoint-initdb.d
+      - MONGODB_HOSTNAME=db_test
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=admin
+      - ADMIN_DATABASE=admin
+      - COMMON_DATABASE=ELANDB
+      - COMMON_USERNAME=test
+      - COMMON_PASSWORD=test
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh -u $$COMMON_USERNAME -p $$COMMON_PASSWORD \"mongodb://$${MONGODB_HOSTNAME}\" || exit 1"]
+      interval: 7s
+      timeout: 2s
+      retries: 3
   api_test:
     build:
-      context: ./
+      context: .
       args:
       - CONFIG_PATH=./configs/test.json
     depends_on:
-      - db_test
+      db_test:
+        condition: service_healthy
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://api_test:4242/api/service/ping || exit 1
       interval: 10s
