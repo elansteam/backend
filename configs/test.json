@@ -1,6 +1,6 @@
 {
     "database": {
-        "connect_url": "mongodb://test:test@db_test/ELANDB",
+        "connect_url": "mongodb://test:test@db_test",
         "name": "ELANDB"
     },
     "auth": {
