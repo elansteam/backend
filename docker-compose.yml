@@ -2,7 +2,6 @@ services:
   db_test:
     build:
       context: ./mongodb
-    hostname: db_test
     environment:
       - MONGODB_HOSTNAME=db_test
       - ADMIN_USERNAME=admin
