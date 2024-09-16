@@ -3,26 +3,24 @@ services:
     build:
       context: ./mongodb
     environment:
-      - MONGODB_HOSTNAME=db_test
-      - INITDB_ROOT_USERNAME=admin
-      - INITDB_ROOT_PASSWORD=admin
-      - INITDB_ROOT_DATABASE=admin
+      - MONGO_HOSTNAME=db_test
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_ROOT_DATABASE=admin
       - COMMON_DATABASE=ELANDB
       - COMMON_USERNAME=test
       - COMMON_PASSWORD=test
-    healthcheck:
-      test: ["CMD-SHELL", "mongosh -u $$COMMON_USERNAME -p $$COMMON_PASSWORD \"mongodb://$${MONGODB_HOSTNAME}\" || exit 1"]
-      interval: 7s
-      timeout: 2s
-      retries: 3
+    ports:
+      - "27017:27017"
+    extra_hosts:
+      - "db_test:127.0.0.1"
   api_test:
     build:
       context: .
       args:
       - CONFIG_PATH=./configs/test.json
     depends_on:
-      db_test:
-        condition: service_healthy
+      - db_test
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://api_test:4242/api/service/ping || exit 1
       interval: 10s
