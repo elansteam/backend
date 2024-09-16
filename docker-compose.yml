@@ -4,9 +4,9 @@ services:
       context: ./mongodb
     environment:
       - MONGODB_HOSTNAME=db_test
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=admin
-      - ADMIN_DATABASE=admin
+      - INITDB_ROOT_USERNAME=admin
+      - INITDB_ROOT_PASSWORD=admin
+      - INITDB_ROOT_DATABASE=admin
       - COMMON_DATABASE=ELANDB
       - COMMON_USERNAME=test
       - COMMON_PASSWORD=test

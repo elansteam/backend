@@ -29,8 +29,8 @@ set -e
     create_users="
     while (true) {
         try {
-            var adminDB = db.getSiblingDB('${ADMIN_DATABASE}');
-            adminDB.createUser({user: '${ADMIN_USERNAME}', pwd: '${ADMIN_PASSWORD}', roles: [{ role: 'root', db: 'admin' }]});
+            var adminDB = db.getSiblingDB('${INITDB_ROOT_DATABASE}');
+            adminDB.createUser({user: '${INITDB_ROOT_USERNAME}', pwd: '${INITDB_ROOT_PASSWORD}', roles: [{ role: 'root', db: 'admin' }]});
             break;
         } catch {
             console.log('Waiting for initalization...')
@@ -39,7 +39,7 @@ set -e
     }
     console.log('Admin created successfully');
 
-    adminDB.auth('${ADMIN_USERNAME}', '${ADMIN_PASSWORD}');
+    adminDB.auth('${INITDB_ROOT_USERNAME}', '${INITDB_ROOT_PASSWORD}');
     var dbName = db.getSiblingDB('${COMMON_DATABASE}');
 
     adminDB.createUser({
