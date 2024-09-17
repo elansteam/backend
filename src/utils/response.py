@@ -4,11 +4,13 @@ from pydantic import model_validator, model_serializer
 
 from utils.schemas import BaseModel
 
+
 class ErrorCodes(Enum):
     """
     Enum of response error codes.
     For description see documentation
     """
+
     INTERNAL_SERVER_ERROR = 1
     UNPROCESSABLE_ENTITY = 2
     TOKEN_EXPIRED = 3
@@ -17,6 +19,7 @@ class ErrorCodes(Enum):
     ACCESS_DENIED = 6
     DOMAIN_ALREADY_TAKEN = 7
     EMAIL_ALREADY_TAKEN = 8
+
 
 class ErrorResponse(Exception):
     """Response with custom error code"""
@@ -28,11 +31,7 @@ class ErrorResponse(Exception):
     """If main message is None, it makes message be error code representation"""
 
     def __init__(
-        self,
-        code: ErrorCodes,
-        message: str | None = None,
-        http_status_code: int = 400,
-        auto_message: bool = False
+        self, code: ErrorCodes, message: str | None = None, http_status_code: int = 400, auto_message: bool = False
     ):
         self.code = code
         self.message = message
@@ -49,13 +48,8 @@ class SuccessfulResponse[T: BaseModel | None](BaseModel):
     @model_serializer
     def serialize_model(self) -> dict[str, Any]:
         if self.proxy is None:
-            return {
-                "ok": self.ok
-            }
-        return {
-            "ok": self.ok,
-            **self.proxy.model_dump()
-        }
+            return {"ok": self.ok}
+        return {"ok": self.ok, **self.proxy.model_dump()}
 
     ok: Literal[True] = True
     proxy: T

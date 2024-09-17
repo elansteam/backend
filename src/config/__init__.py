@@ -3,6 +3,4 @@ from .config_model import Config
 
 config = Config.load()
 
-__all__ = [
-    "config"
-]
+__all__ = ["config"]
