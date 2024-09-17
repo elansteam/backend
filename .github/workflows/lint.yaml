@@ -102,7 +102,4 @@ jobs:
       run: |
         - name: Check Black results
           run: |
-            if [ $? -ne 0 ]; then
-              echo "Black issues found!"
-              exit 1
-            fi
+            if ! (echo $? | grep -q "1"); then echo "Black issues found"; exit 1; fi
