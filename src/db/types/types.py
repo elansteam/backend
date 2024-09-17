@@ -51,6 +51,3 @@ class Organization(_OrganizationBase):
 
 class OrganizationWithoutID(_OrganizationBase):
     ...
-
-DocumentWithIntId = User | Organization
-HasCollection = User | Organization | Entity

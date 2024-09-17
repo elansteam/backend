@@ -3,8 +3,7 @@ from pymongo.client_session import ClientSession
 from pymongo.collection import Collection
 from pymongo.errors import DuplicateKeyError
 
-from db.types import types
-from .collections import internal_counters, users, organizations, domains
+from .collections import internal_counters
 
 
 def insert_with_auto_increment_id(
@@ -28,13 +27,3 @@ def insert_with_auto_increment_id(
                 key_pattern.get("_id") is None
             ):
                 raise e
-
-def get_related_collection(object_type: type[types.HasCollection]) -> Collection:
-    match object_type:
-        case types.User:
-            return users
-        case types.Organization:
-            return organizations
-        case types.Entity:
-            return domains
-    raise NotImplementedError("This type is not supported")
