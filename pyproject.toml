@@ -19,6 +19,7 @@ passlib = "^1.7.4"
 pylint = "^3.2.6"
 types-passlib = "^1.7.7.13"
 pyright = "^1.1.374"
+black = "^24.8.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -29,7 +30,7 @@ jobs=4
 persistent="no"
 
 [tool.pylint."MESSAGES CONTROL"]
-disable="fixme,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
+disable="fixme,multiple-statements,no-self-argument,missing-class-docstring,import-error,no-name-in-module,too-few-public-methods,missing-function-docstring,missing-module-docstring"
 enable="wildcard-import"
 
 [tool.pylint."FORMAT"]
@@ -40,3 +41,7 @@ expected-line-ending-format=""
 
 [tool.pyright]
 include = ["./src/**"]
+
+[tool.black]
+line-length=120
+unstable=true
