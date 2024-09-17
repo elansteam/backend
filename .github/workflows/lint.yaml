@@ -101,7 +101,7 @@ jobs:
     - name: Check Black results
       run: |
         cat black_output.txt
-        if ! grep -q "would reformat" black_output.txt; then
+        if ! grep -q "All done!" black_output.txt; then
           echo "Black issues found!"
           exit 1
         fi
