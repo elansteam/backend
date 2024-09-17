@@ -136,7 +136,7 @@ def get_current_user(authorization: str = Header()) -> types.User:
 
     subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
 
-    if subject.isnumeric() and (user := methods.common.get_object_by_id(int(subject), types.User)) is not None:
+    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
         return user
 
     raise response.ErrorResponse(
@@ -150,7 +150,7 @@ def get_current_user_by_refresh_token(authorization: str = Header()) -> types.Us
 
     subject = decode_jwt(token, config.auth.jwt_refresh_secret_key.get_secret_value())["subject"]
 
-    if subject.isnumeric() and (user := methods.common.get_object_by_id(int(subject), types.User)) is not None:
+    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
         return user
 
     raise response.ErrorResponse(

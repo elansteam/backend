@@ -15,11 +15,11 @@ router = APIRouter()
 async def signin(request: RQ.auth.signin):
     user: types.User | None = None
     if request.id:
-        user = methods.common.get_object_by_id(request.id, types.User)
+        user = methods.users.get(request.id)
     elif request.domain:
         entity = methods.domains.resolve_entity(request.domain)
         if entity and entity.target_type == "user":
-            user = methods.common.get_object_by_id(entity.target_id, types.User)
+            user = methods.users.get(entity.target_id)
     elif request.email:
         user = methods.users.get_by_email(request.email)
 

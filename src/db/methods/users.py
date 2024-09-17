@@ -5,6 +5,10 @@ from db.types import types
 from .collections import users
 from .helpers import insert_with_auto_increment_id
 
+def get(user_id: int, session: ClientSession | None = None) -> types.User | None:
+    if (obj := users.find_one({"_id": user_id}, session=session)) is None:
+        return None
+    return types.User(**obj)
 
 def get_by_email(email: str, session: ClientSession | None = None):
     if (user := users.find_one({"email": email}, session=session)) is None:
