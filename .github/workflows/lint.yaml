@@ -99,6 +99,4 @@ jobs:
       continue-on-error: true
 
     - name: Check Black results
-      run: |
-        - name: Check Black results
-          run: if ! (echo $? | grep -q "0"); then echo "Black issues found"; exit 1; fi
+      run: if ! (echo $? | grep -q "0"); then echo "Black issues found"; exit 1; fi
