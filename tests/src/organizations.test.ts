@@ -78,7 +78,7 @@ describe("Organizations", () => {
 
     // Try to invite the second user again
     await api.test.organizations.invite({organizationId: organization.id, userId: secondUser.id}, firstUser.getAccessToken())
-      .expectJsonLike({ok: false, error: {code: ErrorCodes.USER_ALREADY_INVITED}});
+      .expectJsonLike({ok: false, error: {code: ErrorCodes.USER_ALREADY_MEMBER}});
 
     // Ensure that the organization members remain unchanged
     const receivedOrganization: RS.organizations.get = await api.organizations.get({id: organization.id}, firstUser.getAccessToken())
