@@ -22,15 +22,16 @@ async def cleanup():
     logger.warning("CLEARED ALL COLLECTIONS")
     return
 
+
 @router.post("/signup", response_model=SuccessfulResponse[RS.test.signup])
 async def signup(request: RQ.test.signup):
     hashed_password = utils.auth.hash_password(request.password)
 
-    inserted_user_id = methods.users.insert_user_with_id(
+    inserted_user_id = methods.users.insert_user(
         types.UserWithoutID(
             email=request.email,
             hashed_password=hashed_password,
-            first_name=request.first_name
+            first_name=request.first_name,
         )
     )
 
@@ -41,41 +42,47 @@ async def signup(request: RQ.test.signup):
 
     return utils.auth.create_jwt_pair_by_user_id(inserted_user_id)
 
-@router.post("/organizations/create", response_model=SuccessfulResponse[RS.test.organizations.create])
+
+@router.post(
+    "/organizations/create",
+    response_model=SuccessfulResponse[RS.test.organizations.create],
+)
 async def create_organization(
-    request: RQ.test.organizations.create, current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.create,
+    current_user: types.User = Depends(utils.auth.get_current_user),
 ):
-    inserted_id = methods.organizations.insert_organization_with_id(types.OrganizationWithoutID(
-        name=request.name,
-        members=[types.Member(id=current_user.id)]
-    ))
+    inserted_id = methods.organizations.insert_organization(
+        types.OrganizationWithoutID(
+            name=request.name, members=[types.Member(id=current_user.id)]
+        )
+    )
 
     return RS.test.organizations.create(
-        members=[types.Member(id=current_user.id)],
-        name=request.name,
-        _id=inserted_id
+        members=[types.Member(id=current_user.id)], name=request.name, _id=inserted_id
     )
+
 
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
 async def invite_user_to_organization(
-    request: RQ.test.organizations.invite, current_user: types.User = Depends(utils.auth.get_current_user)
+    request: RQ.test.organizations.invite,
+    current_user: types.User = Depends(utils.auth.get_current_user),
 ):
     if not methods.organizations.check_existence(request.organization_id):
-        raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found")
-
-    if (methods.users.get(request.user_id)) is None:
         raise ErrorResponse(
-            code=ErrorCodes.ENTITY_NOT_FOUND,
-            message="User not found"
+            code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found"
         )
 
-    if not methods.organizations.is_user_in_organization(current_user.id, request.organization_id):
+    if (methods.users.get(request.user_id)) is None:
+        raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="User not found")
+
+    if not methods.organizations.is_user_in_organization(
+        current_user.id, request.organization_id
+    ):
         raise ErrorResponse(
             code=ErrorCodes.ACCESS_DENIED,
-            message="You are not a member of this organization"
+            message="You are not a member of this organization",
         )
 
     methods.organizations.add_member(
-        request.organization_id,
-        types.Member(id=request.user_id)
+        request.organization_id, types.Member(id=request.user_id)
     )

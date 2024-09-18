@@ -14,7 +14,7 @@ class Role(BaseModel):
     name: str
     permissions: int
 
-class _HasMembersWithRoles(BaseModel):
+class   (BaseModel):
     members: list[Member]
     roles: list[Role] = []
 
