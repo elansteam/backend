@@ -10,7 +10,6 @@ from db import client, methods
 from db.types import types, RS, RQ
 
 
-
 router = APIRouter()
 
 
@@ -22,16 +21,13 @@ async def cleanup():
     logger.warning("CLEARED ALL COLLECTIONS")
     return
 
+
 @router.post("/signup", response_model=SuccessfulResponse[RS.test.signup])
 async def signup(request: RQ.test.signup):
     hashed_password = utils.auth.hash_password(request.password)
 
     inserted_user_id = methods.users.insert_user_with_id(
-        types.UserWithoutID(
-            email=request.email,
-            hashed_password=hashed_password,
-            first_name=request.first_name
-        )
+        types.UserWithoutID(email=request.email, hashed_password=hashed_password, first_name=request.first_name)
     )
 
     if inserted_user_id is None:

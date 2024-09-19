@@ -10,10 +10,12 @@ def get(user_id: int) -> types.User | None:
         return None
     return types.User(**user)
 
+
 def get_by_email(email: str):
     if (user := users.find_one({"email": email})) is None:
         return None
     return types.User(**user)
+
 
 def insert_user_with_id(user: types.UserWithoutID) -> int | None:
     """
@@ -21,8 +23,6 @@ def insert_user_with_id(user: types.UserWithoutID) -> int | None:
         Inserted user id or None, if error occurred
     """
     try:
-        return insert_with_auto_increment_id(
-            users, user.model_dump()
-        )
+        return insert_with_auto_increment_id(users, user.model_dump())
     except DuplicateKeyError:
         return None

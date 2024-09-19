@@ -74,3 +74,29 @@ jobs:
           echo "Pyright issues found!"
           exit 1
         fi
+  black:
+    name: Black
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run Black
+      run: poetry run black ./src --check
+      continue-on-error: true
+
+    - name: Check Black results
+      run: if ! (echo $? | grep -q "0"); then echo "Black issues found"; exit 1; fi

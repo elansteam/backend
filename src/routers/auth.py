@@ -25,19 +25,16 @@ async def signin(request: RQ.auth.signin):
 
     if user is None:
         raise ErrorResponse(
-            code=ErrorCodes.ENTITY_NOT_FOUND,
-            http_status_code=http_status.HTTP_404_NOT_FOUND,
-            message="User not found"
+            code=ErrorCodes.ENTITY_NOT_FOUND, http_status_code=http_status.HTTP_404_NOT_FOUND, message="User not found"
         )
 
     if not utils.auth.verify_password(request.password, user.hashed_password):
         raise ErrorResponse(
-            code=ErrorCodes.ACCESS_DENIED,
-            http_status_code=http_status.HTTP_403_FORBIDDEN,
-            message="Incorrect password"
+            code=ErrorCodes.ACCESS_DENIED, http_status_code=http_status.HTTP_403_FORBIDDEN, message="Incorrect password"
         )
 
     return utils.auth.create_jwt_pair_by_user_id(user.id)
+
 
 @router.get("/refresh", response_model=SuccessfulResponse[RS.auth.refresh])
 async def refresh(current_user: types.User = Depends(get_current_user_by_refresh_token)):

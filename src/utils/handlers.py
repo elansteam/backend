@@ -8,10 +8,7 @@ from loguru import logger
 from . import response
 
 
-async def request_validation_exception_handler(
-    _request: Request,
-    exc: Exception
-) -> JSONResponse:
+async def request_validation_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
     """Unprocessable entity exception handler for make response consistent"""
 
     if not isinstance(exc, RequestValidationError):
@@ -25,24 +22,17 @@ async def request_validation_exception_handler(
             f"Input: {part.get('input', 'none')}"
         )
 
-    errors = "Unprocessable entity exception. Errors: " + \
-        '; '.join([detail_part_to_string(error) for error in exc.errors()])
-
-    return JSONResponse(
-        content={
-            "ok": False,
-            "error": {
-                "code": response.ErrorCodes.UNPROCESSABLE_ENTITY.value,
-                "message": errors
-            }
-        },
-        status_code=422
+    errors = "Unprocessable entity exception. Errors: " + "; ".join(
+        [detail_part_to_string(error) for error in exc.errors()]
     )
 
-async def error_response_handler(
-    _request: Request,
-    exc: Exception
-) -> JSONResponse:
+    return JSONResponse(
+        content={"ok": False, "error": {"code": response.ErrorCodes.UNPROCESSABLE_ENTITY.value, "message": errors}},
+        status_code=422,
+    )
+
+
+async def error_response_handler(_request: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, response.ErrorResponse):
         raise ValueError("Unexpected error: get wrong exception type")
 
@@ -50,7 +40,7 @@ async def error_response_handler(
         "ok": False,
         "error": {
             "code": exc.code.value,
-        }
+        },
     }
 
     if exc.message is not None:
@@ -58,17 +48,15 @@ async def error_response_handler(
     elif exc.auto_message:
         content["error"]["message"] = exc.code.name
 
-    return JSONResponse(
-        content=content,
-        status_code=exc.http_status_code
-    )
+    return JSONResponse(content=content, status_code=exc.http_status_code)
+
 
 async def internal_exception_handler(_request: Request, exc: Exception):
     logger.exception(exc)
-    return JSONResponse(status_code=500, content={
-        "ok": False,
-        "error": {
-            "code": response.ErrorCodes.INTERNAL_SERVER_ERROR.value,
-            "message": "Internal Server Error"
-        }
-    })
+    return JSONResponse(
+        status_code=500,
+        content={
+            "ok": False,
+            "error": {"code": response.ErrorCodes.INTERNAL_SERVER_ERROR.value, "message": "Internal Server Error"},
+        },
+    )

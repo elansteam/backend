@@ -8,14 +8,17 @@ class RS:
         class signin(BaseModel):
             access_token: str
             refresh_token: str
+
         class refresh(BaseModel):
             access_token: str
             refresh_token: str
+
     class users:
         class current(BaseModel):
             id: int
             first_name: str
             email: str
+
     class test:
         class signup(BaseModel):
             access_token: str

@@ -1,4 +1,5 @@
 """Entire project configuration model"""
+
 import os
 import sys
 from typing import Literal
@@ -16,10 +17,12 @@ class MongoDBCollections(BaseModel):
     group_members: str = "GroupMembers"
     contests: str = "Contests"
 
+
 class DatabaseConfig(BaseModel):
     connect_url: SecretStr
     name: str
     collections: MongoDBCollections = MongoDBCollections()
+
 
 class AuthConfig(BaseModel):
     access_token_expire_minutes: int = 10
@@ -27,6 +30,7 @@ class AuthConfig(BaseModel):
     jwt_access_secret_key: SecretStr
     jwt_refresh_secret_key: SecretStr
     service_token: SecretStr
+
 
 class Config(BaseModel):
     database: DatabaseConfig
@@ -46,20 +50,16 @@ class Config(BaseModel):
         file_exists = False
         if os.path.exists(config_path) and os.path.isfile(config_path):
             _, file_extension = os.path.splitext(config_path)
-            if file_extension.lower() == '.json':
+            if file_extension.lower() == ".json":
                 file_exists = True
 
         if not file_exists:
-            logger.error(
-                f"File {config_path} is not a json file or isnt exists"
-            )
+            logger.error(f"File {config_path} is not a json file or isnt exists")
             sys.exit(1)
 
         try:
             with open(config_path, "r", encoding="utf-8") as config_file:
                 return Config.model_validate_json(config_file.read())
         except ValidationError as exception:
-            logger.error(
-                f"Failed to load configuration with errors: {exception.errors()}"
-            )
+            logger.error(f"Failed to load configuration with errors: {exception.errors()}")
             sys.exit(1)
