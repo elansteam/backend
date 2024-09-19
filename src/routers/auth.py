@@ -25,7 +25,7 @@ async def signin(request: RQ.auth.signin):
 
     if user is None:
         raise ErrorResponse(
-            code=ErrorCodes.ENTITY_NOT_FOUND, http_status_code=http_status.HTTP_404_NOT_FOUND, message="User not found"
+            code=ErrorCodes.NOT_FOUND, http_status_code=http_status.HTTP_404_NOT_FOUND, message="User not found"
         )
 
     if not utils.auth.verify_password(request.password, user.hashed_password):

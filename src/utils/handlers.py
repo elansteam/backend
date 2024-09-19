@@ -60,3 +60,13 @@ async def internal_exception_handler(_request: Request, exc: Exception):
             "error": {"code": response.ErrorCodes.INTERNAL_SERVER_ERROR.value, "message": "Internal Server Error"},
         },
     )
+
+
+async def external_not_found_handler(_request: Request, _exc: Exception):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "ok": False,
+            "error": {"code": response.ErrorCodes.NOT_FOUND.value, "message": "Endpoint Not Found"},
+        },
+    )
