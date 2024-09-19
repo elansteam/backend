@@ -67,22 +67,20 @@ async def invite_user_to_organization(
     request: RQ.test.organizations.invite,
     current_user: types.User = Depends(utils.auth.get_current_user),
 ):
-    if not methods.organizations.check_existence(request.organization_id):
-        raise ErrorResponse(
-            code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found"
-        )
+    with client.start_session() as session:
+        with session.start_transaction():
+            if not methods.organizations.check_existence(request.organization_id, session):
+                raise ErrorResponse(
+                    code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found"
+                )
 
-    if (methods.users.get(request.user_id)) is None:
-        raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="User not found")
+            if (methods.users.get(request.user_id), session) is None:
+                raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="User not found")
 
-    if not methods.organizations.is_user_in_organization(
-        current_user.id, request.organization_id
-    ):
-        raise ErrorResponse(
-            code=ErrorCodes.ACCESS_DENIED,
-            message="You are not a member of this organization",
-        )
+            if not methods.organizations.is_user_in_organization(current_user.id, request.organization_id, session):
+                raise ErrorResponse(
+                    code=ErrorCodes.ACCESS_DENIED,
+                    message="You are not a member of this organization",
+                )
 
-    methods.organizations.add_member(
-        request.organization_id, types.Member(id=request.user_id)
-    )
+            methods.organizations.add_member(request.organization_id, types.Member(id=request.user_id), session)
