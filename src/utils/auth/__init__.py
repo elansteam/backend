@@ -5,7 +5,7 @@ from .auth import (
     hash_password,
     verify_password,
     create_jwt,
-    create_jwt_pair_by_user_id
+    create_jwt_pair_by_user_id,
 )
 
 
@@ -16,5 +16,5 @@ __all__ = [
     "verify_password",
     "hash_password",
     "get_current_user_by_refresh_token",
-    "create_jwt_pair_by_user_id"
+    "create_jwt_pair_by_user_id",
 ]

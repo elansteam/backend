@@ -18,5 +18,6 @@ except ServerSelectionTimeoutError:
     logger.error("Database is not connected (Timeout error)")
     sys.exit(1)
 
+
 def close_connection():
     client.close()

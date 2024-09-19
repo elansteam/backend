@@ -40,17 +40,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_exception_handler(
-    RequestValidationError,
-    utils.handlers.request_validation_exception_handler
-)
+app.add_exception_handler(RequestValidationError, utils.handlers.request_validation_exception_handler)
 
-app.add_exception_handler(
-    utils.response.ErrorResponse,
-    utils.handlers.error_response_handler
-)
+app.add_exception_handler(utils.response.ErrorResponse, utils.handlers.error_response_handler)
 
-app.add_exception_handler(
-    500,
-    utils.handlers.internal_exception_handler
-)
+app.add_exception_handler(500, utils.handlers.internal_exception_handler)

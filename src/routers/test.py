@@ -52,14 +52,10 @@ async def create_organization(
     current_user: types.User = Depends(utils.auth.get_current_user),
 ):
     inserted_id = methods.organizations.insert_organization(
-        types.OrganizationWithoutID(
-            name=request.name, members=[types.Member(id=current_user.id)]
-        )
+        types.OrganizationWithoutID(name=request.name, members=[types.Member(id=current_user.id)])
     )
 
-    return RS.test.organizations.create(
-        members=[types.Member(id=current_user.id)], name=request.name, _id=inserted_id
-    )
+    return RS.test.organizations.create(members=[types.Member(id=current_user.id)], name=request.name, _id=inserted_id)
 
 
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
@@ -70,9 +66,7 @@ async def invite_user_to_organization(
     with client.start_session() as session:
         with session.start_transaction():
             if not methods.organizations.check_existence(request.organization_id, session):
-                raise ErrorResponse(
-                    code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found"
-                )
+                raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="Organization not found")
 
             if (methods.users.get(request.user_id), session) is None:
                 raise ErrorResponse(code=ErrorCodes.ENTITY_NOT_FOUND, message="User not found")

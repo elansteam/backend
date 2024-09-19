@@ -18,9 +18,7 @@ def get_by_email(email: str, session: ClientSession | None = None):
     return types.User(**user)
 
 
-def insert_user(
-    user: types.UserWithoutID, session: ClientSession | None = None
-) -> int | None:
+def insert_user(user: types.UserWithoutID, session: ClientSession | None = None) -> int | None:
     """
     Returns:
         Inserted user id or None, if error occurred

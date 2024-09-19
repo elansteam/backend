@@ -1,10 +1,4 @@
-from . import (
-    auth,
-    service,
-    organizations,
-    users,
-    test
-)
+from . import auth, service, organizations, users, test
 
 
 __all__ = [
@@ -12,5 +6,5 @@ __all__ = [
     "users",
     "service",
     "organizations",
-    "test"
+    "test",
 ]
