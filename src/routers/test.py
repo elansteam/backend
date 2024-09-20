@@ -68,7 +68,7 @@ async def invite_user_to_organization(
             if not methods.organizations.check_existence(request.organization_id, session):
                 raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="Organization not found")
 
-            if (methods.users.get(request.user_id), session) is None:
+            if not methods.users.check_existence(request.user_id, session):
                 raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="User not found")
 
             if not methods.organizations.is_user_in_organization(current_user.id, request.organization_id, session):

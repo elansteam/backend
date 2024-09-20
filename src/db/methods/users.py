@@ -27,3 +27,7 @@ def insert_user(user: types.UserWithoutID, session: ClientSession | None = None)
         return insert_with_auto_increment_id(users, user.db_dump(), session=session)
     except DuplicateKeyError:
         return None
+
+
+def check_existence(user_id: int, session: ClientSession | None = None) -> bool:
+    return users.count_documents({"_id": user_id}, session=session) > 0
