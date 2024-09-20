@@ -1,5 +1,4 @@
 from typing import Literal
-from pydantic import Field
 
 from utils.schemas import BaseModel
 
@@ -13,7 +12,7 @@ EntityTargetType = Literal["user", "group", "contest"]
 
 
 class Entity(BaseModel):
-    id: str = Field(alias="_id")
+    id: str
     target_type: EntityTargetType
     target_id: int
 
@@ -31,4 +30,4 @@ class UserWithoutID(_UserBase): ...
 
 
 class User(_UserBase):
-    id: int = Field(alias="_id")
+    id: int
