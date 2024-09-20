@@ -55,7 +55,7 @@ async def create_organization(
         types.OrganizationWithoutID(name=request.name, members=[types.Member(id=current_user.id)])
     )
 
-    return RS.test.organizations.create(members=[types.Member(id=current_user.id)], name=request.name, _id=inserted_id)
+    return RS.test.organizations.create(members=[types.Member(id=current_user.id)], name=request.name, id=inserted_id)
 
 
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
