@@ -23,6 +23,6 @@ def insert_user_with_id(user: types.UserWithoutID) -> int | None:
         Inserted user id or None, if error occurred
     """
     try:
-        return insert_with_auto_increment_id(users, user.model_dump())
+        return insert_with_auto_increment_id(users, user.db_dump())
     except DuplicateKeyError:
         return None
