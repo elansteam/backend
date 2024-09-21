@@ -5,6 +5,7 @@ from config import config
 
 
 users = db.get_collection(config.database.collections.users)
+organizations = db.get_collection(config.database.collections.organizations)
 groups = db.get_collection(config.database.collections.groups)
 domains = db.get_collection(config.database.collections.domains)
 contests = db.get_collection(config.database.collections.contests)

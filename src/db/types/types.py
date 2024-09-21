@@ -3,6 +3,23 @@ from typing import Literal
 from utils.schemas import BaseModel
 
 
+class Member(BaseModel):
+    id: int
+    roles: list[str] = []
+    custom_permissions: int = 0
+
+
+class Role(BaseModel):
+    id: str
+    name: str
+    permissions: int
+
+
+class _HasMembersWithRoles(BaseModel):
+    members: list[Member]
+    roles: list[Role] = []
+
+
 class JWTPair(BaseModel):
     access_token: str
     refresh_token: str
@@ -31,3 +48,14 @@ class UserWithoutID(_UserBase): ...
 
 class User(_UserBase):
     id: int
+
+
+class _OrganizationBase(_HasMembersWithRoles):
+    name: str
+
+
+class Organization(_OrganizationBase):
+    id: int
+
+
+class OrganizationWithoutID(_OrganizationBase): ...

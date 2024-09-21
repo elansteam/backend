@@ -6,7 +6,8 @@ export enum ErrorCodes {
   NOT_FOUND,
   ACCESS_DENIED,
   DOMAIN_ALREADY_TAKEN,
-  EMAIL_ALREADY_TAKEN
+  EMAIL_ALREADY_TAKEN,
+  USER_ALREADY_MEMBER
 }
 
 export const SERVICE_TOKEN = "Service test_service_token";

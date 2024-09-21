@@ -1,3 +1,5 @@
+import { Organization } from "./types";
+
 namespace RS {
   export namespace auth {
     export interface signin {
@@ -15,11 +17,21 @@ namespace RS {
       firstName: string;
       email: string;
     }
+    export interface get_organizations {
+      organizations: Organization[];
+    }
+  }
+  export namespace organizations {
+    export interface get extends Organization {};
   }
   export namespace test {
     export interface signup {
       accessToken: string;
       refreshToken: string;
+    }
+    export namespace organizations {
+      export interface create extends Organization {}
+      export interface invite {}
     }
   }
 }

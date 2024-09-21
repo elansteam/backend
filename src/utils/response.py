@@ -19,6 +19,7 @@ class ErrorCodes(Enum):
     ACCESS_DENIED = 6
     DOMAIN_ALREADY_TAKEN = 7
     EMAIL_ALREADY_TAKEN = 8
+    USER_ALREADY_MEMBER = 9
 
 
 class ErrorResponse(Exception):

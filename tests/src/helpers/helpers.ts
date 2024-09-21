@@ -26,6 +26,7 @@ export const makeResponse = (ctx: CaptureContext): any => {
       }
     }
   }
+
   replaceKeys(ctx.res.body);
   return ctx.res.body;
 }

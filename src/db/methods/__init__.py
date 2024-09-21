@@ -1,4 +1,12 @@
-from . import users, domains
+from . import (
+    users,
+    domains,
+    organizations,
+)
 
 
-__all__ = ["users", "domains"]
+__all__ = [
+    "users",
+    "domains",
+    "organizations",
+]

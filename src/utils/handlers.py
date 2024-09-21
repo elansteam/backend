@@ -36,7 +36,7 @@ async def error_response_handler(_request: Request, exc: Exception) -> JSONRespo
     if not isinstance(exc, response.ErrorResponse):
         raise ValueError("Unexpected error: get wrong exception type")
 
-    content: dict = {
+    content = {
         "ok": False,
         "error": {
             "code": exc.code.value,
