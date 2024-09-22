@@ -3,7 +3,6 @@
 from fastapi import APIRouter, Depends
 from loguru import logger
 
-from db.methods.organizations import is_user_in_organization
 import utils.auth
 from config import config
 from utils.auth.auth import get_current_user
@@ -51,7 +50,7 @@ async def signup(request: RQ.test.signup):
 )
 async def create_organization(
     request: RQ.test.organizations.create,
-    current_user: types.User = Depends(utils.auth.get_current_user),
+    current_user: types.User = Depends(get_current_user),
 ):
     inserted_id = methods.organizations.insert_organization(
         types.OrganizationWithoutID(name=request.name, members=[types.Member(id=current_user.id)])
@@ -63,7 +62,7 @@ async def create_organization(
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
 async def invite_user_to_organization(
     request: RQ.test.organizations.invite,
-    current_user: types.User = Depends(utils.auth.get_current_user),
+    current_user: types.User = Depends(get_current_user),
 ):
     with client.start_session() as session:
         with session.start_transaction():
