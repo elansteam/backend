@@ -1,7 +1,7 @@
 import {describe, test, expect, beforeEach} from "@jest/globals";
 import { cleanup } from "./helpers/scripts";
 import api from "./helpers/api";
-import { ErrorCodes, SERVICE_TOKEN } from "./helpers/constants";
+import { ErrorCodes } from "./helpers/constants";
 import RS from "./helpers/responses";
 import { makeResponse } from "./helpers/helpers";
 import { User } from "./helpers/objects";
@@ -132,5 +132,35 @@ describe("Organizations", () => {
       .returns(makeResponse);
     expect(secondUserOrganizations.organizations).toContainEqual(expect.objectContaining({ name: "third_org" }));
     expect(secondUserOrganizations.organizations).toContainEqual(expect.objectContaining({ name: "first_org" }));
+  });
+});
+
+
+describe("Organizations with groups", () => {
+  let firstUser: User;
+  let secondUser: User;
+  let firstOrganization: Organization;
+  beforeEach(async () => {
+    await cleanup();
+    firstUser = await User.signup("first@gmail.com");
+    secondUser = await User.signup("second@gmail.com");
+
+    firstOrganization = await api.test.organizations.create({name: "first_org"}, firstUser.getAccessToken())
+      .returns(makeResponse);
+  });
+
+  test("Get groups from organization", async () => {
+    const firstGroup: RS.test.groups.create = await api.test.groups.create({name: "test_group", organizationId: firstOrganization.id}, firstUser.getAccessToken())
+      .returns(makeResponse);
+
+    const secondGroup: RS.test.groups.create= await api.test.groups.create({name: "test_group", organizationId: firstOrganization.id}, firstUser.getAccessToken())
+      .returns(makeResponse);
+
+    const groups: RS.organizations.get_groups = await api.organizations.get_groups({id: firstOrganization.id}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+
+    expect(groups.groups).toContainEqual(firstGroup);
+    expect(groups.groups).toContainEqual(secondGroup);
   });
 });

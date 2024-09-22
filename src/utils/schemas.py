@@ -11,6 +11,6 @@ class BaseModel(pydantic.BaseModel):
 
     @pydantic.model_validator(mode="before")
     def convert_id(cls, values):
-        if "_id" in values:
+        if isinstance(values, dict) and "_id" in values:
             values["id"] = str(values.pop("_id"))
         return values

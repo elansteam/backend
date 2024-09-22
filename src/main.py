@@ -27,6 +27,7 @@ app.include_router(routers.auth.router, prefix="/api/auth")
 app.include_router(routers.service.router, prefix="/api/service")
 app.include_router(routers.users.router, prefix="/api/users")
 app.include_router(routers.organizations.router, prefix="/api/organizations")
+app.include_router(routers.groups.router, prefix="/api/groups")
 if config.environment == "test":
     logger.warning("YOU ARE IN TEST MODE! DANGEROUS FUNCTIONS ARE AVAILABLE")
     app.include_router(routers.test.router, prefix="/api/test")

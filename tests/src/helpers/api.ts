@@ -16,6 +16,9 @@ const api = {
   organizations: {
     get: (request: RQ.organizations.get, bearerToken: string) => pactum.spec().get("/api/organizations/get")
       .withBearerToken(bearerToken)
+      .withQueryParams(makeRequest(request)),
+    get_groups: (request: RQ.organizations.get_groups, bearerToken: string) => pactum.spec().get("/api/organizations/get_groups")
+      .withBearerToken(bearerToken)
       .withQueryParams(makeRequest(request))
   },
   test: {
@@ -28,8 +31,16 @@ const api = {
         .withBody(makeRequest(request)),
       invite: (request: RQ.test.organizations.invite, bearerToken: string) => pactum.spec().post("/api/test/organizations/invite")
         .withBearerToken(bearerToken)
-        .withBody(makeRequest(request))
-    }
+        .withBody(makeRequest(request)),
+    },
+    groups: {
+      create: (request: RQ.test.groups.create, bearerToken: string) => pactum.spec().post("/api/test/groups/create")
+        .withBearerToken(bearerToken)
+        .withBody(makeRequest(request)),
+      invite: (request: RQ.test.groups.invite, bearerToken: string) => pactum.spec().post("/api/test/groups/invite")
+        .withBearerToken(bearerToken)
+        .withBody(makeRequest(request)),
+    },
   },
   users: {
     current: (bearerToken: string) => pactum.spec().get("/api/users/current")
@@ -37,6 +48,11 @@ const api = {
     get_organizations: (request: RQ.users.get_organizations, bearerToken: string) => pactum.spec().get("/api/users/get_organizations")
       .withBearerToken(bearerToken)
       .withQueryParams(makeRequest(request))
+  },
+  groups: {
+    get: (request: RQ.groups.get, bearerToken: string) => pactum.spec().get("/api/groups/get")
+      .withBearerToken(bearerToken)
+      .withQueryParams(makeRequest(request)),
   }
 };
 

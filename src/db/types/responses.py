@@ -27,6 +27,12 @@ class RS:
     class organizations:
         class get(types.Organization): ...
 
+        class get_groups(BaseModel):
+            groups: list[types.Group]
+
+    class groups:
+        class get(types.Group): ...
+
     class test:
         class signup(BaseModel):
             access_token: str
@@ -34,3 +40,6 @@ class RS:
 
         class organizations:
             class create(types.Organization): ...
+
+        class groups:
+            class create(types.Group): ...

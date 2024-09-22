@@ -52,6 +52,7 @@ class User(_UserBase):
 
 class _OrganizationBase(_HasMembersWithRoles):
     name: str
+    groups: list[int] = []
 
 
 class Organization(_OrganizationBase):
@@ -59,3 +60,15 @@ class Organization(_OrganizationBase):
 
 
 class OrganizationWithoutID(_OrganizationBase): ...
+
+
+class _GroupBase(_HasMembersWithRoles):
+    name: str
+    organization_id: int
+
+
+class GroupWithoutID(_GroupBase): ...
+
+
+class Group(_GroupBase):
+    id: int

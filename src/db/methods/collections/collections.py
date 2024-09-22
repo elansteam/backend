@@ -9,8 +9,6 @@ organizations = db.get_collection(config.database.collections.organizations)
 groups = db.get_collection(config.database.collections.groups)
 domains = db.get_collection(config.database.collections.domains)
 contests = db.get_collection(config.database.collections.contests)
-group_roles = db.get_collection(config.database.collections.group_roles)
-group_members = db.get_collection(config.database.collections.group_members)
 internal_counters = db.get_collection(config.database.collections.internal_counters)
 
 

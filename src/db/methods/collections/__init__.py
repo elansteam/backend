@@ -1,12 +1,11 @@
-from .collections import users, domains, contests, group_roles, group_members, organizations, internal_counters
+from .collections import users, domains, contests, organizations, internal_counters, groups
 
 
 __all__ = [
     "users",
     "domains",
     "contests",
-    "group_roles",
-    "group_members",
+    "groups",
     "organizations",
     "internal_counters",
 ]

@@ -15,3 +15,10 @@ async def get(request: RQ.organizations.get = Depends(), _current_user: types.Us
         raise ErrorResponse(code=ErrorCodes.NOT_FOUND)
 
     return organization
+
+
+@router.get("/get_groups", response_model=SuccessfulResponse[RS.organizations.get_groups])
+async def get_groups(
+    request: RQ.organizations.get_groups = Depends(), _current_user: types.User = Depends(get_current_user)
+):
+    return RS.organizations.get_groups(groups=methods.organizations.get_groups(request.id))

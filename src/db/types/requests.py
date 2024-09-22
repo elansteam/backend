@@ -25,8 +25,15 @@ class RQ:
         class get(BaseModel):
             id: int
 
+        class get_groups(BaseModel):
+            id: int
+
     class users:
         class get_organizations(BaseModel):
+            id: int
+
+    class groups:
+        class get(BaseModel):
             id: int
 
     class test:
@@ -42,3 +49,13 @@ class RQ:
             class invite(BaseModel):
                 organization_id: int
                 user_id: int
+
+        class groups:
+
+            class create(BaseModel):
+                name: str = Field(..., max_length=30)
+                organization_id: int
+
+            class invite(BaseModel):
+                user_id: int
+                group_id: int

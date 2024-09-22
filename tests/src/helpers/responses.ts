@@ -1,4 +1,4 @@
-import { Organization } from "./types";
+import { Group, Organization } from "./types";
 
 namespace RS {
   export namespace auth {
@@ -23,6 +23,12 @@ namespace RS {
   }
   export namespace organizations {
     export interface get extends Organization {};
+    export interface get_groups {
+      groups: Group[];
+    }
+  }
+  export namespace groups {
+    export interface get extends Group {}
   }
   export namespace test {
     export interface signup {
@@ -31,6 +37,10 @@ namespace RS {
     }
     export namespace organizations {
       export interface create extends Organization {}
+      export interface invite {}
+    }
+    export namespace groups {
+      export interface create extends Group {}
       export interface invite {}
     }
   }

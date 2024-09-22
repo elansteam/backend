@@ -28,6 +28,9 @@ export const makeResponse = (ctx: CaptureContext): any => {
   }
 
   replaceKeys(ctx.res.body);
+  if ("ok" in ctx.res.body) {
+    delete ctx.res.body["ok"];
+  }
   return ctx.res.body;
 }
 

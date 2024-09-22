@@ -3,7 +3,7 @@ from pymongo.client_session import ClientSession
 from db.types import types
 from db.methods.helpers import insert_with_auto_increment_id
 from utils.response import ErrorCodes, ErrorResponse
-from .collections import organizations
+from .collections import organizations, groups
 
 
 def get(organization_id: int, session: ClientSession | None = None) -> types.Organization | None:
@@ -26,7 +26,7 @@ def add_member(organization_id: int, member: types.Member, session: ClientSessio
 
     organizations.update_one(
         {"_id": organization_id},
-        {"$push": {"members": member.db_dump()}},
+        {"$push": {"members": member.model_dump()}},
         session=session,
     )
 
@@ -46,3 +46,18 @@ def is_user_in_organization(user_id: int, organization_id: int, session: ClientS
         )
         > 0
     )
+
+
+def get_groups(organization_id: int) -> list[types.Group]:
+    pipeline = [
+        {"$match": {"_id": organization_id}},
+        {"$lookup": {"from": groups.name, "localField": "groups", "foreignField": "_id", "as": "group_objects"}},
+        {"$unwind": "$group_objects"},
+        {"$replaceRoot": {"newRoot": "$group_objects"}},
+    ]
+    received_groups = organizations.aggregate(pipeline)
+    return [types.Group(**group) for group in received_groups]
+
+
+def add_group(organization_id: int, group_id: int, session: ClientSession | None = None) -> None:
+    organizations.update_one({"_id": organization_id}, {"$push": {"groups": group_id}}, session=session)

@@ -11,9 +11,18 @@ namespace RQ {
         export interface get {
             id: number;
         }
+
+        export interface get_groups {
+            id: number;
+        }
     }
     export namespace users {
         export interface get_organizations {
+            id: number;
+        }
+    }
+    export namespace groups {
+        export interface get {
             id: number;
         }
     }
@@ -30,6 +39,16 @@ namespace RQ {
             export interface invite {
                 organizationId: number;
                 userId: number
+            }
+        }
+        export namespace groups {
+            export interface create {
+                name: string;
+                organizationId: number;
+            }
+            export interface invite {
+                userId: number;
+                groupId: number;
             }
         }
     }

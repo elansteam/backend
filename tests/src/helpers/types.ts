@@ -19,4 +19,11 @@ interface HasMembersWithRoles {
 export interface Organization extends HasMembersWithRoles {
   id: number;
   name: string;
+  groups: number[];
+}
+
+export interface Group extends HasMembersWithRoles {
+  id: number;
+  name: string;
+  organizationId: number;
 }
