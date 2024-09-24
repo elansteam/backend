@@ -34,7 +34,9 @@ jobs:
       continue-on-error: true
 
     - name: Cleanup
-      run: docker compose down -v --rmi all
+      run: \
+        docker compose down -v --rmi all
+        docker system prune -f
       continue-on-error: true
 
     - name: Check test results
