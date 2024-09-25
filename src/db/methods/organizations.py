@@ -26,7 +26,7 @@ def add_member(organization_id: int, member: types.Member, session: ClientSessio
 
     organizations.update_one(
         {"_id": organization_id},
-        {"$push": {"members": member.db_dump()}},
+        {"$push": {"members": member.model_dump()}},
         session=session,
     )
 

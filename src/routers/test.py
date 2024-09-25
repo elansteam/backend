@@ -77,4 +77,10 @@ async def invite_user_to_organization(
                     message="You are not a member of this organization",
                 )
 
+            if methods.organizations.is_user_in_organization(request.user_id, request.organization_id, session):
+                raise ErrorResponse(
+                    code=ErrorCodes.USER_ALREADY_MEMBER,
+                    message="User already in organization",
+                )
+
             methods.organizations.add_member(request.organization_id, types.Member(id=request.user_id), session)
