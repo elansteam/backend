@@ -4,7 +4,7 @@ from fastapi import status as http_status
 import utils.auth
 from utils.auth import get_current_user_by_refresh_token
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
-from db import methods
+from db.methods import methods
 from db.types import types, RS, RQ
 
 
@@ -15,13 +15,9 @@ router = APIRouter()
 async def signin(request: RQ.auth.signin):
     user: types.User | None = None
     if request.id:
-        user = methods.users.get(request.id)
-    elif request.domain:
-        entity = methods.domains.resolve_entity(request.domain)
-        if entity and entity.target_type == "user":
-            user = methods.users.get(entity.target_id)
+        user = methods.get_user(request.id)
     elif request.email:
-        user = methods.users.get_by_email(request.email)
+        user = methods.get_user_by_email(request.email)
 
     if user is None:
         raise ErrorResponse(

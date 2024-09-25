@@ -6,7 +6,7 @@ from loguru import logger
 import utils.auth
 from config import config
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
-from db import methods
+from db.methods import methods
 from db.client import client
 from db.types import types, RS, RQ
 
@@ -26,8 +26,7 @@ async def cleanup():
 @router.post("/signup", response_model=SuccessfulResponse[RS.test.signup])
 async def signup(request: RQ.test.signup):
     hashed_password = utils.auth.hash_password(request.password)
-
-    inserted_user_id = methods.users.insert_user(
+    inserted_user_id = methods.insert_user(
         types.UserWithoutID(
             email=request.email,
             hashed_password=hashed_password,
@@ -51,11 +50,9 @@ async def create_organization(
     request: RQ.test.organizations.create,
     current_user: types.User = Depends(utils.auth.get_current_user),
 ):
-    inserted_id = methods.organizations.insert_organization(
-        types.OrganizationWithoutID(name=request.name, members=[types.Member(id=current_user.id)])
-    )
-
-    return RS.test.organizations.create(members=[types.Member(id=current_user.id)], name=request.name, id=inserted_id)
+    inserted_id = methods.insert_organization(types.OrganizationWithoutID(name=request.name))
+    methods.insert_member_to_organization(types.Member(object_id=current_user.id, target_id=inserted_id))
+    return types.Organization(id=inserted_id, name=request.name)
 
 
 @router.post("/organizations/invite", response_model=SuccessfulResponse[None])
@@ -63,24 +60,18 @@ async def invite_user_to_organization(
     request: RQ.test.organizations.invite,
     current_user: types.User = Depends(utils.auth.get_current_user),
 ):
-    with client.start_session() as session:
-        with session.start_transaction():
-            if not methods.organizations.check_existence(request.organization_id, session):
-                raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="Organization not found")
+    if not methods.check_organization_existence(request.organization_id):
+        raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="Organization not found")
 
-            if not methods.users.check_existence(request.user_id, session):
-                raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="User not found")
+    if not methods.check_user_existence(request.user_id):
+        raise ErrorResponse(code=ErrorCodes.NOT_FOUND, message="User not found")
 
-            if not methods.organizations.is_user_in_organization(current_user.id, request.organization_id, session):
-                raise ErrorResponse(
-                    code=ErrorCodes.ACCESS_DENIED,
-                    message="You are not a member of this organization",
-                )
+    if not methods.is_user_in_organization(current_user.id, request.organization_id):
+        raise ErrorResponse(code=ErrorCodes.ACCESS_DENIED, message="You are not a member of this organization")
 
-            if methods.organizations.is_user_in_organization(request.user_id, request.organization_id, session):
-                raise ErrorResponse(
-                    code=ErrorCodes.USER_ALREADY_MEMBER,
-                    message="User already in organization",
-                )
+    is_member_inserted = methods.insert_member_to_organization(
+        types.Member(object_id=request.user_id, target_id=request.organization_id)
+    )
 
-            methods.organizations.add_member(request.organization_id, types.Member(id=request.user_id), session)
+    if not is_member_inserted:
+        raise ErrorResponse(code=ErrorCodes.USER_ALREADY_MEMBER, message="User already in organization")

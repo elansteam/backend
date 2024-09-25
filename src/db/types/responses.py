@@ -27,6 +27,9 @@ class RS:
     class organizations:
         class get(types.Organization): ...
 
+        class get_members(BaseModel):
+            members: list[int]
+
     class test:
         class signup(BaseModel):
             access_token: str

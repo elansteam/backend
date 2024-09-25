@@ -1,23 +1,10 @@
-from typing import Literal
-
 from utils.schemas import BaseModel
 
 
+# Misc
 class Member(BaseModel):
-    id: int
-    roles: list[str] = []
-    custom_permissions: int = 0
-
-
-class Role(BaseModel):
-    id: str
-    name: str
-    permissions: int
-
-
-class _HasMembersWithRoles(BaseModel):
-    members: list[Member]
-    roles: list[Role] = []
+    object_id: int
+    target_id: int
 
 
 class JWTPair(BaseModel):
@@ -25,20 +12,10 @@ class JWTPair(BaseModel):
     refresh_token: str
 
 
-EntityTargetType = Literal["user", "group", "contest"]
-
-
-class Entity(BaseModel):
-    id: str
-    target_type: EntityTargetType
-    target_id: int
-
-
+# Users
 class _UserBase(BaseModel):
-    domain: str | None = None
     first_name: str
     last_name: str | None = None
-    groups: list[int] = []
     hashed_password: str
     email: str
 
@@ -50,7 +27,8 @@ class User(_UserBase):
     id: int
 
 
-class _OrganizationBase(_HasMembersWithRoles):
+# Organizations
+class _OrganizationBase(BaseModel):
     name: str
 
 

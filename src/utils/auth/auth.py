@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from fastapi import Header
 from fastapi import status as http_status
 
-from db import methods
+from db.methods import methods
 from db.types import types
 from utils import response
 from config import config
@@ -121,7 +121,7 @@ def get_current_user(authorization: str = Header()) -> types.User:
 
     subject = decode_jwt(token, config.auth.jwt_access_secret_key.get_secret_value())["subject"]
 
-    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
+    if subject.isnumeric() and (user := methods.get_user(int(subject))) is not None:
         return user
 
     raise response.ErrorResponse(
@@ -136,7 +136,7 @@ def get_current_user_by_refresh_token(authorization: str = Header()) -> types.Us
 
     subject = decode_jwt(token, config.auth.jwt_refresh_secret_key.get_secret_value())["subject"]
 
-    if subject.isnumeric() and (user := methods.users.get(int(subject))) is not None:
+    if subject.isnumeric() and (user := methods.get_user(int(subject))) is not None:
         return user
 
     raise response.ErrorResponse(

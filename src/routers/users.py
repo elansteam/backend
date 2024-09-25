@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from utils.response import SuccessfulResponse
 from utils.auth import get_current_user
-from db import methods
+from db.methods import methods
 from db.types import types, RS, RQ
 
 
@@ -18,4 +18,4 @@ async def current(current_user: types.User = Depends(get_current_user)):
 async def get_organizations(
     request: RQ.users.get_organizations = Depends(), _current_user: types.User = Depends(get_current_user)
 ):
-    return RS.users.get_organizations(organizations=methods.organizations.get_organizations_by_user(request.id))
+    return RS.users.get_organizations(organizations=methods.get_organizations_by_user(request.id))

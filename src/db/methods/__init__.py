@@ -1,12 +1,4 @@
-from . import (
-    users,
-    domains,
-    organizations,
-)
+from . import methods
 
 
-__all__ = [
-    "users",
-    "domains",
-    "organizations",
-]
+__all__ = ["methods"]
