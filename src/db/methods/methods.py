@@ -30,7 +30,6 @@ def insert_member_to_organization(member: types.Member, s: ClientSession | None 
 
 
 def get_organizations_by_user(user_id: int, s: ClientSession | None = None) -> list[types.Organization]:
-
     pipeline = [
         {"$match": {"object_id": user_id}},
         {
