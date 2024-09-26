@@ -56,7 +56,7 @@ def get_members_of_organization(organization_id: int, s: ClientSession | None = 
         {"$match": {"target_id": organization_id}},
         {"$group": {"_id": None, "result": {"$push": "$object_id"}}},
     ]
-    return next(organization_members.aggregate(pipeline, session=s)).get("result", None)
+    return next(organization_members.aggregate(pipeline, session=s)).get("result", [])
 
 
 # Users
