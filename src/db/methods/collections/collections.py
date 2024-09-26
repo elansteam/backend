@@ -1,5 +1,7 @@
 """Here collection and indexes are defined"""
 
+from typing import Any
+from pymongo.collection import Collection
 from db.client import db
 from config import config
 
