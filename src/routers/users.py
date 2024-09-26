@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends
 
 from utils.response import SuccessfulResponse
 from utils.auth import get_current_user
-from db.methods import methods
-from db.types import types, RS, RQ
+from db import methods
+from src import types
+from src.types import RS, RQ
 
 
 router = APIRouter()

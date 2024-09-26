@@ -1,4 +1,1 @@
-from . import methods
-
-
-__all__ = ["methods"]
+from .methods import *

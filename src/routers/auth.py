@@ -4,8 +4,9 @@ from fastapi import status as http_status
 import utils.auth
 from utils.auth import get_current_user_by_refresh_token
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
-from db.methods import methods
-from db.types import types, RS, RQ
+from db import methods
+from src import types
+from src.types import RQ, RS
 
 
 router = APIRouter()

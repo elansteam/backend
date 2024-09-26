@@ -1,8 +1,8 @@
 from pymongo.client_session import ClientSession
 from pymongo.errors import DuplicateKeyError
 
-from db.types import types
-from db.methods.helpers import insert_with_auto_increment_id
+from src import types
+from .helpers import insert_with_auto_increment_id
 from .collections import users, organizations, organization_members
 
 

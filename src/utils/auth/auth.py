@@ -5,8 +5,8 @@ from passlib.context import CryptContext
 from fastapi import Header
 from fastapi import status as http_status
 
-from db.methods import methods
-from db.types import types
+from db import methods
+from src import types
 from utils import response
 from config import config
 

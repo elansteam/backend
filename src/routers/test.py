@@ -6,9 +6,10 @@ from loguru import logger
 import utils.auth
 from config import config
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
-from db.methods import methods
+from db import methods
 from db.client import client
-from db.types import types, RS, RQ
+from src import types
+from src.types import RQ, RS
 
 
 router = APIRouter()
