@@ -8,9 +8,7 @@ from config import config
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
 from db import methods
 from db.client import client
-from src import types
-from src.types import RQ, RS
-
+from t import types, RQ, RS
 
 router = APIRouter()
 
@@ -70,9 +68,7 @@ async def invite_user_to_organization(
     if not methods.is_user_in_organization(current_user.id, request.organization_id):
         raise ErrorResponse(code=ErrorCodes.ACCESS_DENIED, message="You are not a member of this organization")
 
-    is_member_inserted = methods.insert_member_to_organization(
+    if not methods.insert_member_to_organization(
         types.Member(object_id=request.user_id, target_id=request.organization_id)
-    )
-
-    if not is_member_inserted:
+    ):
         raise ErrorResponse(code=ErrorCodes.USER_ALREADY_MEMBER, message="User already in organization")

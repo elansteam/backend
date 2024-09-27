@@ -1,12 +1,11 @@
 from pymongo.client_session import ClientSession
 from pymongo.errors import DuplicateKeyError
 
-from src import types
+from t import types
 from .helpers import insert_with_auto_increment_id
-from .collections import users, organizations, organization_members
+from .collections import organizations, organization_members
 
 
-# Organizations
 def get_organization(organization_id: int, s: ClientSession | None = None) -> types.Organization | None:
     if (organization := organizations.find_one({"_id": organization_id}, session=s)) is None:
         return None
@@ -56,27 +55,3 @@ def get_members_of_organization(organization_id: int, s: ClientSession | None = 
         {"$group": {"_id": None, "result": {"$push": "$object_id"}}},
     ]
     return (organization_members.aggregate(pipeline, session=s).try_next() or {}).get("result", [])
-
-
-# Users
-def get_user(user_id: int, s: ClientSession | None = None) -> types.User | None:
-    if (user := users.find_one({"_id": user_id}, session=s)) is None:
-        return None
-    return types.User(**user)
-
-
-def get_user_by_email(email: str, s: ClientSession | None = None):
-    if (user := users.find_one({"email": email}, session=s)) is None:
-        return None
-    return types.User(**user)
-
-
-def insert_user(user: types.UserWithoutID, s: ClientSession | None = None) -> int | None:
-    try:
-        return insert_with_auto_increment_id(users, user.db_dump(), session=s)
-    except DuplicateKeyError:
-        return None
-
-
-def check_user_existence(user_id: int, s: ClientSession | None = None) -> bool:
-    return users.count_documents({"_id": user_id}, session=s) > 0

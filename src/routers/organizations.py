@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from db import methods
-from src import types
-from src.types import RQ, RS
+from t import types, RQ, RS
 from utils.auth.auth import get_current_user
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
 

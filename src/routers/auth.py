@@ -5,8 +5,7 @@ import utils.auth
 from utils.auth import get_current_user_by_refresh_token
 from utils.response import SuccessfulResponse, ErrorCodes, ErrorResponse
 from db import methods
-from src import types
-from src.types import RQ, RS
+from t import types, RQ, RS
 
 
 router = APIRouter()
