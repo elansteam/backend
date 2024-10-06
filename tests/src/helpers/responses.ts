@@ -34,7 +34,7 @@ namespace RS {
     }
     export namespace organizations {
       export interface create extends Organization {}
-      export interface invite {}
+      export interface invite { }
     }
   }
 }

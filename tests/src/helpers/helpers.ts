@@ -15,7 +15,7 @@ export const makeResponse = (ctx: CaptureContext): any => {
     return result;
   }
   const replaceKeys = (source: any) => {
-    for (let prop in source) {
+    for (const prop in source) {
       const upper = fromSnakeToCamelCase(prop);
       if (prop !== upper) {
         source[upper] = source[prop];
@@ -44,7 +44,7 @@ export const makeRequest = (object: any): any => {
     return result;
   }
   const replaceKeys = (source: any) => {
-    for (let prop in source) {
+    for (const prop in source) {
       const upper = fromCamelCaseToSnake(prop);
       if (prop !== upper) {
         source[upper] = source[prop];
