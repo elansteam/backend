@@ -1,11 +1,10 @@
 import {describe, test, expect, beforeEach} from "@jest/globals";
 import { cleanup } from "./helpers/scripts";
 import api from "./helpers/api";
-import { ErrorCodes, SERVICE_TOKEN } from "./helpers/constants";
+import { ErrorCodes } from "./helpers/constants";
 import RS from "./helpers/responses";
 import { makeResponse } from "./helpers/helpers";
 import { User } from "./helpers/objects";
-import { Organization } from "./helpers/types";
 
 
 describe("Organizations", () => {
@@ -46,20 +45,20 @@ describe("Organizations", () => {
   });
 
   test("Invite user to organization from unauthorized user", async () => {
-      const organization: RS.test.organizations.create = await api.test.organizations.create({name: "test_org"}, firstUser.getAccessToken())
-        .expectJsonLike({ok: true})
-        .returns(makeResponse);
+    const organization: RS.test.organizations.create = await api.test.organizations.create({name: "test_org"}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
 
-      // Try to invite a user from an unauthorized user
-      await api.test.organizations.invite({organizationId: organization.id, userId: secondUser.id}, secondUser.getAccessToken())
-        .expectJsonLike({ok: false, error: {code: ErrorCodes.ACCESS_DENIED}});
+    // Try to invite a user from an unauthorized user
+    await api.test.organizations.invite({organizationId: organization.id, userId: secondUser.id}, secondUser.getAccessToken())
+      .expectJsonLike({ok: false, error: {code: ErrorCodes.ACCESS_DENIED}});
 
-      // Ensure that the organization members remain unchanged
-      const members: RS.organizations.get_members = await api.organizations.get_members({id: organization.id}, firstUser.getAccessToken())
-        .expectJsonLike({ok: true})
-        .returns(makeResponse);
-      expect(members).toMatchObject({members: [firstUser.id]})
-    });
+    // Ensure that the organization members remain unchanged
+    const members: RS.organizations.get_members = await api.organizations.get_members({id: organization.id}, firstUser.getAccessToken())
+      .expectJsonLike({ok: true})
+      .returns(makeResponse);
+    expect(members).toMatchObject({members: [firstUser.id]})
+  });
 
   test("Invite user already in organization", async () => {
     const organization: RS.test.organizations.create = await api.test.organizations.create({name: "test_org"}, firstUser.getAccessToken())
@@ -80,6 +79,7 @@ describe("Organizations", () => {
       .returns(makeResponse);
     expect(members).toMatchObject({members: [firstUser.id, secondUser.id]});
   });
+
   test("Get user organizations", async () => {
     // Create two different organizations and ensure that after each creation method returns new organization
     const firstOrganization: RS.test.organizations.create = await api.test.organizations.create({name: "first_org"}, firstUser.getAccessToken())
