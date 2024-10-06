@@ -1,7 +1,7 @@
 from pymongo.client_session import ClientSession
 from pymongo.errors import DuplicateKeyError
 
-from t import types
+from typings import types
 from .helpers import insert_with_auto_increment_id
 from .collections import organizations, organization_members
 

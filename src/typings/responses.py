@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from utils.schemas import BaseModel
-from t import types
+from typings import types
 
 
 class RS:

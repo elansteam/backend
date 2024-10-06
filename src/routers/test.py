@@ -8,7 +8,7 @@ from config import config
 from utils.response import ErrorCodes, ErrorResponse, SuccessfulResponse
 from db import methods
 from db.client import client
-from t import types, RQ, RS
+from typings import types, RQ, RS
 
 router = APIRouter()
 
