@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from utils.schemas import BaseModel
-from db.types import types
+from typings import types
 
 
 class RS:
@@ -26,6 +26,9 @@ class RS:
 
     class organizations:
         class get(types.Organization): ...
+
+        class get_members(BaseModel):
+            members: list[int]
 
     class test:
         class signup(BaseModel):

@@ -3,20 +3,7 @@ export interface JWTPair {
   refreshToken: string;
 }
 
-interface HasMembersWithRoles {
-  members: {
-    id: number;
-    customPermissions: number;
-    roles: string[];
-  }[];
-  roles: {
-    id: number;
-    name: string;
-    permissions: number;
-  }[];
-}
-
-export interface Organization extends HasMembersWithRoles {
+export interface Organization {
   id: number;
   name: string;
 }

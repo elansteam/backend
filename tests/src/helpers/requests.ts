@@ -11,6 +11,10 @@ namespace RQ {
         export interface get {
             id: number;
         }
+
+        export interface get_members {
+            id: number;
+        }
     }
     export namespace users {
         export interface get_organizations {

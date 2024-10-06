@@ -23,6 +23,9 @@ namespace RS {
   }
   export namespace organizations {
     export interface get extends Organization {};
+    export interface get_members {
+      members: number[];
+    };
   }
   export namespace test {
     export interface signup {
